@@ -9,15 +9,22 @@ import Footer from "./Footer";
 
 function App() {
   return (
-    <>
+    <div className="bg-black text-green-400 font-retro scroll-smooth">
+      {/* Navbar */}
       <Navbar />
-      <Hero />
-      <About />
-      <Skills />
-      <Projects />
-      <Contact />
+
+      {/* Main Content */}
+      <main>
+        <Hero />
+        <About />
+        <Skills />
+        <Projects />
+        <Contact />
+      </main>
+
+      {/* Footer */}
       <Footer />
-    </>
+    </div>
   );
 }
 

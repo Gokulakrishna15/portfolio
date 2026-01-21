@@ -1,3 +1,21 @@
+@import "tailwindcss";
+
+/* Global background animation */
+body {
+  background: linear-gradient(270deg, #000000, #111111, #222222);
+  background-size: 600% 600%;
+  animation: backgroundShift 20s ease infinite;
+  font-family: 'VT323', monospace; /* retro hacker font */
+  color: #00ff88;
+}
+
+@keyframes backgroundShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Root container */
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -5,38 +23,120 @@
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Neon glow effect */
+.neon-text {
+  text-shadow: 0 0 5px #00ff88, 0 0 10px #00ff88, 0 0 20px #00ff88;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+/* Buttons */
+.btn-neon {
+  background-color: #00ff88;
+  color: #000;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px #00ff88, 0 0 20px #00ff88;
+}
+.btn-neon:hover {
+  background-color: #ff00aa;
+  color: #fff;
+  box-shadow: 0 0 15px #ff00aa, 0 0 30px #ff00aa;
+  transform: scale(1.05);
+}
+
+/* Section styling */
+section {
+  padding: 4rem 2rem;
+  border-bottom: 2px solid #00ff88;
+}
+
+/* Navbar glass effect */
+nav {
+  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.7);
+  border-bottom: 2px solid #00ff88;
+  box-shadow: 0 0 10px #00ff88;
+}
+nav a {
+  position: relative;
+  transition: color 0.3s ease;
+}
+nav a::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  bottom: -4px;
+  left: 0;
+  background-color: #ff00aa;
+  transition: width 0.3s ease;
+}
+nav a:hover {
+  color: #ff00aa;
+}
+nav a:hover::after {
+  width: 100%;
+}
+
+/* Scroll indicator */
+.scroll-indicator {
+  animation: bounce 1.5s infinite;
+  color: #00ff88;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+
+/* Project cards */
+.project-card {
+  background: linear-gradient(145deg, #111, #1a1a1a);
+  border: 1px solid #00ff88;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  transition: all 0.4s ease;
+}
+.project-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 0 20px #00ff88, 0 0 40px #ff00aa;
+}
+
+/* Footer */
+footer {
+  padding: 2rem;
+  text-align: center;
+  color: #00ff88;
+  font-size: 0.9rem;
+  border-top: 2px solid #00ff88;
+  position: relative;
+}
+footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 60%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00ff88, transparent);
+  transform: translateX(-50%);
+  animation: glowLine 3s infinite;
+}
+@keyframes glowLine {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  section {
+    padding: 2rem 1rem;
   }
-  to {
-    transform: rotate(360deg);
+  h2 {
+    font-size: 1.5rem;
   }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+  .btn-neon {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
   }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
 }
