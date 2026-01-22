@@ -40,24 +40,24 @@ export default function Navbar() {
   return (
     <>
       <nav className="fixed w-full top-0 z-50 bg-black/70 backdrop-blur-md border-b-2 border-orange-400 shadow-lg relative">
-        {/* Sunrise Aura */}
-        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top,#ffdd00,#ff8800,transparent)]"></div>
+        {/* 🌅 Sunrise Aura */}
+        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top,#ffdd00,#ff8800,transparent)] animate-pulse"></div>
 
-        {/* Scroll Progress Bar */}
+        {/* 📊 Scroll Progress Bar */}
         <div className="absolute top-0 left-0 w-full h-1 bg-gray-800">
           <div
-            className="h-1 bg-gradient-to-r from-orange-400 via-pink-400 to-purple-400 transition-all duration-200"
+            className="h-1 bg-gradient-to-r from-orange-400 via-pink-400 to-purple-400 transition-all duration-200 shadow-lg"
             style={{ width: `${scrollProgress}%` }}
           ></div>
         </div>
 
         <div className="flex justify-between items-center px-8 py-4 relative z-10">
-          {/* Logo */}
-          <h1 className="text-2xl md:text-3xl font-bold tracking-widest text-orange-400 hover:text-yellow-300 transition duration-300 cursor-pointer">
+          {/* 🌟 Logo with Glow */}
+          <h1 className="text-2xl md:text-3xl font-bold tracking-widest text-orange-400 hover:text-yellow-300 transition duration-300 cursor-pointer animate-pulse">
             🌅 Gokulakrishna N.E
           </h1>
 
-          {/* Desktop Links with Tooltips */}
+          {/* 🖥 Desktop Links with Tooltips */}
           <div className="hidden md:flex space-x-12">
             {["about", "skills", "projects", "contact"].map((section) => (
               <div key={section} className="group relative">
@@ -65,7 +65,7 @@ export default function Navbar() {
                   href={`#${section}`}
                   className={`relative text-lg font-semibold transition duration-300 ${
                     activeSection === section
-                      ? "text-yellow-300"
+                      ? "text-yellow-300 after:content-[''] after:block after:h-1 after:bg-yellow-300 after:rounded-full after:mt-1 after:animate-pulse"
                       : "text-orange-400 hover:text-pink-400"
                   }`}
                 >
@@ -84,15 +84,15 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Hire Me Button */}
+          {/* 💼 Hire Me Button */}
           <a
             href="#contact"
-            className="hidden md:inline-block bg-gradient-to-r from-orange-400 via-pink-400 to-purple-400 text-black px-4 py-2 rounded-lg font-bold shadow-lg hover:scale-105 transition"
+            className="hidden md:inline-block bg-gradient-to-r from-orange-400 via-pink-400 to-purple-400 text-black px-4 py-2 rounded-lg font-bold shadow-lg transform hover:scale-110 hover:rotate-1 transition duration-300"
           >
             💼 Hire Me
           </a>
 
-          {/* Mobile Hamburger */}
+          {/* 📱 Mobile Hamburger */}
           <button
             className="md:hidden text-orange-400 hover:text-pink-400 transition text-3xl"
             onClick={() => setIsOpen(!isOpen)}
@@ -101,23 +101,39 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Mobile Menu */}
+        {/* 📱 Mobile Menu with Fade-in */}
         {isOpen && (
-          <div className="md:hidden flex flex-col items-center bg-black/95 border-t border-orange-400 animate-fadeIn">
-            <a href="#about" onClick={() => setIsOpen(false)} className="py-3 w-full text-center text-lg text-orange-400 hover:text-pink-400">👤 About</a>
-            <a href="#skills" onClick={() => setIsOpen(false)} className="py-3 w-full text-center text-lg text-orange-400 hover:text-pink-400">🛠 Skills</a>
-            <a href="#projects" onClick={() => setIsOpen(false)} className="py-3 w-full text-center text-lg text-orange-400 hover:text-pink-400">📂 Projects</a>
-            <a href="#contact" onClick={() => setIsOpen(false)} className="py-3 w-full text-center text-lg text-orange-400 hover:text-pink-400">📞 Contact</a>
-            <a href="#contact" onClick={() => setIsOpen(false)} className="my-4 bg-gradient-to-r from-orange-400 via-pink-400 to-purple-400 text-black px-4 py-2 rounded-lg font-bold shadow-lg hover:scale-105 transition">💼 Hire Me</a>
+          <div className="md:hidden flex flex-col items-center bg-black/95 border-t border-orange-400 animate-[fadeIn_0.5s_ease-in-out]">
+            {["about", "skills", "projects", "contact"].map((section, index) => (
+              <a
+                key={section}
+                href={`#${section}`}
+                onClick={() => setIsOpen(false)}
+                className="py-3 w-full text-center text-lg text-orange-400 hover:text-pink-400 animate-[fadeInUp_0.5s_ease-in-out]"
+                style={{ animationDelay: `${index * 0.1}s`, animationFillMode: "both" }}
+              >
+                {section === "about" && "👤 About"}
+                {section === "skills" && "🛠 Skills"}
+                {section === "projects" && "📂 Projects"}
+                {section === "contact" && "📞 Contact"}
+              </a>
+            ))}
+            <a
+              href="#contact"
+              onClick={() => setIsOpen(false)}
+              className="my-4 bg-gradient-to-r from-orange-400 via-pink-400 to-purple-400 text-black px-4 py-2 rounded-lg font-bold shadow-lg hover:scale-110 transition"
+            >
+              💼 Hire Me
+            </a>
           </div>
         )}
       </nav>
 
-      {/* Floating Back to Top Button */}
+      {/* ⬆️ Floating Back to Top Button */}
       {showTopButton && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 bg-gradient-to-r from-orange-400 via-pink-400 to-purple-400 text-black px-4 py-2 rounded-full shadow-lg hover:scale-110 transition"
+          className="fixed bottom-6 right-6 bg-gradient-to-r from-orange-400 via-pink-400 to-purple-400 text-black px-4 py-2 rounded-full shadow-lg hover:scale-110 transition animate-bounce"
         >
           ⬆️ Back to Top
         </button>
