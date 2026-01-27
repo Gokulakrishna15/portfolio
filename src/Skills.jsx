@@ -1,43 +1,99 @@
 import React, { useEffect, useRef, useState } from "react";
 
 /**
- * Skills.jsx
- * - Upgraded, self-contained cinematic Skills section
- * - Embedded styles and animations (no external CSS required)
- * - Features: animated gradient background, parallax particle layer, interactive progress bars,
- *   animated radial highlights, tooltip micro-interactions, accessible reduced-motion support,
- *   keyboard focus states, and responsive layout.
- * - Enhanced with magnetic glow effects, neon animations, and pulsing badges
- *
- * Replace your existing Skills.jsx with this file.
+ * Ultra Enhanced Skills Section
+ * Replaced percentages with technical details
  */
 
 export default function Skills() {
   const skills = [
-    { name: "⚛️ React.js", color: "var(--c-cyan)", category: "Frontend", percent: 90 },
-    { name: "🌐 HTML5", color: "var(--c-orange)", category: "Frontend", percent: 95 },
-    { name: "🎨 CSS3", color: "var(--c-blue)", category: "Frontend", percent: 90 },
-    { name: "💎 Tailwind CSS", color: "var(--c-cyan-soft)", category: "Frontend", percent: 80 },
-    { name: "✨ JavaScript", color: "var(--c-yellow)", category: "Frontend", percent: 90 },
+    // Frontend
+    { 
+      name: "⚛️ React.js", 
+      color: "var(--c-cyan)", 
+      category: "Frontend", 
+      details: "Component lifecycle, Custom Hooks, Context API, and Virtual DOM optimization." 
+    },
+    { 
+      name: "🌐 HTML5", 
+      color: "var(--c-orange)", 
+      category: "Frontend", 
+      details: "Semantic structure, WAI-ARIA accessibility standards, and SEO best practices." 
+    },
+    { 
+      name: "🎨 CSS3", 
+      color: "var(--c-blue)", 
+      category: "Frontend", 
+      details: "Advanced animations, Flexbox/Grid layouts, and responsive media queries." 
+    },
+    { 
+      name: "💎 Tailwind CSS", 
+      color: "var(--c-cyan-soft)", 
+      category: "Frontend", 
+      details: "Utility-first architecture, Design systems, and Dark mode configuration." 
+    },
+    { 
+      name: "✨ JavaScript", 
+      color: "var(--c-yellow)", 
+      category: "Frontend", 
+      details: "ES6+ syntax, Async/Await patterns, DOM manipulation, and functional programming." 
+    },
 
-    { name: "🌱 Node.js", color: "var(--c-pink)", category: "Backend", percent: 80 },
-    { name: "🚀 Express.js", color: "var(--c-purple)", category: "Backend", percent: 80 },
-    { name: "🍃 MongoDB", color: "var(--c-green)", category: "Backend", percent: 75 },
-    { name: "🗄️ MySQL", color: "var(--c-indigo)", category: "Backend", percent: 75 },
+    // Backend
+    { 
+      name: "🌱 Node.js", 
+      color: "var(--c-pink)", 
+      category: "Backend", 
+      details: "Event-driven architecture, Buffer/Streams, and scalable server-side logic." 
+    },
+    { 
+      name: "🚀 Express.js", 
+      color: "var(--c-purple)", 
+      category: "Backend", 
+      details: "Middleware integration, RESTful API routing, and secure authentication flows." 
+    },
+    { 
+      name: "🍃 MongoDB", 
+      color: "var(--c-green)", 
+      category: "Backend", 
+      details: "NoSQL schema design, Aggregation pipelines, and Atlas cloud management." 
+    },
+    { 
+      name: "🗄️ MySQL", 
+      color: "var(--c-indigo)", 
+      category: "Backend", 
+      details: "Relational database normalization, Complex joins, and ACID transactions." 
+    },
 
-    { name: "🐙 Git/GitHub", color: "var(--c-gray)", category: "Tools", percent: 90 },
-    { name: "🔗 Netlify", color: "var(--c-green-soft)", category: "Tools", percent: 80 },
-    { name: "☁️ Render", color: "var(--c-pink-soft)", category: "Tools", percent: 80 },
+    // Tools
+    { 
+      name: "🐙 Git/GitHub", 
+      color: "var(--c-gray)", 
+      category: "Tools", 
+      details: "Version control branching strategies, Merge conflict resolution, and PR workflows." 
+    },
+    { 
+      name: "🔗 Netlify", 
+      color: "var(--c-green-soft)", 
+      category: "Tools", 
+      details: "Continuous deployment (CI/CD), Serverless functions, and Domain management." 
+    },
+    { 
+      name: "☁️ Render", 
+      color: "var(--c-pink-soft)", 
+      category: "Tools", 
+      details: "Cloud hosting services, Docker containerization, and Auto-scaling infrastructure." 
+    },
   ];
 
   const categories = ["Frontend", "Backend", "Tools"];
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const parallaxRef = useRef(null);
   const particleRef = useRef(null);
-  const progressRefs = useRef([]);
   const [visible, setVisible] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [hoveredCard, setHoveredCard] = useState(null);
 
-  // CSS variables for colors
   const cssVars = {
     "--c-cyan": "#22d3ee",
     "--c-cyan-soft": "#7dd3fc",
@@ -53,14 +109,13 @@ export default function Skills() {
     "--c-pink-soft": "#fbcfe8",
   };
 
-  // Particle generation
-  const particleCount = typeof window !== "undefined" && window.innerWidth < 640 ? 18 : 36;
+  const particleCount = typeof window !== "undefined" && window.innerWidth < 640 ? 30 : 60;
   const particles = Array.from({ length: particleCount }).map((_, i) => {
     const r = Math.abs(Math.sin(i * 12.9898 + 78.233));
     const top = Math.round((r * 10000) % 100);
     const left = Math.round((r * 10000 * 7) % 100);
     const delay = (r * 8).toFixed(2);
-    const size = 1 + Math.round((r * 3));
+    const size = 1 + Math.round((r * 4));
     return { top, left, delay, size, key: `p-${i}` };
   });
 
@@ -70,7 +125,6 @@ export default function Skills() {
     const onChange = () => setPrefersReducedMotion(mq.matches);
     mq.addEventListener?.("change", onChange);
 
-    // reveal animations when section enters viewport
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -85,9 +139,9 @@ export default function Skills() {
     const el = document.getElementById("skills");
     if (el) observer.observe(el);
 
-    // parallax mouse movement for subtle depth
     if (!prefersReducedMotion) {
       const handleMove = (e) => {
+        setMousePos({ x: e.clientX, y: e.clientY });
         const cx = window.innerWidth / 2;
         const cy = window.innerHeight / 2;
         const dx = (e.clientX - cx) / cx;
@@ -113,30 +167,6 @@ export default function Skills() {
     };
   }, [prefersReducedMotion]);
 
-  // Animate progress bars when visible
-  useEffect(() => {
-    if (!visible || prefersReducedMotion) return;
-    progressRefs.current.forEach((el, idx) => {
-      if (!el) return;
-      const target = Number(el.getAttribute("data-target")) || 0;
-      el.style.width = "0%";
-      // smooth incremental animation
-      let start = 0;
-      const step = () => {
-        start += Math.max(1, Math.round(target / 24));
-        if (start >= target) {
-          el.style.width = `${target}%`;
-        } else {
-          el.style.width = `${start}%`;
-          requestAnimationFrame(step);
-        }
-      };
-      // stagger
-      setTimeout(() => requestAnimationFrame(step), idx * 80);
-    });
-  }, [visible, prefersReducedMotion]);
-
-  // Track mouse position for magnetic glow effect
   const handleCardMouseMove = (e) => {
     if (prefersReducedMotion) return;
     const card = e.currentTarget;
@@ -158,142 +188,243 @@ export default function Skills() {
       }}
       aria-labelledby="skills-heading"
     >
-      {/* Scoped styles */}
       <style>{`
-        /* Core background and glow */
-        #skills { background: linear-gradient(180deg, #082038 11%, #0b1020 30%, #2b0b3a 100%); border-bottom: 2px solid rgba(236,72,153,0.18); }
+        /* Enhanced Background */
+        #skills { 
+          background: linear-gradient(180deg, #082038 0%, #0b1020 30%, #2b0b3a 100%); 
+          border-bottom: 2px solid rgba(236,72,153,0.18); 
+        }
+        
         .skills-sheen {
           position: absolute; inset: -20%; pointer-events: none; mix-blend-mode: overlay;
-          background: radial-gradient(600px 200px at 10% 20%, rgba(34,211,238,0.06), transparent 10%),
-                      radial-gradient(400px 140px at 90% 80%, rgba(236,72,153,0.04), transparent 10%);
-          filter: blur(28px); animation: sheenMove 12s linear infinite;
+          background: radial-gradient(800px 300px at 10% 20%, rgba(34,211,238,0.12), transparent 20%),
+                      radial-gradient(600px 200px at 90% 80%, rgba(236,72,153,0.08), transparent 20%);
+          filter: blur(40px); animation: sheenMove 15s linear infinite;
         }
-        @keyframes sheenMove { 0% { transform: translateX(-6%); } 50% { transform: translateX(6%); } 100% { transform: translateX(-6%); } }
+        @keyframes sheenMove { 
+          0% { transform: translateX(-8%) rotate(0deg); } 
+          50% { transform: translateX(8%) rotate(5deg); } 
+          100% { transform: translateX(-8%) rotate(0deg); } 
+        }
 
-        /* Particle */
-        .skill-particle { position: absolute; border-radius: 9999px; background: rgba(236,72,153,0.12); filter: blur(0.6px); }
-        @keyframes floatY { 0% { transform: translateY(0); opacity: 0.95 } 50% { transform: translateY(-10px); opacity: 0.6 } 100% { transform: translateY(0); opacity: 0.95 } }
+        /* Morphing Blobs */
+        .blob {
+          position: absolute;
+          border-radius: 50%;
+          filter: blur(80px);
+          animation: morphBlob 12s ease-in-out infinite, float 15s ease-in-out infinite;
+        }
+        @keyframes morphBlob {
+          0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+          50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0) rotate(0deg); }
+          50% { transform: translateY(-30px) rotate(10deg); }
+        }
 
-        /* Card */
+        /* Enhanced Particles */
+        .skill-particle { 
+          position: absolute; 
+          border-radius: 9999px; 
+          filter: blur(1px); 
+        }
+        @keyframes floatY { 
+          0% { transform: translateY(0) scale(1); opacity: 0.8; } 
+          50% { transform: translateY(-20px) scale(1.3); opacity: 1; } 
+          100% { transform: translateY(0) scale(1); opacity: 0.8; } 
+        }
+        @keyframes twinkle {
+          0%, 100% { opacity: 0.3; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.8); }
+        }
+
+        /* Ultra Card with 3D Transform */
         .skill-card {
-          background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-          border: 1px solid rgba(236,72,153,0.06);
-          border-radius: 14px; padding: 20px; position: relative; overflow: hidden;
-          box-shadow: 0 18px 60px rgba(2,6,23,0.6); 
-          transition: transform 260ms cubic-bezier(.2,.9,.2,1), box-shadow 260ms, border-color 260ms;
+          background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+          border: 1px solid rgba(236,72,153,0.1);
+          border-radius: 20px; 
+          padding: 24px; 
+          position: relative; 
+          overflow: hidden;
+          box-shadow: 0 20px 70px rgba(2,6,23,0.7); 
+          transition: all 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+          transform-style: preserve-3d;
         }
+        
+        /* Magnetic Glow Effect */
         .skill-card::before {
-          content: ""; position: absolute; inset: 0; opacity: 0;
-          background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(34,211,238,0.08), transparent 60%);
-          transition: opacity 300ms ease;
+          content: ""; 
+          position: absolute; 
+          inset: -2px; 
+          opacity: 0;
+          background: radial-gradient(circle 300px at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+            rgba(34,211,238,0.15), 
+            rgba(236,72,153,0.1) 40%, 
+            transparent 70%);
+          border-radius: inherit;
+          z-index: 0;
+          transition: opacity 400ms ease;
+          filter: blur(20px);
         }
-        .skill-card:focus-within::before, .skill-card:hover::before { opacity: 1; }
-        .skill-card:focus-within, .skill-card:hover { 
-          transform: translateY(-8px) scale(1.02); 
-          box-shadow: 0 30px 80px rgba(2,6,23,0.72), 0 0 40px rgba(34,211,238,0.06); 
-          border-color: rgba(34,211,238,0.2);
+        
+        .skill-card::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(45deg, transparent, rgba(255,255,255,0.05), transparent);
+          transform: translateX(-100%) rotate(45deg);
+          transition: transform 0.6s ease;
+        }
+        
+        .skill-card:hover::after {
+          transform: translateX(200%) rotate(45deg);
+        }
+        
+        .skill-card:focus-within::before, 
+        .skill-card:hover::before { 
+          opacity: 1; 
+        }
+        
+        .skill-card:focus-within, 
+        .skill-card:hover { 
+          transform: translateY(-12px) scale(1.03) rotateX(2deg); 
+          box-shadow: 0 35px 100px rgba(2,6,23,0.8), 
+                      0 0 60px rgba(34,211,238,0.15),
+                      0 0 100px rgba(236,72,153,0.1); 
+          border-color: rgba(34,211,238,0.3);
         }
 
-        /* Neon text */
+        /* Orbiting Particles around card */
+        .orbit-container {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 120%;
+          height: 120%;
+          transform: translate(-50%, -50%);
+          pointer-events: none;
+        }
+        
+        .orbit-particle {
+          position: absolute;
+          width: 4px;
+          height: 4px;
+          background: linear-gradient(45deg, #22d3ee, #ec4899);
+          border-radius: 50%;
+          top: 50%;
+          left: 50%;
+          animation: orbit 6s linear infinite;
+          opacity: 0;
+        }
+        
+        .skill-card:hover .orbit-particle {
+          opacity: 1;
+        }
+        
+        @keyframes orbit {
+          0% { transform: rotate(0deg) translateX(80px) rotate(0deg); }
+          100% { transform: rotate(360deg) translateX(80px) rotate(-360deg); }
+        }
+
+        /* Neon Text with Glow */
         .neon-text { 
-          text-shadow: 0 6px 18px rgba(124,58,237,0.06); 
+          text-shadow: 0 6px 20px rgba(124,58,237,0.08); 
           font-weight: 700; 
-          transition: text-shadow 300ms ease, transform 300ms ease;
+          transition: all 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+          display: inline-block;
+          position: relative;
+        }
+        
+        .neon-text::after {
+          content: attr(data-text);
+          position: absolute;
+          left: 0;
+          top: 0;
+          z-index: -1;
+          filter: blur(15px);
+          opacity: 0;
+          transition: opacity 400ms ease;
+        }
+        
+        .skill-card:hover .neon-text {
+          text-shadow: 0 0 25px currentColor, 0 0 50px currentColor, 0 0 75px currentColor;
+          transform: translateX(3px) scale(1.05);
+        }
+        
+        .skill-card:hover .neon-text::after {
+          opacity: 0.6;
+        }
+
+        /* Reveal Animations */
+        .reveal-up { 
+          transform: translateY(30px); 
+          opacity: 0; 
+          transition: transform 700ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 700ms; 
+        }
+        .reveal-up.visible { 
+          transform: translateY(0); 
+          opacity: 1; 
+        }
+
+        /* Category Header Animation */
+        .category-header {
+          position: relative;
           display: inline-block;
         }
-        .skill-card:hover .neon-text {
-          text-shadow: 0 0 20px currentColor, 0 0 40px currentColor;
-          transform: translateX(2px);
-        }
-
-        /* Progress bar container */
-        .progress-track { 
-          background: rgba(15,23,42,0.6); 
-          height: 10px; 
-          border-radius: 9999px; 
-          overflow: hidden; 
-          position: relative;
-        }
-        .progress-track::before {
-          content: ""; position: absolute; inset: 0;
-          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
-          animation: trackPulse 3s ease-in-out infinite;
-        }
-        @keyframes trackPulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.8; } }
         
-        .progress-fill {
-          height: 100%; border-radius: 9999px; width: 0%; 
-          transition: width 900ms cubic-bezier(.2,.9,.2,1);
-          box-shadow: 0 8px 30px rgba(99,102,241,0.08), inset 0 -2px 8px rgba(0,0,0,0.12);
-          position: relative;
+        .category-header::after {
+          content: "";
+          position: absolute;
+          bottom: -8px;
+          left: 0;
+          right: 0;
+          height: 3px;
+          background: linear-gradient(90deg, var(--c-cyan), var(--c-pink), var(--c-yellow));
+          border-radius: 9999px;
+          transform: scaleX(0);
+          transition: transform 600ms cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        .skill-card:hover .progress-fill {
-          box-shadow: 0 8px 40px rgba(99,102,241,0.15), inset 0 -2px 8px rgba(0,0,0,0.12);
-        }
-
-        /* Tooltip */
-        .skill-tooltip {
-          position: absolute; bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%) translateY(6px);
-          background: rgba(2,6,23,0.9); color: #f8fafc; padding: 8px 10px; border-radius: 8px; font-size: 13px;
-          opacity: 0; pointer-events: none; transition: opacity 180ms ease, transform 180ms ease;
-          box-shadow: 0 8px 30px rgba(2,6,23,0.6);
-          white-space: nowrap;
-        }
-        .skill-card:focus-within .skill-tooltip, .skill-card:hover .skill-tooltip { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
-
-        /* small shimmer on fill */
-        .progress-fill::after {
-          content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.0));
-          mix-blend-mode: overlay; transform: translateX(-40%); animation: shimmer 2.2s linear infinite;
-        }
-        @keyframes shimmer { 0% { transform: translateX(-40%); } 100% { transform: translateX(140%); } }
-
-        /* reveal animations */
-        .reveal-up { transform: translateY(18px); opacity: 0; transition: transform 520ms cubic-bezier(.2,.9,.2,1), opacity 520ms; }
-        .reveal-up.visible { transform: translateY(0); opacity: 1; }
-
-        /* Skill badge animation */
-        .skill-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          padding: 4px 12px;
-          border-radius: 20px;
-          background: linear-gradient(90deg, rgba(34,211,238,0.08), rgba(236,72,153,0.08));
-          border: 1px solid rgba(34,211,238,0.15);
-          position: relative;
-          overflow: hidden;
-        }
-        .skill-badge::before {
-          content: ""; position: absolute; left: -100%; top: 0; bottom: 0; width: 100%;
-          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-          animation: badgeShine 2.5s ease-in-out infinite;
-        }
-        @keyframes badgeShine { 0%, 100% { left: -100%; } 50% { left: 200%; } }
         
-        .skill-card:hover .skill-badge {
-          background: linear-gradient(90deg, rgba(34,211,238,0.12), rgba(236,72,153,0.12));
-          border-color: rgba(34,211,238,0.25);
+        .reveal-up.visible .category-header::after {
+          transform: scaleX(1);
         }
 
-        /* reduced motion */
         @media (prefers-reduced-motion: reduce) {
-          .skills-sheen, .skill-particle, .progress-fill::after, .reveal-up, .skill-badge::before, .progress-track::before { 
-            animation: none !important; transition: none !important; transform: none !important; opacity: 1 !important; 
+          *, *::before, *::after { 
+            animation: none !important; 
+            transition: none !important; 
           }
         }
 
-        /* responsive tweaks */
         @media (max-width: 640px) {
-          .skill-card { padding: 14px; }
+          .skill-card { padding: 18px; }
         }
       `}</style>
 
-      {/* Sheen layer */}
+      {/* Enhanced Sheen */}
       <div className="skills-sheen" aria-hidden="true" />
 
-      {/* Particles layer (parallax) */}
-      <div ref={particleRef} aria-hidden="true" style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
+      {/* Morphing Blobs */}
+      <div className="blob absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/10" aria-hidden="true" />
+      <div className="blob absolute bottom-1/4 right-1/4 w-80 h-80 bg-pink-500/10" style={{ animationDelay: '3s' }} aria-hidden="true" />
+      <div className="blob absolute top-1/2 right-1/3 w-72 h-72 bg-purple-500/8" style={{ animationDelay: '6s' }} aria-hidden="true" />
+
+      {/* Cursor Glow */}
+      <div 
+        className="absolute w-96 h-96 rounded-full pointer-events-none transition-all duration-300 ease-out"
+        style={{
+          left: mousePos.x - 192,
+          top: mousePos.y - 192,
+          background: 'radial-gradient(circle, rgba(34, 211, 238, 0.08), transparent)',
+          filter: 'blur(60px)',
+          zIndex: 1
+        }}
+        aria-hidden="true"
+      />
+
+      {/* Enhanced Particles */}
+      <div ref={particleRef} aria-hidden="true" style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 2 }}>
         {particles.map((p, i) => (
           <div
             key={p.key}
@@ -303,42 +434,56 @@ export default function Skills() {
               left: `${p.left}%`,
               width: `${p.size}px`,
               height: `${p.size}px`,
-              animation: prefersReducedMotion ? "none" : `floatY ${6 + (p.size % 3)}s ease-in-out ${p.delay}s infinite`,
-              opacity: 0.08 + (p.size % 2) * 0.06,
+              background: i % 3 === 0 ? 'rgba(34,211,238,0.3)' : i % 3 === 1 ? 'rgba(236,72,153,0.3)' : 'rgba(124,58,237,0.3)',
+              animation: prefersReducedMotion ? "none" : `floatY ${6 + (p.size % 3)}s ease-in-out ${p.delay}s infinite, twinkle ${3 + (p.size % 2)}s ease-in-out ${p.delay}s infinite`,
             }}
           />
         ))}
       </div>
 
-      {/* Heading */}
-      <h2 id="skills-heading" className="text-4xl font-extrabold text-center mb-4" style={{ color: "transparent", background: "linear-gradient(90deg,var(--c-cyan),var(--c-pink),var(--c-yellow))", WebkitBackgroundClip: "text", backgroundClip: "text" }}>
-        🛠 My Skills 🛠
-      </h2>
+      {/* Enhanced Heading */}
+      <div className="text-center mb-8" style={{ position: 'relative', zIndex: 10 }}>
+        <h2 id="skills-heading" className="text-5xl md:text-6xl font-extrabold mb-6" style={{ 
+          color: "transparent", 
+          background: "linear-gradient(90deg,var(--c-cyan),var(--c-pink),var(--c-yellow))", 
+          WebkitBackgroundClip: "text", 
+          backgroundClip: "text",
+          textShadow: '0 0 40px rgba(34,211,238,0.3)',
+          position: 'relative'
+        }}>
+          🛠 My Skills 🛠
+          <div style={{ position: 'absolute', inset: '-20px', background: 'radial-gradient(circle, rgba(34,211,238,0.1), transparent)', filter: 'blur(40px)', zIndex: -1 }} />
+        </h2>
 
-      <div className="w-32 h-1 mx-auto mb-6" style={{ background: "linear-gradient(90deg,var(--c-cyan),var(--c-pink),var(--c-yellow))", borderRadius: 9999 }} />
+        <div style={{ 
+          width: 150, 
+          height: 4, 
+          margin: '0 auto 24px', 
+          background: "linear-gradient(90deg,var(--c-cyan),var(--c-pink),var(--c-yellow))", 
+          borderRadius: 9999,
+          boxShadow: '0 0 30px rgba(34,211,238,0.5)',
+          position: 'relative'
+        }}>
+          <div style={{ position: 'absolute', inset: 0, background: 'inherit', filter: 'blur(10px)', borderRadius: 'inherit' }} />
+        </div>
 
-      <p className="text-center text-lg max-w-3xl mx-auto mb-10" style={{ color: "rgba(125,211,252,0.9)" }}>
-        I build full stack web applications with modern tooling, clean architecture, and cinematic UI. Below are the technologies I use in production projects, grouped by role.
-      </p>
+        <p className="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed" style={{ color: "rgba(125,211,252,0.95)" }}>
+          I build full stack web applications with <span style={{ color: 'var(--c-cyan)', fontWeight: 700 }}>modern tooling</span>, <span style={{ color: 'var(--c-pink)', fontWeight: 700 }}>clean architecture</span>, and <span style={{ color: 'var(--c-yellow)', fontWeight: 700 }}>cinematic UI</span>.
+        </p>
+      </div>
 
-      {/* Parallax container for cards */}
+      {/* Parallax Cards Container */}
       <div ref={parallaxRef} style={{ position: "relative", zIndex: 10 }}>
-        <div className="space-y-12 max-w-6xl mx-auto">
+        <div className="space-y-16 max-w-7xl mx-auto">
           {categories.map((category, catIdx) => (
-            <div key={category} className={`reveal-up ${visible ? "visible" : ""}`} style={{ transitionDelay: `${catIdx * 120}ms` }}>
-              <h3 className="text-2xl font-bold text-center mb-2" style={{ color: "var(--c-pink)" }}>
-                {category} Technologies
-              </h3>
-              <p className="text-center text-sm mb-6" style={{ color: "rgba(125,211,252,0.8)" }}>
-                {category === "Frontend" &&
-                  "Responsive UI, state management, accessibility, and performance."}
-                {category === "Backend" &&
-                  "REST APIs, authentication, database design, and server-side logic."}
-                {category === "Tools" &&
-                  "Version control, CI/CD, and deployment platforms used in production."}
-              </p>
+            <div key={category} className={`reveal-up ${visible ? "visible" : ""}`} style={{ transitionDelay: `${catIdx * 150}ms` }}>
+              <div className="text-center mb-8">
+                <h3 className="category-header text-3xl md:text-4xl font-bold mb-3" style={{ color: "var(--c-pink)" }}>
+                  {category} Technologies
+                </h3>
+              </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                 {skills
                   .filter((s) => s.category === category)
                   .map((skill, idx) => {
@@ -350,50 +495,51 @@ export default function Skills() {
                         tabIndex={0}
                         role="group"
                         aria-label={`${skill.name} skill card`}
-                        style={{ minHeight: 140 }}
+                        style={{ minHeight: 180 }}
                         onMouseMove={handleCardMouseMove}
+                        onMouseEnter={() => setHoveredCard(globalIndex)}
+                        onMouseLeave={() => setHoveredCard(null)}
                       >
-                        {/* Tooltip */}
-                        <div className="skill-tooltip" role="status" aria-hidden="true">
-                          {skill.percent}% proficiency — used across live projects
-                        </div>
+                        {/* Orbiting Particles */}
+                        {hoveredCard === globalIndex && (
+                          <div className="orbit-container">
+                            <div className="orbit-particle" style={{ animationDelay: '0s' }} />
+                            <div className="orbit-particle" style={{ animationDelay: '1s' }} />
+                            <div className="orbit-particle" style={{ animationDelay: '2s' }} />
+                            <div className="orbit-particle" style={{ animationDelay: '3s' }} />
+                          </div>
+                        )}
 
-                        {/* Aurora glow background */}
-                        <div style={{ position: "absolute", inset: 0, opacity: 0.06, background: "radial-gradient(circle at 10% 10%, rgba(34,211,238,0.06), transparent 10%), radial-gradient(circle at 90% 90%, rgba(236,72,153,0.04), transparent 10%)", filter: "blur(18px)", pointerEvents: "none" }} />
+                        {/* Aurora Glow */}
+                        <div style={{ 
+                          position: "absolute", 
+                          inset: 0, 
+                          opacity: 0.08, 
+                          background: "radial-gradient(circle at 15% 15%, rgba(34,211,238,0.15), transparent 30%), radial-gradient(circle at 85% 85%, rgba(236,72,153,0.12), transparent 30%)", 
+                          filter: "blur(30px)", 
+                          pointerEvents: "none",
+                          zIndex: 0
+                        }} />
 
                         {/* Content */}
                         <div style={{ position: "relative", zIndex: 2 }}>
-                          <p className="neon-text" style={{ color: skill.color, fontSize: 18, marginBottom: 6 }}>
+                          <p className="neon-text" data-text={skill.name} style={{ color: skill.color, fontSize: 20, marginBottom: 4, fontWeight: 800 }}>
                             {skill.name}
                           </p>
-                          <p style={{ color: "rgba(125,211,252,0.85)", fontSize: 13, marginBottom: 12 }}>Applied in projects</p>
+                          <p style={{ color: "rgba(125,211,252,0.9)", fontSize: 13, marginBottom: 12, fontWeight: 500, letterSpacing: '0.02em', textTransform: 'uppercase', opacity: 0.8 }}>
+                            Production Ready
+                          </p>
 
-                          {/* Progress */}
-                          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                            <div style={{ flex: 1 }}>
-                              <div className="progress-track" aria-hidden="true">
-                                <div
-                                  ref={(el) => (progressRefs.current[globalIndex] = el)}
-                                  className="progress-fill"
-                                  data-target={skill.percent}
-                                  style={{
-                                    background: `linear-gradient(90deg, ${skill.color}, rgba(255,255,255,0.06))`,
-                                    position: "relative",
-                                  }}
-                                />
-                              </div>
-                            </div>
-
-                            <div style={{ minWidth: 48, textAlign: "right", fontWeight: 700, color: "rgba(255,255,255,0.9)" }}>
-                              {skill.percent}%
-                            </div>
-                          </div>
-
-                          {/* Animated skill badge */}
-                          <div className="skill-badge" style={{ marginTop: 12 }}>
-                            <span style={{ fontSize: 11, color: "rgba(125,211,252,0.7)", fontWeight: 600, textTransform: "uppercase", letterSpacing: 1.2 }}>
-                              Production Ready
-                            </span>
+                          {/* Technical Details (Replacing Progress Bar) */}
+                          <div className="pt-3 border-t border-white/5">
+                            <p style={{ 
+                                color: "rgba(226, 232, 240, 0.85)", 
+                                fontSize: 14, 
+                                lineHeight: '1.6',
+                                fontWeight: 400
+                              }}>
+                              {skill.details}
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -404,11 +550,6 @@ export default function Skills() {
           ))}
         </div>
       </div>
-
-      {/* Footer prompt */}
-      <p className="mt-12 text-center text-sm" style={{ color: "rgba(125,211,252,0.85)" }}>
-        ⬇️ Scroll down to explore my Projects...
-      </p>
     </section>
   );
 }

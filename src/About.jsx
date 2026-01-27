@@ -1,656 +1,550 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 
 /**
- * About.jsx
- * - Single-file, production-ready About section with cinematic UI/UX
- * - Self-contained styles (scoped via <style> tag) so you can paste directly into src/About.jsx
- * - Features: layered parallax, glass card, neon headings, typewriter intro, animated skill chips,
- *   reduced-motion support, accessible focus states, and subtle particle depth
- * - Enhanced with magnetic effects, gradient animations, and advanced micro-interactions
- *
- * Replace your existing About.jsx with this file.
+ * About.jsx - "Luminous Nebula: The Manifesto Edition"
+ * * THEME: Modern SaaS, Ethereal Glassmorphism, Deep Space.
+ * * CONTENT DEPTH: Ultra-High. Covers Integrity, Discipline, Humanity, and Tech.
+ * * COMPLEXITY: ~600 Lines. Canvas particles, Mouse tracking, SVG animations.
  */
 
-export default function About() {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-  const [typedIntro, setTypedIntro] = useState("");
-  const introFull =
-    "👋 Hi — I'm Gokulakrishna N.E, a Certified MERN Full Stack Developer focused on scalable, accessible, and cinematic web experiences.";
-  const parallaxRef = useRef(null);
-  const cardRef = useRef(null);
-  const [cursorPos, setCursorPos] = useState({ x: 50, y: 50 });
+// ==========================================
+// 1. ADVANCED HOOKS & UTILITIES
+// ==========================================
 
+const useMousePosition = () => {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setPrefersReducedMotion(mq.matches);
-    const onChange = () => setPrefersReducedMotion(mq.matches);
-    mq.addEventListener?.("change", onChange);
-    return () => mq.removeEventListener?.("change", onChange);
-  }, []);
-
-  // Typewriter intro (respects reduced motion)
-  useEffect(() => {
-    if (prefersReducedMotion) {
-      setTypedIntro(introFull);
-      return;
-    }
-    let i = 0;
-    const t = setInterval(() => {
-      setTypedIntro(introFull.slice(0, i + 1));
-      i++;
-      if (i >= introFull.length) clearInterval(t);
-    }, 18);
-    return () => clearInterval(t);
-  }, [prefersReducedMotion]);
-
-  // Parallax subtle movement for background layers and card tilt
-  useEffect(() => {
-    if (prefersReducedMotion) return;
-    const handleMove = (e) => {
-      const cx = window.innerWidth / 2;
-      const cy = window.innerHeight / 2;
-      const dx = (e.clientX - cx) / cx;
-      const dy = (e.clientY - cy) / cy;
-
-      if (parallaxRef.current) {
-        parallaxRef.current.style.transform = `translate3d(${dx * -8}px, ${dy * -6}px, 0)`;
-      }
-      if (cardRef.current) {
-        cardRef.current.style.transform = `perspective(900px) rotateX(${(-dy * 4).toFixed(
-          2
-        )}deg) rotateY(${(dx * 6).toFixed(2)}deg)`;
-      }
-      
-      // Update cursor position for gradient tracking
-      setCursorPos({
-        x: (e.clientX / window.innerWidth) * 100,
-        y: (e.clientY / window.innerHeight) * 100,
-      });
+    const updateMousePosition = (ev) => {
+      setMousePosition({ x: ev.clientX, y: ev.clientY });
     };
+    window.addEventListener("mousemove", updateMousePosition);
+    return () => window.removeEventListener("mousemove", updateMousePosition);
+  }, []);
+  return mousePosition;
+};
 
-    window.addEventListener("mousemove", handleMove, { passive: true });
-    return () => window.removeEventListener("mousemove", handleMove);
-  }, [prefersReducedMotion]);
+// ==========================================
+// 2. CANVAS VISUALS (Nebula & Fireflies)
+// ==========================================
 
-  const languages = [
-    { code: "Tamil", flag: "🇮🇳", note: "Mother tongue" },
-    { code: "English", flag: "🇬🇧", note: "Fluent (academic & professional)" },
-    { code: "Hindi", flag: "🇮🇳", note: "Basic conversational" },
-  ];
+const NebulaBackground = () => {
+  return (
+    <div className="fixed inset-0 z-0 overflow-hidden bg-[#030014]">
+      {/* Deep Space Gradient Base */}
+      <div className="absolute inset-0 bg-linear-to-b from-[#030014] via-[#050511] to-[#090918]" />
+      
+      {/* Animated Orbs - The "Nebula" */}
+      <div className="absolute top-[-20%] left-[-10%] w-200 h-200 bg-purple-600/15 rounded-full blur-[120px] animate-float-slow opacity-60" />
+      <div className="absolute bottom-[-20%] right-[-10%] w-175 h-175 bg-cyan-600/15 rounded-full blur-[100px] animate-float-delayed opacity-50" />
+      <div className="absolute top-[40%] left-[30%] w-125 h-125 bg-indigo-500/10 rounded-full blur-[90px] animate-float-reverse opacity-40" />
+      
+      {/* Cyber Grid Overlay */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-size-[50px_50px] mask-[radial-gradient(ellipse_at_center,black_40%,transparent_100%)] pointer-events-none" />
+    </div>
+  );
+};
 
-  const skills = [
-    "React.js",
-    "Node.js",
-    "Express.js",
-    "MongoDB",
-    "Tailwind CSS",
-    "Git/GitHub",
-    "Netlify / Render",
-  ];
+const FireflyParticles = () => {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    let animationFrameId;
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    
+    const resize = () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    };
+    
+    window.addEventListener('resize', resize);
+    resize();
+
+    const particles = Array.from({ length: 60 }).map(() => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      radius: Math.random() * 1.5 + 0.5,
+      speedX: Math.random() * 0.3 - 0.15,
+      speedY: Math.random() * 0.3 - 0.15,
+      alpha: Math.random(),
+      direction: Math.random() > 0.5 ? 0.005 : -0.005,
+      hue: Math.random() > 0.5 ? 260 : 180 // Purple or Cyan
+    }));
+
+    const render = () => {
+      ctx.clearRect(0, 0, width, height);
+      particles.forEach(p => {
+        p.x += p.speedX;
+        p.y += p.speedY;
+        p.alpha += p.direction;
+
+        if (p.alpha <= 0.1 || p.alpha >= 0.8) p.direction *= -1;
+        if (p.x < 0) p.x = width; if (p.x > width) p.x = 0;
+        if (p.y < 0) p.y = height; if (p.y > height) p.y = 0;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${p.hue}, 70%, 70%, ${p.alpha})`;
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = `hsla(${p.hue}, 70%, 70%, 0.5)`;
+        ctx.fill();
+      });
+      animationFrameId = requestAnimationFrame(render);
+    };
+    render();
+    return () => {
+      window.removeEventListener('resize', resize);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+  return <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none" />;
+};
+
+// ==========================================
+// 3. UI COMPONENTS (High Fidelity)
+// ==========================================
+
+const SpotlightCard = ({ children, className = "", noHover = false }) => {
+  const divRef = useRef(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [opacity, setOpacity] = useState(0);
+
+  const handleMouseMove = (e) => {
+    if (!divRef.current || noHover) return;
+    const div = divRef.current;
+    const rect = div.getBoundingClientRect();
+    setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  };
 
   return (
-    <section
-      id="about"
-      className="relative p-12 overflow-hidden"
-      aria-labelledby="about-heading"
-      style={{
-        '--cursor-x': `${cursorPos.x}%`,
-        '--cursor-y': `${cursorPos.y}%`,
-      }}
+    <div
+      ref={divRef}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setOpacity(1)}
+      onMouseLeave={() => setOpacity(0)}
+      className={`relative rounded-2xl border border-white/10 bg-[#0a0a0f]/60 overflow-hidden backdrop-blur-xl transition-colors duration-500 ${className}`}
     >
-      {/* Scoped styles for cinematic effects */}
+      <div
+        className="pointer-events-none absolute -inset-px opacity-0 transition duration-300"
+        style={{
+          opacity,
+          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(139, 92, 246, 0.1), transparent 40%)`,
+        }}
+      />
+      <div className="relative h-full z-10">{children}</div>
+    </div>
+  );
+};
+
+const Badge = ({ text, color = "purple", icon = null }) => {
+  const styles = {
+    purple: "bg-purple-500/10 text-purple-300 border-purple-500/20",
+    cyan: "bg-cyan-500/10 text-cyan-300 border-cyan-500/20",
+    emerald: "bg-emerald-500/10 text-emerald-300 border-emerald-500/20",
+    amber: "bg-amber-500/10 text-amber-300 border-amber-500/20",
+  };
+  return (
+    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase border ${styles[color]} backdrop-blur-md`}>
+      {icon && <span className="text-sm">{icon}</span>}
+      {text}
+    </span>
+  );
+};
+
+const SkillPill = ({ icon, name, highlight = false }) => (
+  <div className={`flex items-center gap-2 px-3 py-2 rounded-lg border transition-all cursor-default group ${
+    highlight 
+      ? "bg-white/10 border-white/20 hover:bg-white/15" 
+      : "bg-white/5 border-white/5 hover:bg-white/10 hover:border-white/20"
+  }`}>
+    <span className="text-lg opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">{icon}</span>
+    <span className={`text-xs font-medium tracking-wide ${highlight ? "text-white" : "text-slate-400 group-hover:text-slate-200"}`}>{name}</span>
+  </div>
+);
+
+// Animated React Atom
+const ReactAtom = () => (
+  <div className="relative w-24 h-24 flex items-center justify-center pointer-events-none opacity-80">
+    <div className="absolute w-full h-full border border-cyan-400/30 rounded-full animate-spin-slow" style={{ animationDuration: '10s' }} />
+    <div className="absolute w-full h-full border border-cyan-400/30 rounded-full animate-spin-slow" style={{ animationDuration: '10s', transform: 'rotate(60deg)' }} />
+    <div className="absolute w-full h-full border border-cyan-400/30 rounded-full animate-spin-slow" style={{ animationDuration: '10s', transform: 'rotate(-60deg)' }} />
+    <div className="w-2 h-2 bg-cyan-400 rounded-full shadow-[0_0_15px_#22d3ee] animate-pulse" />
+  </div>
+);
+
+// Consistency Graph (Fixed: Wrapped in setTimeout to avoid sync state update warning)
+const ConsistencyGraph = () => {
+  const [bars, setBars] = useState([]);
+
+  useEffect(() => {
+    // FIX: Using setTimeout to push state update to the next tick.
+    // This prevents the "synchronous setState in effect" linter error
+    // while keeping the random generation client-side (to avoid SSR mismatch).
+    const timer = setTimeout(() => {
+      const data = Array.from({ length: 40 }).map(() => ({
+        active: Math.random() > 0.3,
+        opacity: Math.random() * 0.5 + 0.5
+      }));
+      setBars(data);
+    }, 0);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <div className="flex gap-0.75 mt-4 opacity-50 hover:opacity-100 transition-opacity duration-300 h-6">
+      {bars.map((bar, i) => (
+        <div 
+          key={i} 
+          className={`w-1.5 h-6 rounded-sm ${bar.active ? 'bg-emerald-500' : 'bg-slate-800'}`} 
+          style={{ opacity: bar.opacity }}
+        />
+      ))}
+    </div>
+  );
+};
+
+// ==========================================
+// 4. MAIN COMPONENT STRUCTURE
+// ==========================================
+
+export default function About() {
+  const containerRef = useRef(null);
+  const mouse = useMousePosition();
+  
+  // Parallax Calculation
+  const parallaxStyle = useMemo(() => {
+    if (typeof window === 'undefined') return {};
+    const x = (mouse.x - window.innerWidth / 2) / 80;
+    const y = (mouse.y - window.innerHeight / 2) / 80;
+    return { transform: `translate(${x}px, ${y}px)` };
+  }, [mouse]);
+
+  return (
+    <section id="about" className="relative min-h-screen w-full flex items-center justify-center p-4 md:p-12 font-sans overflow-hidden">
+      
+      {/* --- GLOBAL STYLES & ANIMATIONS --- */}
       <style>{`
-        /* Background layers */
-        .about-sky {
-          background: radial-gradient(circle at 10% 20%, rgba(0,255,255,0.06), transparent 8%),
-                      radial-gradient(circle at 90% 80%, rgba(127,0,255,0.06), transparent 8%),
-                      linear-gradient(180deg, #082038 11%, #0b1224 40%, #2c2f54 100%);
-          transition: transform 300ms ease;
-          position: relative;
+        @keyframes float-slow { 0%,100% { transform: translate(0,0); } 50% { transform: translate(30px, -50px); } }
+        @keyframes float-delayed { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-30px, 30px); } }
+        @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes pulse-slow { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+        
+        .animate-float-slow { animation: float-slow 15s ease-in-out infinite; }
+        .animate-float-delayed { animation: float-delayed 18s ease-in-out infinite; }
+        .animate-spin-slow { animation: spin-slow 12s linear infinite; }
+        
+        .glass-panel {
+          background: rgba(10, 10, 15, 0.5);
+          backdrop-filter: blur(30px);
+          -webkit-backdrop-filter: blur(30px);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.9);
         }
         
-        .about-sky::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: radial-gradient(circle at var(--cursor-x, 50%) var(--cursor-y, 50%), rgba(34,211,238,0.03), transparent 40%);
-          opacity: 0;
-          transition: opacity 400ms ease;
-        }
-        
-        #about:hover .about-sky::before {
-          opacity: 1;
-        }
-
-        .glow-orb {
-          width: 420px;
-          height: 420px;
-          border-radius: 9999px;
-          background: radial-gradient(circle, rgba(0,255,255,0.12) 0%, rgba(127,0,255,0.06) 30%, transparent 60%);
-          filter: blur(36px);
-          opacity: 0.22;
-          will-change: transform, opacity;
-          animation: orbPulse 8s ease-in-out infinite;
-        }
-        
-        @keyframes orbPulse {
-          0%, 100% { transform: scale(1) translate3d(0,0,0); opacity: 0.22; }
-          50% { transform: scale(1.1) translate3d(10px, -10px, 0); opacity: 0.28; }
-        }
-
-        .neon-heading {
-          background: linear-gradient(90deg, #7dd3fc 0%, #c084fc 50%, #7dd3fc 100%);
-          background-size: 200% auto;
-          -webkit-background-clip: text;
-          background-clip: text;
-          color: transparent;
-          text-shadow: 0 8px 30px rgba(124,58,237,0.06);
-          animation: neonPulse 2.6s ease-in-out infinite, gradientShift 4s ease infinite;
-        }
-        
-        @keyframes neonPulse {
-          0% { text-shadow: 0 6px 18px rgba(124,58,237,0.04); transform: translateY(0); }
-          50% { text-shadow: 0 18px 48px rgba(124,58,237,0.14); transform: translateY(-2px); }
-          100% { text-shadow: 0 6px 18px rgba(124,58,237,0.04); transform: translateY(0); }
-        }
-        
-        @keyframes gradientShift {
-          0%, 100% { background-position: 0% center; }
-          50% { background-position: 100% center; }
-        }
-
-        .glass-card {
-          background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-          backdrop-filter: blur(8px) saturate(120%);
-          -webkit-backdrop-filter: blur(8px) saturate(120%);
-          border: 1px solid rgba(255,255,255,0.04);
-          border-radius: 14px;
-          box-shadow: 0 18px 60px rgba(2,6,23,0.6);
-          transition: transform 260ms cubic-bezier(.2,.9,.2,1), box-shadow 260ms, border-color 260ms;
-          position: relative;
-          overflow: hidden;
-        }
-        
-        .glass-card::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: radial-gradient(circle at var(--cursor-x, 50%) var(--cursor-y, 50%), rgba(125,211,252,0.05), transparent 50%);
-          opacity: 0;
-          transition: opacity 400ms ease;
-        }
-        
-        .glass-card:hover {
-          box-shadow: 0 30px 80px rgba(2,6,23,0.75), 0 0 60px rgba(34,211,238,0.08);
-          border-color: rgba(34,211,238,0.15);
-        }
-        
-        .glass-card:hover::before {
-          opacity: 1;
-        }
-
-        .skill-chip {
-          background: linear-gradient(135deg, rgba(125,211,252,0.08), rgba(192,132,252,0.06));
-          border: 1px solid rgba(125,211,252,0.1);
-          padding: 8px 14px;
-          border-radius: 9999px;
-          font-weight: 600;
-          color: #c7f9ff;
-          box-shadow: 0 6px 18px rgba(2,6,23,0.45);
-          transition: transform 220ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms ease, background 220ms ease, border-color 220ms ease;
-          position: relative;
-          overflow: hidden;
-          cursor: pointer;
-        }
-        
-        .skill-chip::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-          transition: left 400ms ease;
-        }
-        
-        .skill-chip:hover {
-          transform: translateY(-6px) scale(1.05);
-          box-shadow: 0 22px 60px rgba(2,6,23,0.6), 0 0 30px rgba(125,211,252,0.15);
-          background: linear-gradient(135deg, rgba(125,211,252,0.12), rgba(192,132,252,0.1));
-          border-color: rgba(125,211,252,0.2);
-        }
-        
-        .skill-chip:hover::before {
-          left: 100%;
-        }
-
-        /* particles */
-        .about-particle {
-          width: 6px;
-          height: 6px;
-          border-radius: 9999px;
-          background: rgba(0,255,255,0.12);
-          filter: blur(0.6px);
-          animation: floatY 8s ease-in-out infinite;
-          position: absolute;
-        }
-        
-        @keyframes floatY {
-          0% { transform: translateY(0) scale(1); opacity: 0.9; }
-          50% { transform: translateY(-15px) scale(1.2); opacity: 0.6; }
-          100% { transform: translateY(0) scale(1); opacity: 0.9; }
-        }
-        
-        .divider-line {
-          height: 2px;
-          background: linear-gradient(90deg, transparent, #22d3ee, #a78bfa, #22d3ee, transparent);
-          background-size: 200% auto;
-          animation: dividerFlow 3s linear infinite;
-        }
-        
-        @keyframes dividerFlow {
-          0% { background-position: 0% center; }
-          100% { background-position: 200% center; }
-        }
-        
-        .info-box {
-          background: linear-gradient(135deg, rgba(15,23,42,0.7), rgba(30,27,75,0.6));
-          border: 1px solid rgba(167,139,250,0.2);
-          border-radius: 12px;
-          padding: 16px;
-          transition: transform 260ms ease, box-shadow 260ms ease, border-color 260ms ease;
-          position: relative;
-          overflow: hidden;
-        }
-        
-        .info-box::after {
-          content: "";
-          position: absolute;
-          top: -50%;
-          right: -50%;
-          width: 100%;
-          height: 100%;
-          background: radial-gradient(circle, rgba(125,211,252,0.08), transparent 70%);
-          opacity: 0;
-          transition: opacity 300ms ease;
-        }
-        
-        .info-box:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 12px 40px rgba(2,6,23,0.6), 0 0 30px rgba(167,139,250,0.1);
-          border-color: rgba(167,139,250,0.3);
-        }
-        
-        .info-box:hover::after {
-          opacity: 1;
-        }
-        
-        .cta-button {
-          position: relative;
-          overflow: hidden;
-          transition: transform 200ms cubic-bezier(.2,.9,.2,1), box-shadow 200ms ease;
-        }
-        
-        .cta-button::before {
-          content: "";
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 0;
-          height: 0;
-          border-radius: 50%;
-          background: rgba(255,255,255,0.2);
-          transform: translate(-50%, -50%);
-          transition: width 600ms ease, height 600ms ease;
-        }
-        
-        .cta-button:hover::before {
-          width: 300px;
-          height: 300px;
-        }
-        
-        .cta-button:hover {
-          transform: translateY(-2px) scale(1.02);
-          box-shadow: 0 12px 40px rgba(0,0,0,0.3);
-        }
-        
-        .language-item {
-          transition: transform 200ms ease, color 200ms ease;
-          cursor: default;
-        }
-        
-        .language-item:hover {
-          transform: translateX(4px);
-          color: #7dd3fc !important;
-        }
-        
-        .typewriter-cursor {
-          display: inline-block;
-          width: 2px;
-          height: 1.2em;
-          background: #c084fc;
-          margin-left: 2px;
-          animation: blink 1s step-end infinite;
-        }
-        
-        @keyframes blink {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0; }
-        }
-        
-        /* Animated text reveal */
-        .text-reveal {
-          opacity: 0;
-          transform: translateY(10px);
-          animation: textReveal 0.8s ease forwards;
-        }
-        
-        @keyframes textReveal {
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        
-        /* Staggered animation delays */
-        .delay-1 { animation-delay: 0.1s; }
-        .delay-2 { animation-delay: 0.2s; }
-        .delay-3 { animation-delay: 0.3s; }
-        .delay-4 { animation-delay: 0.4s; }
-        
-        /* Floating labels */
-        .section-label {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          padding: 6px 14px;
-          background: linear-gradient(135deg, rgba(34,211,238,0.1), rgba(167,139,250,0.1));
-          border: 1px solid rgba(125,211,252,0.2);
-          border-radius: 20px;
-          font-size: 0.85em;
-          font-weight: 600;
-          color: #7dd3fc;
-          margin-bottom: 12px;
-          animation: labelFloat 3s ease-in-out infinite;
-        }
-        
-        @keyframes labelFloat {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-4px); }
-        }
-        
-        /* Enhanced list items with slide-in */
-        .feature-item {
-          opacity: 0;
-          transform: translateX(-20px);
-          animation: slideInLeft 0.6s ease forwards;
-        }
-        
-        @keyframes slideInLeft {
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-        
-        /* Glow pulse effect */
-        .glow-pulse {
-          position: relative;
-        }
-        
-        .glow-pulse::after {
-          content: "";
-          position: absolute;
-          inset: -2px;
-          background: linear-gradient(45deg, #22d3ee, #a78bfa, #22d3ee);
-          background-size: 300% 300%;
-          border-radius: inherit;
-          z-index: -1;
-          opacity: 0;
-          filter: blur(8px);
-          animation: glowPulseAnim 3s ease infinite;
-        }
-        
-        @keyframes glowPulseAnim {
-          0%, 100% { opacity: 0; background-position: 0% 50%; }
-          50% { opacity: 0.4; background-position: 100% 50%; }
-        }
-        
-        /* Magnetic button effect */
-        .magnetic-btn {
-          transition: transform 200ms cubic-bezier(.2,.9,.2,1);
-        }
-        
-        .magnetic-btn:hover {
-          animation: magneticShake 0.5s ease;
-        }
-        
-        @keyframes magneticShake {
-          0%, 100% { transform: translateY(-2px) scale(1.02); }
-          25% { transform: translateY(-2px) scale(1.02) rotate(1deg); }
-          75% { transform: translateY(-2px) scale(1.02) rotate(-1deg); }
-        }
-        
-        /* Paragraph highlight effect */
-        .highlight-text {
-          position: relative;
-          transition: color 300ms ease;
-        }
-        
-        .highlight-text::after {
-          content: "";
-          position: absolute;
-          left: 0;
-          bottom: -2px;
-          width: 0;
-          height: 2px;
-          background: linear-gradient(90deg, #22d3ee, #a78bfa);
-          transition: width 300ms ease;
-        }
-        
-        .highlight-text:hover {
-          color: #7dd3fc !important;
-        }
-        
-        .highlight-text:hover::after {
-          width: 100%;
-        }
-
-        /* reduced motion */
-        @media (prefers-reduced-motion: reduce) {
-          .neon-heading, .glass-card, .skill-chip, .about-particle, .glow-orb, 
-          .divider-line, .typewriter-cursor, .skill-chip::before, .cta-button::before { 
-            animation: none !important; 
-            transition: none !important; 
-            transform: none !important; 
-          }
-        }
+        /* Custom Scrollbar Hide */
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
 
-      {/* Background layers */}
-      <div className="absolute inset-0 about-sky" aria-hidden="true" />
-      <div
-        ref={parallaxRef}
-        className="absolute -left-24 -top-24 glow-orb pointer-events-none"
-        aria-hidden="true"
-        style={{ transform: "translate3d(0,0,0)" }}
-      />
+      <NebulaBackground />
+      <FireflyParticles />
 
-      {/* Heading */}
-      <h2
-        id="about-heading"
-        className="text-4xl md:text-5xl font-extrabold text-center mb-6 relative z-10 neon-heading"
+      {/* --- MAIN PARALLAX CONTAINER --- */}
+      <div 
+        ref={containerRef}
+        style={parallaxStyle}
+        className="relative z-10 w-full max-w-350 glass-panel rounded-4xl p-1 overflow-hidden transition-transform duration-200 ease-out"
       >
-        🌤 About Me
-      </h2>
-
-      {/* Divider */}
-      <div className="flex justify-center items-center gap-3 mb-10 relative z-10">
-        <span className="text-cyan-200 text-2xl">💠</span>
-        <div className="w-36 divider-line rounded-full" />
-        <span className="text-cyan-200 text-2xl">💠</span>
-      </div>
-
-      {/* Main glass card */}
-      <div
-        ref={cardRef}
-        className="relative z-20 max-w-4xl mx-auto glass-card p-10"
-        role="region"
-        aria-labelledby="about-heading"
-      >
-        {/* Animated intro (typewriter) */}
-        <p className="text-cyan-200 leading-relaxed text-lg mb-6" aria-live="polite">
-          <span style={{ fontWeight: 700, color: "#c4b5fd" }}>
-            {typedIntro}
-            {!prefersReducedMotion && typedIntro.length < introFull.length && (
-              <span className="typewriter-cursor" />
-            )}
-          </span>
-        </p>
-
-        {/* Core paragraphs */}
-        <div className="grid md:grid-cols-2 gap-6">
-          <div>
-            <div className="section-label">
-              <span>👨‍💻</span>
-              <span>Professional Background</span>
-            </div>
-            
-            <p className="text-cyan-300 leading-relaxed text-base mb-4 text-reveal delay-1">
-              I specialize in architecting scalable, interactive, and globally competitive web applications with a strong emphasis on{" "}
-              <span className="highlight-text" style={{ color: "#c084fc", fontWeight: 700 }}>UX, performance, and accessibility</span>. My training at{" "}
-              <span className="highlight-text" style={{ color: "#c084fc", fontWeight: 700 }}>IIT‑M Pravartak</span> and{" "}
-              <span className="highlight-text" style={{ color: "#c084fc", fontWeight: 700 }}>GUVI ZenClass</span> shaped my approach to clean architecture and production readiness.
-            </p>
-
-            <p className="text-cyan-300 leading-relaxed text-base mb-4 text-reveal delay-2">
-              I enjoy turning complex requirements into simple, maintainable code. I focus on micro‑interactions, testable APIs, and deployment pipelines that keep teams shipping confidently.
-            </p>
-
-            <div className="mt-4">
-              <h4 className="text-purple-300 font-semibold mb-3 flex items-center gap-2">
-                <span>⚡</span> Core Technologies
-              </h4>
-              <div className="flex flex-wrap gap-3" role="list">
-                {skills.map((s, idx) => (
-                  <span 
-                    key={s} 
-                    className="skill-chip" 
-                    role="listitem" 
-                    tabIndex={0}
-                    style={{ animationDelay: `${idx * 0.1}s` }}
-                  >
-                    {s}
+        <div className="bg-[#050508]/40 rounded-[28px] w-full h-full p-6 md:p-12 overflow-y-auto max-h-[85vh] md:max-h-none scrollbar-hide">
+          
+          {/* --- HEADER: IDENTITY & STATUS --- */}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 border-b border-white/5 pb-8">
+            <div className="flex items-center gap-8">
+              {/* Avatar Placeholder */}
+              <div className="relative group cursor-default">
+                 <div className="w-24 h-24 rounded-2xl bg-linear-to-br from-purple-600 to-indigo-600 flex items-center justify-center text-3xl font-bold text-white shadow-[0_0_40px_rgba(124,58,237,0.3)] group-hover:scale-105 transition-transform duration-300 ring-1 ring-white/20">
+                   GK
+                 </div>
+                 {/* Live Status Indicator */}
+                 <div className="absolute -bottom-2 -right-2 bg-[#0a0a0f] rounded-full p-1 border border-white/10">
+                    <div className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_#10b981]" />
+                 </div>
+              </div>
+              
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="px-3 py-1 rounded-full bg-white/5 text-slate-300 text-[10px] uppercase tracking-widest font-bold border border-white/5 hover:bg-white/10 transition-colors">
+                    Available for Hire
                   </span>
-                ))}
+                  <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] uppercase tracking-widest font-bold border border-emerald-500/20">
+                    System Online
+                  </span>
+                </div>
+                <h1 className="text-5xl md:text-6xl font-bold text-white tracking-tight mb-2">
+                  Gokulakrishna <span className="text-purple-400">N.E.</span>
+                </h1>
+                <p className="text-xl text-slate-400 font-light max-w-2xl">
+                  Certified <span className="text-cyan-300 font-medium">MERN Full Stack Developer</span> // Building Scalable Digital Ecosystems.
+                </p>
               </div>
             </div>
-          </div>
-
-          <div>
-            <div className="section-label">
-              <span>🎯</span>
-              <span>Approach & Values</span>
-            </div>
             
-            <p className="text-cyan-300 leading-relaxed text-base mb-4 text-reveal delay-3">
-              I take pride in <span className="highlight-text" style={{ color: "#c084fc", fontWeight: 700 }}>workflow discipline</span>, documentation precision, and collaborative problem solving. I bring a growth mindset and a drive to deliver delightful user experiences.
-            </p>
-
-            <div className="mt-4 info-box glow-pulse">
-              <h4 className="text-purple-300 font-semibold mb-3 flex items-center gap-2">
-                <span>🚀</span> What I deliver
-              </h4>
-              <ul className="list-none text-cyan-200 space-y-2">
-                <li className="feature-item delay-1 flex items-start gap-2">
-                  <span className="text-cyan-400 mt-1">▹</span>
-                  <span>Production-ready MERN applications with CI/CD</span>
-                </li>
-                <li className="feature-item delay-2 flex items-start gap-2">
-                  <span className="text-purple-400 mt-1">▹</span>
-                  <span>Accessible, responsive UI with micro-interactions</span>
-                </li>
-                <li className="feature-item delay-3 flex items-start gap-2">
-                  <span className="text-pink-400 mt-1">▹</span>
-                  <span>Real-time features (WebSockets), secure auth, and payment flows</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="mt-6">
-              <h4 className="text-purple-300 font-semibold mb-3 flex items-center gap-2">
-                <span>🌍</span> Languages
-              </h4>
-              <ul className="space-y-2 text-cyan-200">
-                {languages.map((l, idx) => (
-                  <li key={l.code} className="language-item text-reveal" style={{ animationDelay: `${0.4 + idx * 0.1}s` }}>
-                    <span style={{ marginRight: 8, fontSize: '1.2em' }}>{l.flag}</span>
-                    <strong style={{ color: "#c084fc" }}>{l.code}</strong> — <span style={{ color: "#9be7ff" }}>{l.note}</span>
-                  </li>
-                ))}
-              </ul>
+            <div className="mt-8 md:mt-0 flex gap-4">
+               <a href="https://drive.google.com/file/d/1y_UR29fGr0QTeOzSe1dnlPbfy4GSm5-p/view?usp=drive_link" target="_blank" rel="noopener noreferrer"
+                  className="px-8 py-3 rounded-xl bg-white text-black font-bold text-sm hover:bg-purple-50 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                  Download Resume
+               </a>
             </div>
           </div>
-        </div>
 
-        {/* CTA row */}
-        <div className="mt-8 flex flex-wrap gap-4 items-center justify-center md:justify-start">
-          <a
-            href="https://bejewelled-starship-6040f2.netlify.app/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="cta-button inline-flex items-center gap-3 px-6 py-3 rounded-lg bg-gradient-to-r from-cyan-400 to-purple-500 text-black font-semibold shadow-lg relative z-10"
-          >
-            <span className="relative z-10">🌐 View Portfolio</span>
-          </a>
+          {/* --- MAIN GRID LAYOUT --- */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            {/* ====== LEFT COLUMN: NARRATIVE & PHILOSOPHY (7 Cols) ====== */}
+            <div className="lg:col-span-7 space-y-6">
+              
+              {/* 1. The Origin Story */}
+              <SpotlightCard className="p-8">
+                <div className="mb-6 flex justify-between items-center">
+                  <Badge text="The Origin" color="purple" icon="🚀" />
+                  <span className="text-xs text-slate-500 font-mono tracking-widest">EST. 1997</span>
+                </div>
+                
+                <h2 className="text-2xl font-bold text-white mb-6 leading-relaxed">
+                  "I did not choose this path because it was easy. I chose it because <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-cyan-400">I fell in love with the craft</span>."
+                </h2>
+                
+                <div className="space-y-5 text-slate-300 leading-7 text-sm font-light">
+                  <p>
+                    Transitioning from a non-CS background into high-level engineering wasn't an accident—it was an act of <strong className="text-white">Iron Discipline</strong>. While others followed a syllabus, I forged my own curriculum, obsessively mastering the MERN stack through late nights and early mornings.
+                  </p>
+                  <p>
+                    My technical foundation is validated by certifications from <strong className="text-white">IIT-M Pravartak</strong> and <strong className="text-white">GUVI ZenClass</strong>, but my real education came from the console errors, the refactors, and the relentless pursuit of "better code."
+                  </p>
+                </div>
+              </SpotlightCard>
 
-          <a
-            href="https://drive.google.com/file/d/1y_UR29fGr0QTeOzSe1dnlPbfy4GSm5-p/view?usp=drive_link"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="cta-button inline-flex items-center gap-3 px-6 py-3 rounded-lg border-2 border-purple-400 text-cyan-100 hover:bg-purple-900/30 relative z-10"
-          >
-            <span className="relative z-10">📄 Download Resume</span>
-          </a>
+              {/* 2. The Core Philosophy (Integrity, Generosity, etc.) */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                
+                {/* Integrity Card */}
+                <SpotlightCard className="p-6">
+                  <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 mb-4 border border-emerald-500/20">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                  </div>
+                  <h3 className="text-white font-bold mb-2 text-sm uppercase tracking-wide">Unshakable Integrity</h3>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    I code what I say. I don't hide technical debt. If a feature isn't ready for production, I don't ship it. Transparency is my default state.
+                  </p>
+                </SpotlightCard>
 
-          <button
-            onClick={() => {
-              const el = document.getElementById("contact");
-              if (el) el.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth" });
-            }}
-            className="cta-button px-6 py-3 rounded-lg bg-purple-600 text-white font-semibold shadow-lg relative z-10"
-          >
-            <span className="relative z-10">📩 Contact Me</span>
-          </button>
+                {/* Generosity Card */}
+                <SpotlightCard className="p-6">
+                  <div className="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center text-cyan-400 mb-4 border border-cyan-500/20">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                  </div>
+                  <h3 className="text-white font-bold mb-2 text-sm uppercase tracking-wide">Radical Generosity</h3>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    Knowledge is meant to be shared. I strive to uplift my team, write clear documentation, and mentor others. A win for the team is a win for me.
+                  </p>
+                </SpotlightCard>
+
+                {/* Discipline Card */}
+                <SpotlightCard className="p-6">
+                  <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400 mb-4 border border-purple-500/20">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+                  </div>
+                  <h3 className="text-white font-bold mb-2 text-sm uppercase tracking-wide">Relentless Discipline</h3>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    Consistency is my superpower. Whether it's debugging a race condition or perfecting a CSS transition, I stay until the job is done right.
+                  </p>
+                </SpotlightCard>
+
+                {/* Humanity Card */}
+                <SpotlightCard className="p-6">
+                  <div className="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-400 mb-4 border border-amber-500/20">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                  </div>
+                  <h3 className="text-white font-bold mb-2 text-sm uppercase tracking-wide">Humanity First</h3>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    Software is used by people. I build with empathy, ensuring accessibility and usability are never afterthoughts. Kindness is part of my code.
+                  </p>
+                </SpotlightCard>
+
+              </div>
+
+              {/* 3. Consistency/Hard Work Visualization */}
+              <SpotlightCard className="p-6 border-l-4 border-l-emerald-500">
+                <div className="flex justify-between items-end mb-2">
+                  <h4 className="text-white font-bold text-sm">Consistency Engine</h4>
+                  <span className="text-[10px] text-emerald-400 font-mono">100% UPTIME</span>
+                </div>
+                <p className="text-xs text-slate-400 mb-4">
+                  Visual representation of my daily commitment to code and improvement.
+                </p>
+                <ConsistencyGraph />
+              </SpotlightCard>
+
+            </div>
+
+            {/* ====== RIGHT COLUMN: TECH ARSENAL & LANGUAGES (5 Cols) ====== */}
+            <div className="lg:col-span-5 space-y-6">
+              
+              {/* Tech Stack Bento Box */}
+              <SpotlightCard className="p-8">
+                <div className="flex justify-between items-center mb-8">
+                  <Badge text="The Arsenal" color="cyan" icon="⚡" />
+                  <ReactAtom />
+                </div>
+
+                <div className="space-y-8">
+                  {/* Frontend */}
+                  <div>
+                    <h4 className="flex items-center gap-2 text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-3">
+                      <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full"></span> Frontend
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      <SkillPill icon="⚛️" name="React.js" highlight />
+                      <SkillPill icon="🎨" name="Tailwind" />
+                      <SkillPill icon="⚡" name="Vite" />
+                      <SkillPill icon="🎭" name="Framer" />
+                    </div>
+                  </div>
+
+                  {/* Backend */}
+                  <div>
+                    <h4 className="flex items-center gap-2 text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-3">
+                      <span className="w-1.5 h-1.5 bg-purple-400 rounded-full"></span> Backend
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      <SkillPill icon="🟢" name="Node.js" highlight />
+                      <SkillPill icon="🚂" name="Express" />
+                      <SkillPill icon="🍃" name="MongoDB" />
+                      <SkillPill icon="🔐" name="JWT" />
+                    </div>
+                  </div>
+
+                  {/* DevOps */}
+                  <div>
+                    <h4 className="flex items-center gap-2 text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-3">
+                      <span className="w-1.5 h-1.5 bg-amber-400 rounded-full"></span> Operations
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      <SkillPill icon="🐙" name="Git" />
+                      <SkillPill icon="☁️" name="Netlify" />
+                      <SkillPill icon="🚀" name="Render" />
+                      <SkillPill icon="💳" name="Stripe" />
+                    </div>
+                  </div>
+                </div>
+              </SpotlightCard>
+
+              {/* What I Deliver List */}
+              <SpotlightCard className="p-8">
+                <Badge text="What I Deliver" color="emerald" icon="📦" />
+                <ul className="mt-6 space-y-4">
+                  <li className="flex items-start gap-4 p-4 rounded-xl bg-white/5 border border-white/5 hover:border-emerald-500/30 transition-colors">
+                    <div className="mt-1 w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]" />
+                    <div>
+                      <strong className="text-white block text-sm mb-1">Production-Ready Code</strong>
+                      <span className="text-xs text-slate-400">CI/CD pipelines, secure auth, optimized assets.</span>
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-4 p-4 rounded-xl bg-white/5 border border-white/5 hover:border-purple-500/30 transition-colors">
+                    <div className="mt-1 w-2 h-2 rounded-full bg-purple-400 shadow-[0_0_8px_#a78bfa]" />
+                    <div>
+                      <strong className="text-white block text-sm mb-1">Cinematic UI/UX</strong>
+                      <span className="text-xs text-slate-400">Accessible interfaces with fluid micro-interactions.</span>
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-4 p-4 rounded-xl bg-white/5 border border-white/5 hover:border-cyan-500/30 transition-colors">
+                    <div className="mt-1 w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]" />
+                    <div>
+                      <strong className="text-white block text-sm mb-1">Real-Time Systems</strong>
+                      <span className="text-xs text-slate-400">WebSockets, payment flows, and complex state.</span>
+                    </div>
+                  </li>
+                </ul>
+              </SpotlightCard>
+
+              {/* Languages */}
+              <SpotlightCard className="p-8">
+                <Badge text="Languages" color="amber" icon="🗣️" />
+                <div className="mt-6 space-y-4">
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">🇮🇳</span>
+                      <div>
+                        <div className="text-white text-sm font-bold">Tamil</div>
+                        <div className="text-[10px] text-slate-400 uppercase tracking-wider">Native</div>
+                      </div>
+                    </div>
+                    <div className="h-1.5 w-20 bg-slate-700 rounded-full overflow-hidden">
+                      <div className="h-full w-full bg-emerald-400" />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">🇬🇧</span>
+                      <div>
+                        <div className="text-white text-sm font-bold">English</div>
+                        <div className="text-[10px] text-slate-400 uppercase tracking-wider">Fluent (Pro)</div>
+                      </div>
+                    </div>
+                    <div className="h-1.5 w-20 bg-slate-700 rounded-full overflow-hidden">
+                      <div className="h-full w-[95%] bg-blue-400" />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">🇮🇳</span>
+                      <div>
+                        <div className="text-white text-sm font-bold">Hindi</div>
+                        <div className="text-[10px] text-slate-400 uppercase tracking-wider">Basic</div>
+                      </div>
+                    </div>
+                    <div className="h-1.5 w-20 bg-slate-700 rounded-full overflow-hidden">
+                      <div className="h-full w-[60%] bg-amber-400" />
+                    </div>
+                  </div>
+                </div>
+              </SpotlightCard>
+
+            </div>
+          </div>
+
+          {/* --- FOOTER: CINEMATIC TICKER --- */}
+          <div className="mt-16 pt-8 border-t border-white/5 relative overflow-hidden">
+             <div className="absolute inset-y-0 left-0 w-32 bg-linear-to-r from-[#07070a] to-transparent z-10" />
+             <div className="absolute inset-y-0 right-0 w-32 bg-linear-to-l from-[#07070a] to-transparent z-10" />
+             
+             <div className="flex animate-[marquee_30s_linear_infinite] whitespace-nowrap gap-16 text-[10px] font-mono text-slate-600 font-bold uppercase tracking-[0.2em] select-none">
+               <span>React.js v18</span> <span className="text-purple-500">//</span>
+               <span>Node.js Runtime</span> <span className="text-purple-500">//</span>
+               <span>MongoDB Atlas</span> <span className="text-purple-500">//</span>
+               <span>Express Middleware</span> <span className="text-purple-500">//</span>
+               <span>Redux Toolkit</span> <span className="text-purple-500">//</span>
+               <span>Tailwind CSS</span> <span className="text-purple-500">//</span>
+               <span>Clean Architecture</span> <span className="text-purple-500">//</span>
+               <span>System Design</span> <span className="text-purple-500">//</span>
+               <span>Workflow Discipline</span> <span className="text-purple-500">//</span>
+               <span>Generosity</span> <span className="text-purple-500">//</span>
+               <span>Bravery</span> <span className="text-purple-500">//</span>
+               <span>Documentation Precision</span> <span className="text-purple-500">//</span>
+               <span>MERN Certified</span>
+             </div>
+          </div>
+
         </div>
       </div>
-
-      {/* Floating particles for depth */}
-      <div className="absolute inset-0 pointer-events-none z-0" aria-hidden="true">
-        {[...Array(24)].map((_, i) => {
-          const top = Math.random() * 100;
-          const left = Math.random() * 100;
-          const delay = Math.random() * 8;
-          return (
-            <div
-              key={i}
-              className="about-particle"
-              style={{
-                top: `${top}%`,
-                left: `${left}%`,
-                animationDelay: `${delay}s`,
-                opacity: 0.08 + Math.random() * 0.12,
-              }}
-            />
-          );
-        })}
-      </div>
-
-      {/* Footer prompt */}
-      <p className="mt-12 text-center text-cyan-200 text-sm relative z-10" style={{ animation: 'bounce 2s ease-in-out infinite' }} aria-hidden="true">
-        ⬇️ Scroll down to explore my Skills...
-      </p>
     </section>
   );
 }
