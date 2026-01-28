@@ -105,7 +105,6 @@ export default function Projects() {
   const [hoveredCard, setHoveredCard] = useState(null);
   const [particles, setParticles] = useState([]);
 
-  // FIX: Generate random particles in useEffect to ensure purity
   useEffect(() => {
     const timer = setTimeout(() => {
       const newParticles = Array.from({ length: 30 }).map((_, i) => ({
@@ -136,7 +135,6 @@ export default function Projects() {
   return (
     <section
       id="projects"
-      // FIX: bg-gradient-to-br -> bg-linear-to-br
       className="relative p-6 md:p-12 bg-linear-to-br from-[#071029] via-[#0b1224] to-[#0f1724] text-slate-100 overflow-hidden"
     >
       <style>{`
@@ -363,7 +361,6 @@ export default function Projects() {
         {/* Enhanced Section Heading */}
         <div className="text-center mb-16 animate-slideInUp">
           <div className="inline-block mb-4">
-            {/* FIX: bg-gradient-to-r -> bg-linear-to-r */}
             <span className="px-6 py-2 rounded-full bg-linear-to-r from-yellow-900/40 to-orange-900/40 border border-yellow-500/30 text-yellow-300 font-bold tracking-wider text-xs uppercase backdrop-blur-sm">
               ✨ Portfolio Showcase
             </span>
@@ -371,7 +368,6 @@ export default function Projects() {
 
           <h2 className="text-5xl md:text-7xl font-extrabold mb-6 relative inline-block">
             <span
-              // FIX: bg-gradient-to-r -> bg-linear-to-r
               className="text-transparent bg-clip-text bg-linear-to-r from-yellow-300 via-orange-400 to-red-400"
               style={{
                 backgroundSize: "200% 200%",
@@ -380,7 +376,6 @@ export default function Projects() {
             >
               🌆 Highlighted Projects
             </span>
-            {/* FIX: bg-gradient-to-r -> bg-linear-to-r */}
             <div className="absolute -inset-6 bg-linear-to-r from-yellow-500/20 via-orange-500/20 to-red-500/20 blur-3xl -z-10 animate-pulse" />
           </h2>
 
@@ -395,7 +390,6 @@ export default function Projects() {
 
           {/* Animated Divider */}
           <div className="relative w-40 h-1 mx-auto mt-8">
-            {/* FIX: bg-gradient-to-r -> bg-linear-to-r */}
             <div className="absolute inset-0 bg-linear-to-r from-yellow-400 via-orange-400 to-red-400 rounded-full" />
             <div className="absolute inset-0 bg-linear-to-r from-yellow-400 via-orange-400 to-red-400 rounded-full blur-lg animate-pulse" />
           </div>
@@ -425,7 +419,6 @@ export default function Projects() {
                     {restaurantProject.stack.map((tech, i) => (
                       <span
                         key={i}
-                        // FIX: bg-gradient-to-r -> bg-linear-to-r
                         className="tech-badge inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-linear-to-r from-pink-900/30 to-purple-900/30 text-pink-100 text-sm font-medium border border-pink-500/30 backdrop-blur-sm shadow-lg"
                         style={{ animationDelay: `${i * 100}ms` }}
                       >
@@ -460,7 +453,6 @@ export default function Projects() {
                     {restaurantProject.highlights.map((h, idx) => (
                       <div
                         key={idx}
-                        // FIX: bg-gradient-to-r -> bg-linear-to-r
                         className="feature-badge flex items-center gap-3 bg-linear-to-r from-slate-800/50 to-slate-700/50 p-4 rounded-xl border border-slate-600 hover:border-yellow-500/50 transition-all duration-300 hover:scale-105 backdrop-blur-sm group"
                         style={{ animationDelay: `${idx * 150}ms` }}
                       >
@@ -522,7 +514,6 @@ export default function Projects() {
           {/* RIGHT: Visual Preview */}
           <aside className="lg:col-span-4 flex flex-col gap-6 animate-slideInRight">
             {/* Visual Card with Orbiting Particles */}
-            {/* FIX: bg-gradient-to-br -> bg-linear-to-br */}
             <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-linear-to-br from-pink-900 to-purple-900 p-1 border border-pink-500/40">
               {/* Orbiting Particles */}
               <div className="absolute top-1/2 left-1/2 w-1 h-1">
@@ -545,13 +536,11 @@ export default function Projects() {
               </div>
 
               <div className="bg-slate-900/90 p-6 rounded-xl h-full backdrop-blur-sm relative">
-                {/* FIX: bg-gradient-to-br -> bg-linear-to-br */}
                 <div className="w-full h-48 mb-6 rounded-xl bg-linear-to-br from-pink-600 via-purple-600 to-purple-700 flex items-center justify-center shadow-2xl relative overflow-hidden group">
                   <FaUtensils
                     className="text-white text-7xl relative z-10 group-hover:scale-110 transition-transform duration-500"
                     style={{ animation: "float 6s ease-in-out infinite" }}
                   />
-                  {/* FIX: bg-gradient-to-r -> bg-linear-to-r */}
                   <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 group-hover:translate-x-full transition-transform duration-1000" />
                 </div>
 
@@ -593,7 +582,6 @@ export default function Projects() {
             </div>
 
             {/* Production Badge */}
-            {/* FIX: bg-gradient-to-r -> bg-linear-to-r */}
             <div className="p-6 rounded-2xl bg-linear-to-r from-slate-800/60 to-slate-700/60 border border-slate-600 backdrop-blur-sm hover:border-green-500/50 transition-all duration-300 hover:scale-105">
               <h4 className="text-green-400 font-semibold mb-3 text-sm flex items-center gap-2">
                 <FaRegCheckCircle className="text-lg" /> Production Ready
@@ -621,7 +609,6 @@ export default function Projects() {
               <div className="flex flex-col h-full">
                 {/* Icon with Glow */}
                 <div className="mb-4">
-                  {/* FIX: bg-gradient-to-br -> bg-linear-to-br */}
                   <div className="relative w-14 h-14 rounded-xl bg-linear-to-br from-slate-700 to-slate-800 flex items-center justify-center mb-4 group-hover:from-yellow-600 group-hover:to-orange-600 transition-all duration-500 group-hover:scale-110">
                     <FaRegImage className="text-slate-300 group-hover:text-white text-2xl relative z-10" />
                     {hoveredCard === project.id && (
@@ -633,7 +620,8 @@ export default function Projects() {
                   </h3>
                 </div>
 
-                <p className="text-slate-400 text-sm mb-4 flex-grow group-hover:text-slate-300 transition-colors">
+                {/* Replaced flex-grow with grow */}
+                <p className="text-slate-400 text-sm mb-4 grow group-hover:text-slate-300 transition-colors">
                   {project.description}
                 </p>
 
@@ -675,7 +663,6 @@ export default function Projects() {
                     href={project.demo}
                     target="_blank"
                     rel="noopener noreferrer"
-                    // FIX: hover:bg-gradient-to-r -> hover:bg-linear-to-r
                     className="flex-1 text-center py-3 rounded-xl bg-slate-700 hover:bg-linear-to-r hover:from-yellow-500 hover:to-orange-500 hover:text-black text-white text-sm font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg relative z-10"
                   >
                     Live Demo

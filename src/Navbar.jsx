@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 
 /**
  * =====================================================================
- * GOKULAKRISHNA'S ULTIMATE CINEMATIC NAVBAR
+ * GOKULAKRISHNA'S ULTIMATE CINEMATIC NAVBAR (V2)
  * =====================================================================
  * FEATURES:
  * 1. HTML5 Canvas Particle System (Starfield/Embers)
@@ -10,6 +10,8 @@ import React, { useEffect, useRef, useState } from "react";
  * 3. Magnetic Button Physics
  * 4. Retro/Vintage Grain Overlay Toggle
  * 5. Smart Scroll Detection
+ * 6. Added CERTIFICATIONS section
+ * 7. Professional Labels
  */
 
 // --- UTILITY: Random Character Generator for Scramble Effect ---
@@ -48,7 +50,7 @@ class Particle {
   }
 }
 
-// --- HOOK: useScrambleText (Fixed Linter Warning) ---
+// --- HOOK: useScrambleText ---
 const useScrambleText = (text, active) => {
   const [displayText, setDisplayText] = useState(text);
   
@@ -74,8 +76,6 @@ const useScrambleText = (text, active) => {
         iteration += 1 / 3; // Speed of decoding
       }, 30);
     } else {
-      // FIX: Wrapped in setTimeout to prevent "synchronous setState" linter error.
-      // This pushes the state update to the next event loop tick.
       const timer = setTimeout(() => {
           setDisplayText(text);
       }, 0);
@@ -189,14 +189,14 @@ const NavLink = ({ item, activeSection, onClick, isRetro }) => {
         onClick={onClick}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        className={`relative group px-5 py-3 rounded-xl flex flex-col items-center justify-center transition-all duration-500 overflow-hidden ${
+        className={`relative group px-4 py-3 rounded-xl flex flex-col items-center justify-center transition-all duration-500 overflow-hidden ${
             isActive ? "bg-white/5" : "hover:bg-white/5"
         }`}
       >
         <span className={`text-xl mb-1 transition-all duration-300 ${isHovered ? "scale-125 -translate-y-1" : ""} ${isActive ? "text-orange-400" : "text-gray-400"}`}>
             {item.icon}
         </span>
-        <span className={`text-xs font-bold tracking-widest uppercase ${isActive ? "text-white" : "text-gray-400"} ${isRetro ? "font-mono" : "font-sans"}`}>
+        <span className={`text-[10px] font-bold tracking-widest uppercase ${isActive ? "text-white" : "text-gray-400"} ${isRetro ? "font-mono" : "font-sans"}`}>
             {displayText}
         </span>
         
@@ -232,12 +232,14 @@ export default function Navbar() {
       setLastScrollY(currentScrollY);
       setIsScrolled(currentScrollY > 20);
 
-      const sections = ["about", "skills", "projects", "contact"];
+      // Added 'certifications' to the tracking list
+      const sections = ["about", "skills", "projects", "certifications", "contact"];
       const current = sections.find(id => {
         const el = document.getElementById(id);
         if (el) {
           const rect = el.getBoundingClientRect();
-          return rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2;
+          // Adjusted detection logic for better accuracy
+          return rect.top <= window.innerHeight / 3 && rect.bottom >= window.innerHeight / 3;
         }
         return false;
       });
@@ -263,11 +265,13 @@ export default function Navbar() {
     }
   };
 
+  // --- UPDATED NAV ITEMS WITH PROFESSIONAL NAMES ---
   const navItems = [
-    { id: "about", label: "ABOUT", icon: "🧬" },
-    { id: "skills", label: "SKILLS", icon: "⚡" },
-    { id: "projects", label: "WORK", icon: "🛸" },
-    { id: "contact", label: "CONTACT", icon: "📡" },
+    { id: "about", label: "About", icon: "🧬" },
+    { id: "skills", label: "Skills", icon: "⚡" },
+    { id: "projects", label: "Project", icon: "🛸" },
+    { id: "certifications", label: "Certifications", icon: "🎖️" }, // New Button
+    { id: "contact", label: "Contact", icon: "📡" },
   ];
 
   return (
@@ -296,7 +300,7 @@ export default function Navbar() {
       <nav
         ref={navRef}
         onMouseMove={handleMouseMove}
-        className={`fixed w-full top-0 z-100 transition-all duration-500 ease-[cubic-bezier(0.65,0,0.35,1)] 
+        className={`fixed w-full top-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.65,0,0.35,1)] 
           ${isHidden ? "-translate-y-full" : "translate-y-0"}
           ${isScrolled ? "nav-container bg-black/80 h-20" : "bg-transparent h-28"}
           ${isRetroMode ? "retro-active" : ""}
@@ -341,7 +345,7 @@ export default function Navbar() {
                 </div>
             </MagneticItem>
 
-            <div className="hidden lg:flex items-center gap-4 bg-black/20 p-2 rounded-2xl border border-white/5 backdrop-blur-md">
+            <div className="hidden lg:flex items-center gap-2 bg-black/20 p-2 rounded-2xl border border-white/5 backdrop-blur-md">
                 {navItems.map((item) => (
                     <NavLink 
                         key={item.id} 
@@ -366,10 +370,10 @@ export default function Navbar() {
                 <MagneticItem>
                     <a
                         href="#contact"
-                        className={`liquid-btn relative px-8 py-3 rounded-xl font-bold text-white text-sm tracking-widest uppercase shadow-2xl flex items-center gap-2 overflow-hidden group ${isRetroMode ? "bg-green-600 font-mono rounded-none" : ""}`}
+                        className={`liquid-btn relative px-6 py-3 rounded-xl font-bold text-white text-sm tracking-widest uppercase shadow-2xl flex items-center gap-2 overflow-hidden group ${isRetroMode ? "bg-green-600 font-mono rounded-none" : ""}`}
                     >
                         <span className="relative z-10 flex items-center gap-2">
-                           Start Project <span className="group-hover:animate-bounce">🚀</span>
+                           Hire Me <span className="group-hover:animate-bounce">🚀</span>
                         </span>
                     </a>
                 </MagneticItem>
@@ -384,6 +388,7 @@ export default function Navbar() {
         </div>
       </nav>
 
+      {/* Mobile Menu */}
       <div className={`fixed inset-0 z-50 bg-black/95 backdrop-blur-xl transition-all duration-500 ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}>
           <div className="absolute top-5 right-5">
               <button onClick={() => setIsOpen(false)} className="text-white text-4xl hover:rotate-90 transition duration-300">✕</button>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { 
   FaEnvelope, 
   FaMapMarkerAlt, 
@@ -7,7 +7,6 @@ import {
   FaCheckCircle, 
   FaCopy,
   FaPaperPlane,
-  FaGlobeAmericas,
   FaNetworkWired,
   FaUserAstronaut
 } from "react-icons/fa";
@@ -16,11 +15,6 @@ import {
  * =====================================================================
  * CONTACT.JSX - "THE HOLOGRAPHIC COMMAND CENTER"
  * =====================================================================
- * * FEATURES:
- * 1. 3D Wireframe Globe (CSS Animation)
- * 2. Magnetic 3D Tilt Cards
- * 3. Copy-to-Clipboard with "Cyber Ripple"
- * 4. Deep Space Nebula Background
  */
 
 // --- UTILITY: Particle Class for Background ---
@@ -111,7 +105,7 @@ const HolographicGlobe = () => {
 };
 
 // --- COMPONENT: 3D Tilt Card ---
-const TiltCard = ({ icon: Icon, title, value, label, onClick }) => {
+const TiltCard = ({ icon: Icon, title, value, onClick }) => {
   const ref = useRef(null);
   const [rotation, setRotation] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
@@ -155,9 +149,9 @@ const TiltCard = ({ icon: Icon, title, value, label, onClick }) => {
       <div className="relative h-full bg-[#0a0a0f] rounded-xl p-8 border border-white/10 overflow-hidden flex flex-col items-center justify-center gap-4 group-active:scale-[0.98] transition-transform">
         
         {/* Background Grid */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-size-[20px_20px] opacity-20" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-size-20 opacity-20" />
 
-        {/* Icon Orb */}
+        {/* Icon Orb - Icon is used here */}
         <div className="relative w-16 h-16 flex items-center justify-center rounded-full bg-white/5 border border-white/10 group-hover:border-cyan-500/50 group-hover:bg-cyan-500/10 transition-colors duration-300">
           <Icon className="text-2xl text-slate-300 group-hover:text-cyan-400 transition-colors" />
           <div className="absolute inset-0 rounded-full border border-white/5 animate-ping opacity-0 group-hover:opacity-20" />
@@ -261,8 +255,8 @@ export default function Contact() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(79,70,229,0.15),transparent)] pointer-events-none" />
       
       {/* Decorative Orbs */}
-      <div className="absolute top-20 left-[-100px] w-96 h-96 bg-purple-600/20 rounded-full blur-[100px] animate-pulse" />
-      <div className="absolute bottom-20 right-[-100px] w-96 h-96 bg-cyan-600/20 rounded-full blur-[100px] animate-pulse delay-1000" />
+      <div className="absolute top-20 -left-25 w-96 h-96 bg-purple-600/20 rounded-full blur-[100px] animate-pulse" />
+      <div className="absolute bottom-20 -right-25 w-96 h-96 bg-cyan-600/20 rounded-full blur-[100px] animate-pulse delay-1000" />
 
       {/* --- MAIN CONTENT --- */}
       <div className="relative z-10 max-w-6xl w-full flex flex-col items-center">
@@ -296,7 +290,6 @@ export default function Contact() {
               icon={FaEnvelope} 
               title="Encrypted Mail" 
               value="gokulakrishna578@gmail.com" 
-              label="Email"
               onClick={(e) => handleCopy("gokulakrishna578@gmail.com", "Email Address", e)}
             />
             
@@ -304,7 +297,6 @@ export default function Contact() {
               icon={FaMapMarkerAlt} 
               title="Base of Operations" 
               value="Erode, Tamil Nadu, IN" 
-              label="Location"
               onClick={(e) => handleCopy("Gobichettipalayam, Erode, Tamil Nadu", "Coordinates", e)}
             />
 
@@ -332,7 +324,7 @@ export default function Contact() {
             </div>
           </div>
 
-          {/* Right Column: Contact Form (Mentor Requirement) */}
+          {/* Right Column: Contact Form */}
           <div className="relative bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-xl">
             <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none" />
             
