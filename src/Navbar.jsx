@@ -2,23 +2,22 @@ import React, { useEffect, useRef, useState } from "react";
 
 /**
  * =====================================================================
- * GOKULAKRISHNA'S ULTIMATE CINEMATIC NAVBAR (V2)
+ * GOKULAKRISHNA'S ULTIMATE CINEMATIC NAVBAR (V3)
  * =====================================================================
  * FEATURES:
- * 1. HTML5 Canvas Particle System (Starfield/Embers)
- * 2. "Hacker" Text Scramble Effect on Hover
+ * 1. HTML5 Canvas Particle System
+ * 2. "Hacker" Text Scramble Effect
  * 3. Magnetic Button Physics
  * 4. Retro/Vintage Grain Overlay Toggle
- * 5. Smart Scroll Detection
- * 6. Added CERTIFICATIONS section
- * 7. Professional Labels
+ * 5. Smart Scroll Detection (Updated for AI Section)
+ * 6. Professional Labels (Profile, Expertise, AI Labs, etc.)
  */
 
 // --- UTILITY: Random Character Generator for Scramble Effect ---
 const CYBER_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$#@%&";
 const randomChar = () => CYBER_CHARS[Math.floor(Math.random() * CYBER_CHARS.length)];
 
-// --- UTILITY: Particle Class (Moved Outside Component) ---
+// --- UTILITY: Particle Class ---
 class Particle {
   constructor(canvasWidth, canvasHeight) {
     this.x = Math.random() * canvasWidth;
@@ -90,7 +89,7 @@ const useScrambleText = (text, active) => {
   return displayText;
 };
 
-// --- COMPONENT: Magnetic Wrapper (Physics Buttons) ---
+// --- COMPONENT: Magnetic Wrapper ---
 const MagneticItem = ({ children, className = "" }) => {
   const ref = useRef(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -101,7 +100,6 @@ const MagneticItem = ({ children, className = "" }) => {
     const middleX = clientX - (left + width / 2);
     const middleY = clientY - (top + height / 2);
 
-    // Physics strength (lower = stronger pull)
     setPosition({ x: middleX * 0.2, y: middleY * 0.2 });
   };
 
@@ -120,7 +118,7 @@ const MagneticItem = ({ children, className = "" }) => {
   );
 };
 
-// --- COMPONENT: Canvas Background (The "Ember" System) ---
+// --- COMPONENT: Canvas Background ---
 const ParticleBackground = ({ isRetro }) => {
   const canvasRef = useRef(null);
 
@@ -131,12 +129,11 @@ const ParticleBackground = ({ isRetro }) => {
 
     const setSize = () => {
       canvas.width = window.innerWidth;
-      canvas.height = 100; // Nav height
+      canvas.height = 100;
     };
     setSize();
     window.addEventListener("resize", setSize);
 
-    // Initialize particles using the external class
     const particles = Array.from({ length: 50 }, () => new Particle(canvas.width, canvas.height));
 
     const animate = () => {
@@ -147,7 +144,6 @@ const ParticleBackground = ({ isRetro }) => {
         p.draw(ctx, isRetro);
       });
       
-      // Constellation Lines
       ctx.strokeStyle = isRetro ? "rgba(255, 100, 0, 0.05)" : "rgba(255, 255, 255, 0.05)";
       for (let i = 0; i < particles.length; i++) {
           for (let j = i; j < particles.length; j++) {
@@ -176,7 +172,7 @@ const ParticleBackground = ({ isRetro }) => {
   return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-0" />;
 };
 
-// --- SUB-COMPONENT: Nav Link with Scramble ---
+// --- SUB-COMPONENT: Nav Link ---
 const NavLink = ({ item, activeSection, onClick, isRetro }) => {
   const [isHovered, setIsHovered] = useState(false);
   const displayText = useScrambleText(item.label, isHovered);
@@ -199,7 +195,6 @@ const NavLink = ({ item, activeSection, onClick, isRetro }) => {
         <span className={`text-[10px] font-bold tracking-widest uppercase ${isActive ? "text-white" : "text-gray-400"} ${isRetro ? "font-mono" : "font-sans"}`}>
             {displayText}
         </span>
-        
         {isActive && (
             <span className="absolute bottom-1 w-1 h-1 bg-orange-500 rounded-full shadow-[0_0_10px_#f97316]" />
         )}
@@ -219,26 +214,25 @@ export default function Navbar() {
 
   const navRef = useRef(null);
 
-  // --- Scroll Logic ---
+  // --- Scroll Logic (Updated to include 'ai') ---
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       
       if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        setIsHidden(true); // Hide on scroll down
+        setIsHidden(true); 
       } else {
-        setIsHidden(false); // Show on scroll up
+        setIsHidden(false); 
       }
       setLastScrollY(currentScrollY);
       setIsScrolled(currentScrollY > 20);
 
-      // Added 'certifications' to the tracking list
-      const sections = ["about", "skills", "projects", "certifications", "contact"];
+      // ✅ ADDED 'ai' TO THE TRACKING LIST
+      const sections = ["about", "skills", "projects", "certifications", "ai", "contact"];
       const current = sections.find(id => {
         const el = document.getElementById(id);
         if (el) {
           const rect = el.getBoundingClientRect();
-          // Adjusted detection logic for better accuracy
           return rect.top <= window.innerHeight / 3 && rect.bottom >= window.innerHeight / 3;
         }
         return false;
@@ -254,7 +248,6 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
-  // --- Spotlight Logic ---
   const handleMouseMove = (e) => {
     if (navRef.current) {
       const rect = navRef.current.getBoundingClientRect();
@@ -265,13 +258,14 @@ export default function Navbar() {
     }
   };
 
-  // --- UPDATED NAV ITEMS WITH PROFESSIONAL NAMES ---
+  // --- UPDATED NAV ITEMS WITH 'AI LABS' ---
   const navItems = [
-    { id: "about", label: "About", icon: "🧬" },
-    { id: "skills", label: "Skills", icon: "⚡" },
-    { id: "projects", label: "Project", icon: "🛸" },
-    { id: "certifications", label: "Certifications", icon: "🎖️" }, // New Button
-    { id: "contact", label: "Contact", icon: "📡" },
+    { id: "about", label: "PROFILE", icon: "🧬" },
+    { id: "skills", label: "EXPERTISE", icon: "⚡" },
+    { id: "projects", label: "PORTFOLIO", icon: "🛸" },
+    { id: "certifications", label: "CREDENTIALS", icon: "🎖️" },
+    { id: "ai", label: "AI LABS", icon: "🧠" }, // ✅ Added AI Labs
+    { id: "contact", label: "CONNECT", icon: "📡" },
   ];
 
   return (
