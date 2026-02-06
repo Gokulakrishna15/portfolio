@@ -1,713 +1,679 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
-  FaStar,
   FaUtensils,
-  FaRegImage,
-  FaRegCheckCircle,
-  FaMoneyCheckAlt,
   FaCalendarAlt,
+  FaMoneyCheckAlt,
   FaUsers,
+  FaStar,
+  FaLaptopCode,
+  FaRegCheckCircle,
+  FaShieldAlt,
+  FaCodeBranch,
+  FaExternalLinkAlt,
+  FaGithub,
+  FaServer,
+  FaLock,
+  FaClock,
+  FaChartLine,
+  FaPaintBrush,
+  FaBolt,
+  FaFileInvoiceDollar,
+  FaRegImage,
+  FaTerminal,
+  FaMemory,
+  FaNetworkWired,
+  FaCheckDouble,
+  FaArrowRight,
+  FaFingerprint
 } from "react-icons/fa";
 import {
   SiReact,
-  SiTailwindcss,
-  SiMongodb,
-  SiExpress,
   SiNodedotjs,
+  SiExpress,
+  SiMongodb,
   SiStripe,
-  SiCloudinary,
   SiSocketdotio,
+  SiRedux,
+  SiTailwindcss,
+  SiCloudinary,
   SiJsonwebtokens,
+  SiDocker,
 } from "react-icons/si";
 
-// Project Data
-const projects = [
-  {
-    id: "restaurant",
-    title: "🍽️ Restaurant Reservation Platform",
-    description:
-      "A production-ready MERN platform for discovering, booking, and reviewing restaurants. Features real-time availability, reservation management, owner dashboards, and Stripe payments.",
-    demo: "https://eclectic-cucurucho-a9fcf2.netlify.app/",
-    github: "https://github.com/Gokulakrishna15/restaurant-reservation-platform",
-    stack: [
-      "React.js",
-      "Node.js",
-      "Express.js",
-      "MongoDB",
-      "Stripe",
-      "Cloudinary",
-      "Socket.io",
+// ==========================================
+// 1. EXTENSIVE MOCK DATA & CONFIG
+// ==========================================
+
+const terminalLogs = [
+  { time: "10:42:01", type: "info", msg: "Server initialized on port 5000" },
+  { time: "10:42:02", type: "success", msg: "MongoDB connection established" },
+  { time: "10:42:05", type: "info", msg: "WebSocket Server: Listening for connections..." },
+  { time: "10:43:12", type: "warn", msg: "Client connected: Socket ID x8d9s9" },
+  { time: "10:43:15", type: "success", msg: "PaymentIntent created: pi_1Gq..." },
+  { time: "10:43:16", type: "info", msg: "Booking confirmed: Table #4" },
+];
+
+const restaurantData = {
+  id: "restaurant",
+  title: "🍽️ Restaurant Reservation Ecosystem",
+  tagline: "A Full-Scale MERN Platform for Real-Time Hospitality Management",
+  description:
+    "This is not just a booking app; it is a complete ecosystem designed to bridge the gap between hungry diners and restaurant managers. It solves the critical industry problem of 'No-Shows' using a deposit system and manages table turnover efficiently with live WebSocket updates.",
+  demo: "https://eclectic-cucurucho-a9fcf2.netlify.app/",
+  github: "https://github.com/Gokulakrishna15/restaurant-reservation-platform",
+  version: "v2.4.0-stable",
+  lastCommit: "Refactored reservation controller for atomic transactions",
+  stack: [
+    { name: "React 18", icon: <SiReact className="text-cyan-400" /> },
+    { name: "Node.js", icon: <SiNodedotjs className="text-green-500" /> },
+    { name: "MongoDB", icon: <SiMongodb className="text-green-400" /> },
+    { name: "Socket.io", icon: <SiSocketdotio className="text-white" /> },
+    { name: "Stripe", icon: <SiStripe className="text-indigo-400" /> },
+    { name: "Docker", icon: <SiDocker className="text-blue-400" /> },
+  ],
+  stats: [
+    { label: "Latency", value: "< 50ms", sub: "Socket Emission" },
+    { label: "Security", value: "PCI-DSS", sub: "Stripe Compliant" },
+    { label: "Uptime", value: "99.99%", sub: "Cluster Mode Active" },
+    { label: "Scale", value: "10k+", sub: "Concurrent Connections" },
+  ],
+  challenges: [
+    {
+      title: "Race Conditions",
+      desc: "Prevented double-booking of tables by implementing MongoDB ACID transactions and optimistic locking mechanisms.",
+      icon: <FaCheckDouble className="text-green-400" />
+    },
+    {
+      title: "State Sync",
+      desc: "Kept 50+ connected clients in sync using a custom Redux middleware that listens to Socket.io events.",
+      icon: <FaNetworkWired className="text-blue-400" />
+    },
+    {
+      title: "Memory Leaks",
+      desc: "Identified and patched unmounted component listeners in the admin dashboard, reducing client memory usage by 40%.",
+      icon: <FaMemory className="text-purple-400" />
+    }
+  ],
+  deepDive: {
+    architecture: [
+      "Implemented the Publisher-Subscriber pattern using Socket.io to push real-time table availability to all connected clients instantly.",
+      "Engineered a dual-layer validation system: Client-side (Yup/Formik) for UX and Server-side (Express-Validator) for data integrity.",
+      "Optimized MongoDB aggregations to calculate analytics (Revenue, Peak Hours) without impacting read/write performance for bookings.",
     ],
-    features: [
-      "Real-time table availability (WebSockets)",
-      "Reservation management: create, modify, cancel",
-      "User reviews with photos & owner responses",
-      "Advanced search (cuisine, price, location)",
-      "Admin dashboard with analytics",
-      "Stripe payment integration for deposits",
-    ],
-    impact:
-      "Helps restaurants digitize reservations, reduce no-shows, and streamline customer experience.",
-    highlights: [
-      { icon: <FaCalendarAlt />, label: "Real-time bookings" },
-      { icon: <FaUsers />, label: "User reviews system" },
-      { icon: <FaMoneyCheckAlt />, label: "Stripe payments" },
+    uiux: [
+      "Glassmorphism Design System: Utilized backdrop-filter and semi-transparent layers to create a modern, depth-rich interface.",
+      "Optimistic UI Updates: The interface reflects booking status immediately while syncing with the server in the background, making the app feel instant.",
+      "Adaptive Dark Mode: A carefully curated color palette that reduces eye strain for restaurant staff working in low-light environments.",
     ],
   },
+};
+
+const oaData = {
+  id: "online-assessment",
+  title: "📝 Online Assessment System",
+  tagline: "Secure, Scalable Exam Management with RBAC",
+  description:
+    "A high-security platform designed to conduct remote examinations. It prioritizes academic integrity through browser-locking mechanisms and separates administrative workflows from student experiences.",
+  demo: "https://effervescent-pothos-c78a1a.netlify.app/",
+  github: "https://github.com/Gokulakrishna15/osback",
+  roles: ["Admin", "Proctor", "Student"],
+  stack: [
+    { name: "Redux", icon: <SiRedux className="text-purple-500" /> },
+    { name: "JWT", icon: <SiJsonwebtokens className="text-pink-500" /> },
+    { name: "Tailwind", icon: <SiTailwindcss className="text-cyan-300" /> },
+  ],
+  securityFeatures: [
+    "HttpOnly Cookies for JWT storage",
+    "CSRF Protection via custom tokens",
+    "Rate Limiting on Login Routes",
+    "Request Validation Middleware"
+  ],
+  features: {
+    admin: [
+      "Create/Edit Exam Papers with Rich Text",
+      "Assign Proctors to specific sessions",
+      "View Global Analytics & Pass Rates",
+      "Manage User Roles & Permissions"
+    ],
+    student: [
+      "Real-time countdown timer (Server Synced)",
+      "Auto-submission on timeout",
+      "Question flagging and review system",
+      "Instant Result generation (Objective)"
+    ]
+  }
+};
+
+const tasksData = [
   {
     id: "password-reset",
-    title: "🔑 Password Reset System",
-    description:
-      "Secure MERN workflow with JWT authentication & email verification.",
+    title: "🔑 Auth & Recovery",
+    desc: "A security microservice focusing on the critical 'Forgot Password' flow. Implements secure token generation, email links, and bcrypt hashing.",
+    tags: ["Security", "Nodemailer", "Bcrypt"],
     demo: "https://password-reset-frontend-prod.netlify.app/",
     github: "https://github.com/Gokulakrishna15/password-reset-frontend",
-    stack: ["React.js", "Node.js", "Express.js", "MongoDB", "JWT"],
-    features: [
-      "Forgot password flow with email verification",
-      "JWT-based secure authentication",
-      "Responsive UI with Tailwind CSS",
-    ],
-    impact: "Provides a professional, secure password recovery workflow.",
+    icon: <FaLock className="text-cyan-400" />
   },
   {
     id: "invoice-builder",
-    title: "🧾 Invoice Builder",
-    description: "Dynamic MERN app for invoice creation & management.",
+    title: "🧾 Invoice Generator",
+    desc: "A utility tool for freelancers. Features dynamic form fields, tax calculations, and client-side PDF generation using React-PDF.",
+    tags: ["React-PDF", "Forms", "Utility"],
     demo: "https://sensational-macaron-af7801.netlify.app/",
     github: "https://github.com/Gokulakrishna15/invoice-builder",
-    stack: ["React.js", "Node.js", "Express.js", "MongoDB"],
-    features: [
-      "Create and manage invoices dynamically",
-      "Download invoices as PDF",
-      "Client and product management",
-    ],
-    impact: "Simplifies billing for freelancers and small businesses.",
+    icon: <FaFileInvoiceDollar className="text-green-400" />
   },
   {
     id: "movies",
-    title: "🎬 Movies Search App",
-    description:
-      "React + Tailwind CSS app using OMDB API with pagination and filters.",
+    title: "🎬 Movie Discovery",
+    desc: "An interface study using the OMDB API. Features debounced searching, infinite scroll pagination, and skeleton loading states.",
+    tags: ["API Integration", "Debouncing", "UI"],
     demo: "https://tangerine-phoenix-243994.netlify.app/",
     github: "https://github.com/Gokulakrishna15/movies-search-app",
-    stack: ["React.js", "Tailwind CSS", "OMDB API"],
-    features: [
-      "Search movies by title",
-      "Pagination for large results",
-      "Filter by year and type",
-    ],
-    impact: "Provides a clean, responsive interface for exploring movies.",
+    icon: <FaRegImage className="text-orange-400" />
   },
 ];
 
-export default function Projects() {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [hoveredCard, setHoveredCard] = useState(null);
-  const [particles, setParticles] = useState([]);
+// ==========================================
+// 2. HELPER COMPONENTS
+// ==========================================
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const newParticles = Array.from({ length: 30 }).map((_, i) => ({
-        id: i,
-        size: Math.random() * 8 + 2,
-        top: Math.random() * 100,
-        left: Math.random() * 100,
-        delay: Math.random() * 3,
-        duration: Math.random() * 4 + 2,
-        color: i % 3 === 0 ? "#fbbf24" : i % 3 === 1 ? "#ec4899" : "#8b5cf6"
-      }));
-      setParticles(newParticles);
-    }, 0);
-    return () => clearTimeout(timer);
-  }, []);
+const SectionBadge = ({ children, color = "blue" }) => (
+  <span
+    className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full border text-[10px] uppercase tracking-[0.2em] font-bold backdrop-blur-md shadow-lg transition-transform hover:scale-105 cursor-default
+    ${
+      color === "pink"
+        ? "bg-pink-900/30 border-pink-500/50 text-pink-300 shadow-pink-900/20"
+        : color === "purple"
+        ? "bg-purple-900/30 border-purple-500/50 text-purple-300 shadow-purple-900/20"
+        : "bg-blue-900/30 border-blue-500/50 text-blue-300 shadow-blue-900/20"
+    }`}
+  >
+    <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${
+      color === "pink" ? "bg-pink-400" : color === "purple" ? "bg-purple-400" : "bg-blue-400"
+    }`} />
+    {children}
+  </span>
+);
+
+const TechPill = ({ icon, name }) => (
+  <div className="group flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0f172a] border border-slate-700 text-slate-300 text-xs font-mono hover:border-slate-500 hover:text-white transition-all cursor-default">
+    <span className="group-hover:scale-110 transition-transform">{icon}</span>
+    <span>{name}</span>
+  </div>
+);
+
+const Terminal = () => (
+  <div className="w-full h-full bg-[#0d1117] rounded-lg border border-slate-800 p-4 font-mono text-xs overflow-hidden flex flex-col shadow-inner">
+    <div className="flex gap-2 mb-3 pb-2 border-b border-slate-800">
+      <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
+      <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
+      <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
+      <span className="ml-2 text-slate-500">server.js — node</span>
+    </div>
+    <div className="flex-grow space-y-1 opacity-80">
+      {terminalLogs.map((log, i) => (
+        <div key={i} className="flex gap-3 animate-pulse" style={{ animationDuration: `${Math.random() * 2 + 1}s` }}>
+          <span className="text-slate-500">[{log.time}]</span>
+          <span className={
+            log.type === 'info' ? 'text-blue-400' : 
+            log.type === 'success' ? 'text-green-400' : 
+            log.type === 'warn' ? 'text-yellow-400' : 'text-slate-300'
+          }>
+            {log.type.toUpperCase()}:
+          </span>
+          <span className="text-slate-300">{log.msg}</span>
+        </div>
+      ))}
+      <div className="flex gap-2 mt-2">
+        <span className="text-green-500">➜</span>
+        <span className="text-cyan-400">~/restaurant-backend</span>
+        <span className="text-slate-400 git-branch">git:(main)</span>
+        <span className="animate-blink block w-2 h-4 bg-slate-400 ml-1" />
+      </div>
+    </div>
+  </div>
+);
+
+const TabButton = ({ active, onClick, children }) => (
+  <button
+    onClick={onClick}
+    className={`relative px-4 py-2 text-sm font-bold uppercase tracking-wider transition-all duration-300
+      ${active ? "text-white" : "text-slate-500 hover:text-slate-300"}
+    `}
+  >
+    {children}
+    {active && (
+      <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-pink-500 to-purple-500" />
+    )}
+  </button>
+);
+
+// ==========================================
+// 3. MAIN COMPONENT
+// ==========================================
+
+export default function Projects() {
+  const [activeTab, setActiveTab] = useState("overview"); 
+  const [oaRole, setOaRole] = useState("admin"); 
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const containerRef = useRef(null);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      setMousePos({ x, y });
     };
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
-  const restaurantProject = projects.find((p) => p.id === "restaurant");
-  const otherProjects = projects.filter((p) => p.id !== "restaurant");
-
   return (
-    <section
-      id="projects"
-      className="relative p-6 md:p-12 bg-linear-to-br from-[#071029] via-[#0b1224] to-[#0f1724] text-slate-100 overflow-hidden"
+    <section 
+      id="projects" // ✅ THIS IS THE CRITICAL FIX FOR SCROLLING
+      ref={containerRef}
+      className="relative w-full py-24 px-4 md:px-8 bg-[#020617] text-slate-200 overflow-hidden font-sans selection:bg-pink-500/30"
     >
-      <style>{`
-        @keyframes gradientShift {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        
-        @keyframes float {
-          0%, 100% { transform: translateY(0) rotate(0deg); }
-          50% { transform: translateY(-20px) rotate(5deg); }
-        }
-        
-        @keyframes pulse3d {
-          0%, 100% { transform: scale(1); filter: brightness(1); }
-          50% { transform: scale(1.1); filter: brightness(1.3); }
-        }
-        
-        @keyframes shimmer {
-          0% { transform: translateX(-100%) rotate(45deg); }
-          100% { transform: translateX(200%) rotate(45deg); }
-        }
-        
-        @keyframes slideInUp {
-          from { opacity: 0; transform: translateY(50px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes slideInLeft {
-          from { opacity: 0; transform: translateX(-50px); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-        
-        @keyframes slideInRight {
-          from { opacity: 0; transform: translateX(50px); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-        
-        @keyframes twinkle {
-          0%, 100% { opacity: 0.2; transform: scale(1); }
-          50% { opacity: 1; transform: scale(1.5); }
-        }
-        
-        @keyframes orbit {
-          0% { transform: rotate(0deg) translateX(60px) rotate(0deg); }
-          100% { transform: rotate(360deg) translateX(60px) rotate(-360deg); }
-        }
-        
-        @keyframes morphBlob {
-          0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
-          50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
-        }
-        
-        @keyframes glow {
-          0%, 100% { box-shadow: 0 0 20px rgba(251, 191, 36, 0.3); }
-          50% { box-shadow: 0 0 40px rgba(251, 191, 36, 0.6), 0 0 60px rgba(236, 72, 153, 0.4); }
-        }
-        
-        @keyframes cardHover {
-          0% { transform: translateY(0) rotateX(0deg); }
-          100% { transform: translateY(-10px) rotateX(5deg); }
-        }
-        
-        .animate-slideInUp { animation: slideInUp 0.8s ease-out; }
-        .animate-slideInLeft { animation: slideInLeft 0.8s ease-out; }
-        .animate-slideInRight { animation: slideInRight 0.8s ease-out; }
-        
-        .project-card {
-          transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-          position: relative;
-        }
-        
-        .project-card::before {
-          content: "";
-          position: absolute;
-          inset: -2px;
-          background: linear-gradient(45deg, #fbbf24, #ec4899, #8b5cf6, #fbbf24);
-          background-size: 300% 300%;
-          border-radius: inherit;
-          opacity: 0;
-          z-index: -1;
-          filter: blur(15px);
-          transition: opacity 0.4s ease;
-          animation: gradientShift 4s ease infinite;
-          pointer-events: none;
-        }
-        
-        .project-card:hover::before {
-          opacity: 0.6;
-        }
-        
-        .project-card::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-          transform: translateX(-100%) rotate(45deg);
-          pointer-events: none;
-        }
-        
-        .project-card:hover::after {
-          animation: shimmer 1s ease;
-        }
-        
-        .feature-badge {
-          position: relative;
-          overflow: hidden;
-        }
-        
-        .feature-badge::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-          transition: left 0.5s ease;
-          pointer-events: none;
-        }
-        
-        .feature-badge:hover::before {
-          left: 100%;
-        }
-        
-        .tech-badge {
-          transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        
-        .tech-badge:hover {
-          transform: translateY(-5px) scale(1.1);
-        }
-        
-        .btn-primary {
-          position: relative;
-          overflow: hidden;
-          background: linear-gradient(45deg, #fbbf24, #f59e0b, #fbbf24);
-          background-size: 200% 200%;
-          animation: gradientShift 3s ease infinite;
-        }
-        
-        .btn-primary::before {
-          content: "";
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 0;
-          height: 0;
-          border-radius: 50%;
-          background: rgba(255, 255, 255, 0.4);
-          transform: translate(-50%, -50%);
-          transition: width 0.6s ease, height 0.6s ease;
-          pointer-events: none;
-        }
-        
-        .btn-primary:hover::before {
-          width: 300px;
-          height: 300px;
-        }
-        
-        .blob {
-          position: absolute;
-          border-radius: 50%;
-          filter: blur(80px);
-          animation: morphBlob 12s ease-in-out infinite, float 15s ease-in-out infinite;
-        }
-        
-        .particle {
-          position: absolute;
-          border-radius: 50%;
-          animation: twinkle 3s ease-in-out infinite;
-        }
-        
-        .orbit-particle {
-          position: absolute;
-          width: 8px;
-          height: 8px;
-          background: linear-gradient(45deg, #fbbf24, #ec4899);
-          border-radius: 50%;
-          animation: orbit 10s linear infinite;
-        }
-        
-        .status-online {
-          animation: pulse3d 2s ease-in-out infinite;
-        }
-        
-        @media (prefers-reduced-motion: reduce) {
-          *, *::before, *::after {
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.01ms !important;
-          }
-        }
-      `}</style>
-
-      {/* Enhanced Background Layers */}
-      <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,#0ea5a4,#7c3aed,transparent)] animate-[pulse_12s_ease-in-out_infinite] pointer-events-none" />
-      <div className="absolute inset-0 opacity-10 bg-[conic-gradient(at_bottom_right,#ffb86b,#ff6b6b,#ffb86b,transparent)] animate-[spin_40s_linear_infinite] pointer-events-none" />
-
-      {/* Morphing Blobs */}
-      <div className="blob absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600 opacity-20" />
-      <div
-        className="blob absolute bottom-1/3 right-1/4 w-80 h-80 bg-yellow-500 opacity-15"
-        style={{ animationDelay: "2s" }}
-      />
-      <div
-        className="blob absolute top-1/2 left-1/2 w-72 h-72 bg-pink-500 opacity-10"
-        style={{ animationDelay: "4s" }}
-      />
-
-      {/* Cursor Glow */}
-      <div
-        className="absolute w-96 h-96 rounded-full pointer-events-none transition-all duration-300 ease-out"
-        style={{
-          left: mousePos.x - 192,
-          top: mousePos.y - 192,
-          background:
-            "radial-gradient(circle, rgba(251, 191, 36, 0.1), transparent)",
-          filter: "blur(50px)",
-        }}
-      />
+      
+      {/* --- DYNAMIC BACKGROUND FX --- */}
+      <div className="absolute inset-0 pointer-events-none">
+         <div 
+            className="absolute top-0 left-1/4 w-[800px] h-[800px] bg-blue-600/5 rounded-full blur-[120px] mix-blend-screen transition-transform duration-1000 ease-out"
+            style={{ transform: `translate(${mousePos.x * 0.02}px, ${mousePos.y * 0.02}px)` }}
+         />
+         <div 
+            className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-purple-600/5 rounded-full blur-[100px] mix-blend-screen transition-transform duration-1000 ease-out"
+            style={{ transform: `translate(${mousePos.x * -0.02}px, ${mousePos.y * -0.02}px)` }}
+         />
+         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+      </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* Enhanced Section Heading */}
-        <div className="text-center mb-16 animate-slideInUp">
-          <div className="inline-block mb-4">
-            <span className="px-6 py-2 rounded-full bg-linear-to-r from-yellow-900/40 to-orange-900/40 border border-yellow-500/30 text-yellow-300 font-bold tracking-wider text-xs uppercase backdrop-blur-sm">
-              ✨ Portfolio Showcase
-            </span>
+        
+        {/* HEADER SECTION */}
+        <div className="text-center mb-28 space-y-8 animate-fade-in-up">
+          <SectionBadge color="blue">Portfolio & Engineering</SectionBadge>
+          <div className="relative inline-block">
+            <h2 className="text-5xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-500 tracking-tighter">
+              Built to Scale.
+            </h2>
+            <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 blur-2xl opacity-20 -z-10" />
+          </div>
+          <p className="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 font-light leading-relaxed">
+            Architecting digital experiences with precision. Below are selected works demonstrating mastery in <span className="text-white font-semibold">Full-Stack Development</span>, <span className="text-white font-semibold">Real-Time Systems</span>, and <span className="text-white font-semibold">Security</span>.
+          </p>
+        </div>
+
+        {/* =======================================================
+            TIER 1: THE FLAGSHIP (RESTAURANT APP)
+           ======================================================= */}
+        <div className="mb-40">
+          <div className="flex items-center gap-3 mb-6 px-2">
+             <div className="p-2 bg-yellow-500/10 rounded-lg border border-yellow-500/20">
+                <FaStar className="text-yellow-400 text-lg animate-pulse" />
+             </div>
+             <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest">
+                Flagship Project • Production Grade
+             </h3>
           </div>
 
-          <h2 className="text-5xl md:text-7xl font-extrabold mb-6 relative inline-block">
-            <span
-              className="text-transparent bg-clip-text bg-linear-to-r from-yellow-300 via-orange-400 to-red-400"
-              style={{
-                backgroundSize: "200% 200%",
-                animation: "gradientShift 5s ease infinite",
-              }}
-            >
-              🌆 Highlighted Projects
-            </span>
-            <div className="absolute -inset-6 bg-linear-to-r from-yellow-500/20 via-orange-500/20 to-red-500/20 blur-3xl -z-10 animate-pulse" />
-          </h2>
+          <div className="group relative rounded-[2.5rem] bg-[#0f172a] p-[1px] shadow-2xl hover:shadow-pink-900/20 transition-all duration-500">
+            <div className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 opacity-30 group-hover:opacity-100 transition-opacity duration-700 blur-sm" />
+            
+            <div className="relative rounded-[2.4rem] bg-[#020617] overflow-hidden border border-slate-800">
+              <div className="grid lg:grid-cols-12 min-h-[850px]">
+                
+                {/* LEFT PANEL */}
+                <div className="lg:col-span-7 p-8 md:p-14 flex flex-col border-r border-slate-800/50 relative bg-[radial-gradient(circle_at_top_left,rgba(236,72,153,0.05),transparent_40%)]">
+                  <div className="mb-10">
+                    <div className="flex items-center gap-3 text-pink-500 font-mono text-xs mb-4">
+                       <FaCodeBranch /> {restaurantData.version}
+                       <span className="w-1 h-1 rounded-full bg-slate-600" />
+                       <span className="text-slate-500 truncate max-w-[200px]">{restaurantData.lastCommit}</span>
+                    </div>
+                    <h2 className="text-4xl md:text-6xl font-extrabold text-white mb-6 leading-tight">
+                      {restaurantData.title}
+                    </h2>
+                    <p className="text-xl text-pink-400 font-medium mb-6 font-mono border-l-4 border-pink-500 pl-4">
+                      {restaurantData.tagline}
+                    </p>
+                    <p className="text-slate-400 leading-relaxed text-lg">
+                      {restaurantData.description}
+                    </p>
+                  </div>
 
-          <p className="text-slate-300 max-w-3xl mx-auto text-lg leading-relaxed">
-            A collection of full-stack MERN applications. The{" "}
-            <span className="text-pink-400 font-bold">
-              Restaurant Platform
-            </span>{" "}
-            is my flagship project, demonstrating complex real-time logic,
-            payments, and user management.
-          </p>
+                  {/* Tech Stack */}
+                  <div className="flex flex-wrap gap-3 mb-12 pb-8 border-b border-slate-800">
+                    {restaurantData.stack.map((tech, i) => (
+                      <TechPill key={i} {...tech} />
+                    ))}
+                  </div>
 
-          {/* Animated Divider */}
-          <div className="relative w-40 h-1 mx-auto mt-8">
-            <div className="absolute inset-0 bg-linear-to-r from-yellow-400 via-orange-400 to-red-400 rounded-full" />
-            <div className="absolute inset-0 bg-linear-to-r from-yellow-400 via-orange-400 to-red-400 rounded-full blur-lg animate-pulse" />
+                  {/* TABS */}
+                  <div className="flex-grow flex flex-col">
+                    <div className="flex gap-8 mb-8 border-b border-slate-800">
+                      {["overview", "architecture", "engineering", "ui/ux"].map((tab) => (
+                        <TabButton key={tab} active={activeTab === tab} onClick={() => setActiveTab(tab)}>
+                          {tab}
+                        </TabButton>
+                      ))}
+                    </div>
+
+                    <div className="flex-grow min-h-[200px] animate-fade-in">
+                      {activeTab === "overview" && (
+                        <div className="grid grid-cols-2 gap-6">
+                          {restaurantData.stats.map((stat, i) => (
+                            <div key={i} className="p-5 rounded-2xl bg-slate-900/50 border border-slate-800 hover:border-slate-600 transition-colors group/stat">
+                              <div className="text-3xl font-black text-white mb-2 group-hover/stat:text-pink-400 transition-colors">{stat.value}</div>
+                              <div className="text-xs text-slate-400 uppercase font-bold tracking-wider">{stat.label}</div>
+                              <div className="text-xs text-slate-500 mt-1 font-mono">{stat.sub}</div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {activeTab === "architecture" && (
+                        <div className="space-y-6">
+                           <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-700 font-mono text-xs text-slate-300">
+                              <span className="text-pink-400">const</span> <span className="text-blue-400">socketHandler</span> = (io) ={">"} {'{'} <br/>
+                              &nbsp;&nbsp;io.on(<span className="text-green-400">'connection'</span>, (socket) ={">"} {'{'} <br/>
+                              &nbsp;&nbsp;&nbsp;&nbsp;socket.join(<span className="text-green-400">'restaurant_id'</span>); <br/>
+                              &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-slate-500">// Real-time updates push</span> <br/>
+                              &nbsp;&nbsp;&nbsp;&nbsp;socket.emit(<span className="text-green-400">'table_update'</span>, payload); <br/>
+                              &nbsp;&nbsp;{'}'}); <br/>
+                              {'}'}
+                           </div>
+                           <ul className="space-y-3">
+                              {restaurantData.deepDive.architecture.map((item, i) => (
+                                <li key={i} className="flex gap-3 text-slate-400 text-sm">
+                                  <FaServer className="mt-1 text-blue-500 flex-shrink-0" /> {item}
+                                </li>
+                              ))}
+                           </ul>
+                        </div>
+                      )}
+
+                      {activeTab === "engineering" && (
+                         <div className="space-y-4">
+                            <h4 className="text-sm font-bold text-white uppercase mb-2">Technical Hurdles Solved</h4>
+                            {restaurantData.challenges.map((c, i) => (
+                               <div key={i} className="flex gap-4 p-4 rounded-xl bg-slate-900/30 border border-slate-800">
+                                  <div className="text-xl mt-1">{c.icon}</div>
+                                  <div>
+                                     <h5 className="font-bold text-white text-sm">{c.title}</h5>
+                                     <p className="text-xs text-slate-400 mt-1 leading-relaxed">{c.desc}</p>
+                                  </div>
+                               </div>
+                            ))}
+                         </div>
+                      )}
+
+                      {activeTab === "ui/ux" && (
+                        <ul className="space-y-4">
+                          {restaurantData.deepDive.uiux.map((item, i) => (
+                            <li key={i} className="flex gap-3 text-slate-400 text-sm leading-relaxed p-3 rounded-lg hover:bg-slate-900/50 transition-colors">
+                              <FaPaintBrush className="mt-1 text-pink-500 flex-shrink-0" />
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex flex-wrap gap-4 mt-12 pt-8 border-t border-slate-800/50">
+                    <a
+                      href={restaurantData.demo}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center gap-3 px-8 py-4 rounded-xl bg-white text-black font-bold shadow-2xl shadow-white/10 hover:bg-slate-200 transition-all hover:scale-105 active:scale-95"
+                    >
+                      <FaExternalLinkAlt className="group-hover:rotate-45 transition-transform" /> 
+                      Launch Live Demo
+                    </a>
+                    <a
+                      href={restaurantData.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 px-8 py-4 rounded-xl bg-slate-900 text-white font-bold border border-slate-700 hover:border-slate-500 hover:bg-slate-800 transition-all"
+                    >
+                      <FaGithub size={20} /> 
+                      View Source Code
+                    </a>
+                  </div>
+                </div>
+
+                {/* RIGHT PANEL */}
+                <div className="lg:col-span-5 relative bg-[#050912] flex flex-col">
+                   <div className="h-1/2 relative overflow-hidden flex items-center justify-center p-8">
+                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(236,72,153,0.1),transparent_70%)]" />
+                      
+                      <div className="relative w-64 h-80 bg-slate-900/90 backdrop-blur-xl rounded-2xl border border-slate-700 shadow-2xl p-5 transform rotate-[-6deg] hover:rotate-0 transition-transform duration-500 z-20 group/card">
+                         <div className="flex justify-between items-center mb-6">
+                            <span className="text-xs font-bold text-slate-500">Table #4</span>
+                            <span className="px-2 py-0.5 rounded bg-green-500/20 text-green-400 text-[10px] font-bold">OCCUPIED</span>
+                         </div>
+                         <div className="space-y-3 mb-6">
+                            <div className="h-2 w-3/4 bg-slate-800 rounded-full animate-pulse"></div>
+                            <div className="h-2 w-1/2 bg-slate-800 rounded-full animate-pulse delay-75"></div>
+                         </div>
+                         <div className="absolute bottom-5 left-5 right-5">
+                            <div className="flex justify-between text-xs font-mono text-slate-400 mb-2">
+                               <span>Total Bill</span>
+                               <span className="text-white">$142.50</span>
+                            </div>
+                            <div className="w-full h-8 bg-blue-600 rounded-lg flex items-center justify-center text-xs font-bold text-white group-hover/card:bg-blue-500 transition-colors">
+                               Process Payment
+                            </div>
+                         </div>
+                      </div>
+                      <div className="absolute w-60 h-72 bg-slate-800/50 rounded-2xl border border-slate-700/50 z-10 transform translate-x-12 translate-y-4 rotate-[6deg]" />
+                   </div>
+                   <div className="h-1/2 border-t border-slate-800 p-6 bg-[#02040a]">
+                      <div className="mb-2 text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                         <FaTerminal /> Server Logs
+                      </div>
+                      <Terminal />
+                   </div>
+                </div>
+
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* FEATURED PROJECT */}
-        <article className="relative grid lg:grid-cols-12 gap-8 items-start mb-20">
-          {/* LEFT: Details */}
-          <div className="lg:col-span-8 animate-slideInLeft">
-            <div className="project-card rounded-3xl bg-slate-900/60 backdrop-blur-xl p-6 md:p-8 shadow-2xl border border-slate-700/50 hover:border-pink-500/50">
-              <div className="flex flex-col gap-6">
-                <div>
-                  {/* Title with Glow */}
-                  <div className="relative inline-block mb-4">
-                    <h3 className="text-3xl md:text-5xl font-bold text-pink-300">
-                      {restaurantProject.title}
-                    </h3>
-                    <div className="absolute -inset-3 bg-pink-500/20 blur-2xl -z-10 animate-pulse" />
+        {/* =======================================================
+            TIER 2: THE SPOTLIGHT (ONLINE ASSESSMENT)
+           ======================================================= */}
+        <div className="mb-32">
+          <div className="flex items-center justify-between mb-10 px-2">
+            <div className="flex items-center gap-3">
+               <FaShieldAlt className="text-purple-500 text-xl" />
+               <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest">
+                  Secure Enterprise Module
+               </h3>
+            </div>
+            <div className="h-px bg-slate-800 flex-grow ml-6 max-w-md hidden md:block"></div>
+          </div>
+
+          <div className="relative rounded-3xl bg-[#0b0f19] border border-slate-800 overflow-hidden group hover:border-purple-500/30 transition-all duration-500">
+             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-900/5 rounded-full blur-[100px] pointer-events-none" />
+             
+             <div className="grid lg:grid-cols-2 gap-0">
+                <div className="p-10 md:p-14 flex flex-col justify-center relative z-10">
+                   <SectionBadge color="purple">EdTech Security</SectionBadge>
+                   <h3 className="text-3xl md:text-5xl font-bold text-white mt-6 mb-4 leading-tight">
+                      {oaData.title}
+                   </h3>
+                   <p className="text-slate-400 leading-relaxed mb-8">
+                      {oaData.description}
+                   </p>
+
+                   <div className="flex gap-4 mb-8">
+                      {oaData.stack.map((t, i) => (
+                         <div key={i} className="flex items-center gap-2 text-xs font-mono text-slate-300 bg-slate-900 border border-slate-800 px-3 py-2 rounded-lg">
+                            {t.icon} {t.name}
+                         </div>
+                      ))}
+                   </div>
+
+                   <div className="bg-slate-900/50 rounded-xl p-6 border border-slate-800 mb-8">
+                      <div className="flex justify-between items-center mb-4">
+                         <span className="text-xs font-bold text-slate-500 uppercase">View Features As:</span>
+                         <div className="flex bg-slate-950 rounded-lg p-1 border border-slate-800">
+                            {["admin", "student"].map(r => (
+                               <button 
+                                  key={r}
+                                  onClick={() => setOaRole(r)}
+                                  className={`px-3 py-1 rounded-md text-xs font-bold capitalize transition-all ${oaRole === r ? "bg-purple-600 text-white shadow-lg" : "text-slate-500 hover:text-slate-300"}`}
+                               >
+                                  {r}
+                               </button>
+                            ))}
+                         </div>
+                      </div>
+                      <ul className="space-y-3 min-h-[120px]">
+                         {oaData.features[oaRole].map((f, i) => (
+                            <li key={i} className="flex items-start gap-3 text-sm text-slate-300 animate-fade-in">
+                               <FaRegCheckCircle className="mt-1 text-purple-500" />
+                               {f}
+                            </li>
+                         ))}
+                      </ul>
+                   </div>
+
+                   <div className="flex gap-4">
+                      <a href={oaData.demo} target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-white border-b-2 border-purple-500 pb-1 hover:text-purple-400 transition-colors">
+                        View Application &rarr;
+                      </a>
+                   </div>
+                </div>
+
+                <div className="bg-[#05070e] border-l border-slate-800 p-10 md:p-14 relative overflow-hidden flex flex-col justify-center">
+                   <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(168,85,247,0.05)_50%,transparent_75%,transparent_100%)] bg-[length:250%_250%] animate-shine pointer-events-none" />
+                   
+                   <h4 className="text-sm font-bold text-white mb-6 flex items-center gap-2">
+                      <FaLock className="text-purple-500" /> Security Architecture
+                   </h4>
+                   
+                   <div className="grid gap-4">
+                      {oaData.securityFeatures.map((feat, i) => (
+                         <div key={i} className="p-4 rounded-xl bg-slate-900/50 border border-slate-800 hover:border-purple-500/30 transition-colors flex items-center gap-4 group/sec">
+                            <div className="w-10 h-10 rounded-lg bg-slate-950 flex items-center justify-center text-slate-500 group-hover/sec:text-purple-400 group-hover/sec:scale-110 transition-all">
+                               {i === 0 ? <FaFingerprint /> : i === 1 ? <FaShieldAlt /> : i === 2 ? <FaBolt /> : <FaCodeBranch />}
+                            </div>
+                            <div>
+                               <div className="text-sm font-bold text-slate-200">{feat}</div>
+                               <div className="text-xs text-slate-500 font-mono">Verified</div>
+                            </div>
+                         </div>
+                      ))}
+                   </div>
+
+                   <div className="mt-8 p-4 rounded-lg bg-[#020408] border border-slate-800 font-mono text-[10px] text-slate-400 opacity-70 overflow-hidden">
+                      <span className="text-purple-400">const</span> verifyToken = (req, res, next) ={">"} {'{'} <br/>
+                      &nbsp;&nbsp;<span className="text-blue-400">const</span> token = req.cookies.access_token; <br/>
+                      &nbsp;&nbsp;<span className="text-pink-400">if</span> (!token) <span className="text-pink-400">return</span> next(createError(401, <span className="text-green-400">"Not Auth"</span>)); <br/>
+                      &nbsp;&nbsp;jwt.verify(token, process.env.JWT_SECRET... <br/>
+                      {'}'}
+                   </div>
+                </div>
+             </div>
+          </div>
+        </div>
+
+        {/* =======================================================
+            TIER 3: THE LAB (TASKS)
+           ======================================================= */}
+        <div>
+          <div className="flex items-center gap-3 mb-10 px-2">
+            <FaLaptopCode className="text-blue-500 text-xl" />
+            <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest">
+              Utility Modules & Interface Studies
+            </h3>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {tasksData.map((task) => (
+              <div 
+                key={task.id} 
+                className="group flex flex-col bg-[#0b0f19] border border-slate-800 rounded-2xl p-6 hover:bg-slate-900 hover:border-slate-600 transition-all duration-300 relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                <div className="relative z-10 flex flex-col h-full">
+                  <div className="flex justify-between items-start mb-6">
+                    <div className="p-3 rounded-xl bg-slate-800/50 border border-slate-700 text-2xl text-slate-300 group-hover:scale-110 group-hover:bg-blue-900/20 group-hover:text-blue-400 transition-all">
+                      {task.icon}
+                    </div>
+                    <div className="flex gap-2">
+                       <a href={task.github} target="_blank" rel="noopener noreferrer" className="p-2 rounded-full hover:bg-slate-800 text-slate-500 hover:text-white transition-colors">
+                          <FaGithub size={18} />
+                       </a>
+                       <a href={task.demo} target="_blank" rel="noopener noreferrer" className="p-2 rounded-full hover:bg-slate-800 text-slate-500 hover:text-white transition-colors">
+                          <FaExternalLinkAlt size={16} />
+                       </a>
+                    </div>
                   </div>
 
-                  <p className="text-slate-300 text-lg leading-relaxed mb-6">
-                    {restaurantProject.description}
+                  <h4 className="text-lg font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">
+                    {task.title}
+                  </h4>
+                  <p className="text-slate-400 text-sm leading-relaxed mb-6 flex-grow">
+                    {task.desc}
                   </p>
 
-                  {/* Enhanced Tech Stack */}
-                  <div className="flex flex-wrap gap-3 mb-8">
-                    {restaurantProject.stack.map((tech, i) => (
-                      <span
-                        key={i}
-                        className="tech-badge inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-linear-to-r from-pink-900/30 to-purple-900/30 text-pink-100 text-sm font-medium border border-pink-500/30 backdrop-blur-sm shadow-lg"
-                        style={{ animationDelay: `${i * 100}ms` }}
-                      >
-                        {tech === "React.js" && (
-                          <SiReact className="text-cyan-300 text-lg" />
-                        )}
-                        {tech === "Node.js" && (
-                          <SiNodedotjs className="text-green-500 text-lg" />
-                        )}
-                        {tech === "Express.js" && (
-                          <SiExpress className="text-gray-300 text-lg" />
-                        )}
-                        {tech === "MongoDB" && (
-                          <SiMongodb className="text-green-400 text-lg" />
-                        )}
-                        {tech === "Stripe" && (
-                          <SiStripe className="text-indigo-400 text-lg" />
-                        )}
-                        {tech === "Cloudinary" && (
-                          <SiCloudinary className="text-blue-300 text-lg" />
-                        )}
-                        {tech === "Socket.io" && (
-                          <SiSocketdotio className="text-white text-lg" />
-                        )}
-                        <span>{tech}</span>
+                  <div className="flex flex-wrap gap-2 mt-auto">
+                    {task.tags.map((tag, i) => (
+                      <span key={i} className="text-[10px] font-bold uppercase text-slate-500 bg-slate-950 border border-slate-800 px-2 py-1 rounded">
+                        {tag}
                       </span>
                     ))}
                   </div>
-
-                  {/* Highlights Grid with Animations */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-                    {restaurantProject.highlights.map((h, idx) => (
-                      <div
-                        key={idx}
-                        className="feature-badge flex items-center gap-3 bg-linear-to-r from-slate-800/50 to-slate-700/50 p-4 rounded-xl border border-slate-600 hover:border-yellow-500/50 transition-all duration-300 hover:scale-105 backdrop-blur-sm group"
-                        style={{ animationDelay: `${idx * 150}ms` }}
-                      >
-                        <div className="text-pink-400 text-2xl group-hover:scale-125 transition-transform duration-300">
-                          {h.icon}
-                        </div>
-                        <div className="text-sm font-medium text-slate-200 group-hover:text-yellow-300 transition-colors">
-                          {h.label}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Features with Enhanced Styling */}
-                  <div className="mb-8 p-6 rounded-2xl bg-slate-800/30 border border-slate-700/50 backdrop-blur-sm">
-                    <h4 className="text-pink-200 font-semibold mb-4 text-lg flex items-center gap-2">
-                      <span className="text-2xl">⚡</span> Core Capabilities
-                    </h4>
-                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 text-slate-300">
-                      {restaurantProject.features.map((feature, i) => (
-                        <li key={i} className="flex items-start gap-3 group">
-                          <span className="text-pink-500 mt-1 text-lg group-hover:scale-125 transition-transform">
-                            ✓
-                          </span>
-                          <span className="group-hover:text-white transition-colors">
-                            {feature}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {/* Enhanced Action Buttons */}
-                  <div className="flex flex-wrap gap-4">
-                    <a
-                      href={restaurantProject.demo}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-primary flex items-center gap-3 px-8 py-4 rounded-xl text-black font-bold shadow-2xl hover:scale-110 transition-all duration-300 relative z-10"
-                    >
-                      <span className="text-xl">🌐</span>
-                      <span className="relative z-10">Live Demo</span>
-                    </a>
-                    <a
-                      href={restaurantProject.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 px-8 py-4 rounded-xl border-2 border-slate-600 bg-slate-800/50 backdrop-blur-sm text-white font-bold hover:bg-slate-700 hover:border-yellow-500 hover:scale-105 transition-all duration-300 relative z-10"
-                    >
-                      <span className="text-xl">🐙</span>
-                      <span>GitHub Repo</span>
-                    </a>
-                  </div>
                 </div>
               </div>
-            </div>
+            ))}
           </div>
-
-          {/* RIGHT: Visual Preview */}
-          <aside className="lg:col-span-4 flex flex-col gap-6 animate-slideInRight">
-            {/* Visual Card with Orbiting Particles */}
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-linear-to-br from-pink-900 to-purple-900 p-1 border border-pink-500/40">
-              {/* Orbiting Particles */}
-              <div className="absolute top-1/2 left-1/2 w-1 h-1">
-                <div
-                  className="orbit-particle"
-                  style={{ animationDelay: "0s" }}
-                />
-                <div
-                  className="orbit-particle"
-                  style={{ animationDelay: "2.5s" }}
-                />
-                <div
-                  className="orbit-particle"
-                  style={{ animationDelay: "5s" }}
-                />
-                <div
-                  className="orbit-particle"
-                  style={{ animationDelay: "7.5s" }}
-                />
-              </div>
-
-              <div className="bg-slate-900/90 p-6 rounded-xl h-full backdrop-blur-sm relative">
-                <div className="w-full h-48 mb-6 rounded-xl bg-linear-to-br from-pink-600 via-purple-600 to-purple-700 flex items-center justify-center shadow-2xl relative overflow-hidden group">
-                  <FaUtensils
-                    className="text-white text-7xl relative z-10 group-hover:scale-110 transition-transform duration-500"
-                    style={{ animation: "float 6s ease-in-out infinite" }}
-                  />
-                  <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 group-hover:translate-x-full transition-transform duration-1000" />
-                </div>
-
-                {/* Enhanced Stats */}
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center pb-3 border-b border-white/10">
-                    <span className="text-xs text-pink-200 uppercase tracking-wider font-bold">
-                      Status
-                    </span>
-                    <span className="status-online text-xs text-green-400 font-bold flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-green-400"></span>
-                      Online
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 transition-colors">
-                    <span className="text-sm text-slate-300 font-medium">
-                      User Rating
-                    </span>
-                    <span className="text-yellow-400 flex items-center gap-2 text-sm font-bold">
-                      <FaStar className="animate-pulse" /> 4.8/5
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 transition-colors">
-                    <span className="text-sm text-slate-300 font-medium">
-                      Bookings
-                    </span>
-                    <span className="text-white text-sm font-bold">
-                      Real-time
-                    </span>
-                  </div>
-                </div>
-
-                <div className="mt-6 text-center">
-                  <span className="text-xs font-mono text-pink-300 bg-pink-900/50 px-4 py-2 rounded-lg border border-pink-500/30 inline-block">
-                    MERN • Socket.io • Stripe
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Production Badge */}
-            <div className="p-6 rounded-2xl bg-linear-to-r from-slate-800/60 to-slate-700/60 border border-slate-600 backdrop-blur-sm hover:border-green-500/50 transition-all duration-300 hover:scale-105">
-              <h4 className="text-green-400 font-semibold mb-3 text-sm flex items-center gap-2">
-                <FaRegCheckCircle className="text-lg" /> Production Ready
-              </h4>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Deployed with CI/CD pipelines. Images optimized via Cloudinary.
-                Secure payment gateways implemented.
-              </p>
-            </div>
-          </aside>
-        </article>
-
-        {/* SECONDARY PROJECTS GRID */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {otherProjects.map((project, idx) => (
-            <div
-              key={project.id}
-              className="project-card group bg-[#0b1224]/80 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 shadow-xl hover:shadow-2xl hover:border-slate-600"
-              style={{
-                animation: `slideInUp 0.8s ease-out ${idx * 0.15}s both`,
-              }}
-              onMouseEnter={() => setHoveredCard(project.id)}
-              onMouseLeave={() => setHoveredCard(null)}
-            >
-              <div className="flex flex-col h-full">
-                {/* Icon with Glow */}
-                <div className="mb-4">
-                  <div className="relative w-14 h-14 rounded-xl bg-linear-to-br from-slate-700 to-slate-800 flex items-center justify-center mb-4 group-hover:from-yellow-600 group-hover:to-orange-600 transition-all duration-500 group-hover:scale-110">
-                    <FaRegImage className="text-slate-300 group-hover:text-white text-2xl relative z-10" />
-                    {hoveredCard === project.id && (
-                      <div className="absolute inset-0 bg-yellow-500/30 rounded-xl blur-xl" />
-                    )}
-                  </div>
-                  <h3 className="text-2xl font-bold text-slate-100 group-hover:text-yellow-300 transition-colors duration-300">
-                    {project.title}
-                  </h3>
-                </div>
-
-                {/* Replaced flex-grow with grow */}
-                <p className="text-slate-400 text-sm mb-4 grow group-hover:text-slate-300 transition-colors">
-                  {project.description}
-                </p>
-
-                {/* Tech Stack */}
-                <div className="mb-4 flex flex-wrap gap-2">
-                  {project.stack.slice(0, 3).map((s, i) => (
-                    <span
-                      key={i}
-                      className="text-xs text-slate-400 bg-slate-900/70 px-3 py-1.5 rounded-lg border border-slate-800 hover:border-yellow-500/50 transition-colors backdrop-blur-sm"
-                    >
-                      {s}
-                    </span>
-                  ))}
-                  {project.stack.length > 3 && (
-                    <span className="text-xs text-slate-400 bg-slate-900/70 px-3 py-1.5 rounded-lg border border-slate-800">
-                      +{project.stack.length - 3}
-                    </span>
-                  )}
-                </div>
-
-                {/* Features */}
-                <ul className="text-xs text-slate-300 space-y-2 mb-6 border-t border-slate-800 pt-4">
-                  {project.features.map((f, i) => (
-                    <li
-                      key={i}
-                      className="flex items-start gap-2 group/item hover:text-yellow-300 transition-colors"
-                    >
-                      <span className="text-yellow-500 group-hover/item:scale-125 transition-transform">
-                        •
-                      </span>
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-
-                {/* Buttons */}
-                <div className="flex gap-3 mt-auto">
-                  <a
-                    href={project.demo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 text-center py-3 rounded-xl bg-slate-700 hover:bg-linear-to-r hover:from-yellow-500 hover:to-orange-500 hover:text-black text-white text-sm font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg relative z-10"
-                  >
-                    Live Demo
-                  </a>
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 text-center py-3 rounded-xl border-2 border-slate-700 text-slate-300 hover:border-slate-500 hover:text-white text-sm transition-all duration-300 hover:scale-105 relative z-10"
-                  >
-                    Code
-                  </a>
-                </div>
-              </div>
-            </div>
-          ))}
         </div>
 
-        {/* Enhanced Footer CTA */}
-        <div className="mt-20 text-center">
-          <p className="text-slate-400 text-sm animate-bounce flex items-center justify-center gap-2">
-            <span className="text-lg">⬇️</span>
-            Scroll down to connect with me...
-          </p>
+        <div className="mt-32 text-center border-t border-slate-800 pt-16">
+           <p className="text-slate-500 font-mono text-sm mb-4">Looking for the code?</p>
+           <a 
+              href="https://github.com/Gokulakrishna15" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-white font-bold hover:text-pink-500 transition-colors"
+           >
+              <FaGithub /> github.com/Gokulakrishna15 <FaArrowRight className="text-xs" />
+           </a>
         </div>
       </div>
-
-      {/* Enhanced Floating Particles */}
-      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-        {particles.map((p) => (
-          <div
-            key={p.id}
-            className="particle absolute"
-            style={{
-              width: `${p.size}px`,
-              height: `${p.size}px`,
-              background: p.color,
-              top: `${p.top}%`,
-              left: `${p.left}%`,
-              animationDelay: `${p.delay}s`,
-              animationDuration: `${p.duration}s`,
-            }}
-          />
-        ))}
-      </div>
+      
+      <style>{`
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #0f172a; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        .animate-blink { animation: blink 1s step-end infinite; }
+        
+        @keyframes float-slow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        .animate-float-slow { animation: float-slow 6s ease-in-out infinite; }
+        
+        @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+        .animate-fade-in { animation: fade-in 0.5s ease-out forwards; }
+        
+        @keyframes fade-in-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in-up { animation: fade-in-up 0.8s ease-out forwards; }
+        
+        @keyframes shine { from { background-position: 200% center; } to { background-position: -200% center; } }
+        .animate-shine { animation: shine 8s linear infinite; }
+      `}</style>
     </section>
   );
 }
