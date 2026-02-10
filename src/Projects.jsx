@@ -24,7 +24,12 @@ import {
   FaNetworkWired,
   FaCheckDouble,
   FaArrowRight,
-  FaFingerprint
+  FaFingerprint,
+  FaGlobe,
+  FaUserShield,
+  FaShoppingCart,
+  FaCreditCard,
+  FaDatabase
 } from "react-icons/fa";
 import {
   SiReact,
@@ -38,6 +43,12 @@ import {
   SiCloudinary,
   SiJsonwebtokens,
   SiDocker,
+  SiNestjs,
+  SiGraphql,
+  SiPrisma,
+  SiNextdotjs,
+  SiTypescript,
+  SiApollographql
 } from "react-icons/si";
 
 // ==========================================
@@ -51,6 +62,15 @@ const terminalLogs = [
   { time: "10:43:12", type: "warn", msg: "Client connected: Socket ID x8d9s9" },
   { time: "10:43:15", type: "success", msg: "PaymentIntent created: pi_1Gq..." },
   { time: "10:43:16", type: "info", msg: "Booking confirmed: Table #4" },
+];
+
+const graphqlLogs = [
+  { time: "14:22:01", type: "info", msg: "GraphQL server ready at port 4000" },
+  { time: "14:22:03", type: "success", msg: "Prisma Client initialized successfully" },
+  { time: "14:22:05", type: "info", msg: "RBAC middleware: Validating user roles..." },
+  { time: "14:23:42", type: "success", msg: "Query: fetchRestaurants - Role: MEMBER" },
+  { time: "14:23:45", type: "warn", msg: "Mutation blocked: Unauthorized role MEMBER" },
+  { time: "14:23:50", type: "success", msg: "Order created: ID ord_x9k2l - User: ADMIN" },
 ];
 
 const restaurantData = {
@@ -144,6 +164,84 @@ const oaData = {
   }
 };
 
+const sloozeData = {
+  id: "slooze-challenge",
+  title: "🍕 Slooze Food Ordering Platform",
+  tagline: "Enterprise-Grade RBAC with GraphQL & Relational Access Control",
+  description:
+    "A sophisticated full-stack food ordering application implementing advanced role-based access control (RBAC) with geographical restrictions. Built with modern technologies to demonstrate enterprise-level architecture patterns and security best practices.",
+  demo: "https://github.com/Gokulakrishna15/slooze-challenge",
+  github: "https://github.com/Gokulakrishna15/slooze-challenge",
+  version: "v1.0.0-production",
+  lastCommit: "Final Submission",
+  stack: [
+    { name: "NestJS", icon: <SiNestjs className="text-red-500" /> },
+    { name: "GraphQL", icon: <SiGraphql className="text-pink-500" /> },
+    { name: "Prisma", icon: <SiPrisma className="text-blue-300" /> },
+    { name: "Next.js", icon: <SiNextdotjs className="text-white" /> },
+    { name: "TypeScript", icon: <SiTypescript className="text-blue-400" /> },
+    { name: "Apollo", icon: <SiApollographql className="text-purple-400" /> },
+  ],
+  roles: [
+    {
+      name: "Admin",
+      color: "red",
+      permissions: ["View Restaurants", "Create Orders", "Checkout & Pay", "Cancel Orders", "Manage Payment Methods"],
+      icon: <FaUserShield />
+    },
+    {
+      name: "Manager",
+      color: "blue",
+      permissions: ["View Restaurants", "Create Orders", "Checkout & Pay", "Cancel Orders"],
+      icon: <FaUsers />
+    },
+    {
+      name: "Member",
+      color: "green",
+      permissions: ["View Restaurants", "Create Orders"],
+      icon: <FaShoppingCart />
+    }
+  ],
+  features: {
+    rbac: [
+      "Role-based access control for all operations",
+      "Country-based restrictions (India/America)",
+      "Hierarchical permission inheritance",
+      "Dynamic authorization middleware"
+    ],
+    backend: [
+      "Type-safe GraphQL API with NestJS",
+      "Prisma ORM for database management",
+      "Custom decorators for role validation",
+      "Comprehensive error handling"
+    ],
+    frontend: [
+      "Server-side rendering with Next.js",
+      "Apollo Client for GraphQL state management",
+      "Type-safe operations with generated types",
+      "Responsive Tailwind UI components"
+    ]
+  },
+  techHighlights: [
+    {
+      title: "GraphQL Architecture",
+      desc: "Leveraged GraphQL's type system to create a strongly-typed API with automatic schema validation and introspection.",
+      icon: <SiGraphql className="text-pink-400" />
+    },
+    {
+      title: "RBAC Implementation",
+      desc: "Designed a flexible role-based access control system using NestJS guards and decorators for declarative authorization.",
+      icon: <FaUserShield className="text-blue-400" />
+    },
+    {
+      title: "Type Safety",
+      desc: "End-to-end type safety from database schema to frontend components using Prisma, TypeScript, and GraphQL code generation.",
+      icon: <SiTypescript className="text-cyan-400" />
+    }
+  ],
+  countries: ["India 🇮🇳", "America 🇺🇸"]
+};
+
 const tasksData = [
   {
     id: "password-reset",
@@ -186,11 +284,13 @@ const SectionBadge = ({ children, color = "blue" }) => (
         ? "bg-pink-900/30 border-pink-500/50 text-pink-300 shadow-pink-900/20"
         : color === "purple"
         ? "bg-purple-900/30 border-purple-500/50 text-purple-300 shadow-purple-900/20"
+        : color === "emerald"
+        ? "bg-emerald-900/30 border-emerald-500/50 text-emerald-300 shadow-emerald-900/20"
         : "bg-blue-900/30 border-blue-500/50 text-blue-300 shadow-blue-900/20"
     }`}
   >
     <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${
-      color === "pink" ? "bg-pink-400" : color === "purple" ? "bg-purple-400" : "bg-blue-400"
+      color === "pink" ? "bg-pink-400" : color === "purple" ? "bg-purple-400" : color === "emerald" ? "bg-emerald-400" : "bg-blue-400"
     }`} />
     {children}
   </span>
@@ -235,6 +335,38 @@ const Terminal = () => (
   </div>
 );
 
+const GraphQLTerminal = () => (
+  <div className="w-full h-full bg-[#0d1117] rounded-lg border border-slate-800 p-4 font-mono text-xs overflow-hidden flex flex-col shadow-inner">
+    <div className="flex gap-2 mb-3 pb-2 border-b border-slate-800">
+      <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
+      <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
+      <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
+      <span className="ml-2 text-slate-500">main.ts — nestjs</span>
+    </div>
+    <div className="flex-grow space-y-1 opacity-80">
+      {graphqlLogs.map((log, i) => (
+        <div key={i} className="flex gap-3 animate-pulse" style={{ animationDuration: `${Math.random() * 2 + 1}s` }}>
+          <span className="text-slate-500">[{log.time}]</span>
+          <span className={
+            log.type === 'info' ? 'text-blue-400' : 
+            log.type === 'success' ? 'text-green-400' : 
+            log.type === 'warn' ? 'text-yellow-400' : 'text-slate-300'
+          }>
+            {log.type.toUpperCase()}:
+          </span>
+          <span className="text-slate-300">{log.msg}</span>
+        </div>
+      ))}
+      <div className="flex gap-2 mt-2">
+        <span className="text-green-500">➜</span>
+        <span className="text-cyan-400">~/slooze-backend</span>
+        <span className="text-slate-400 git-branch">git:(main)</span>
+        <span className="animate-blink block w-2 h-4 bg-slate-400 ml-1" />
+      </div>
+    </div>
+  </div>
+);
+
 const TabButton = ({ active, onClick, children }) => (
   <button
     onClick={onClick}
@@ -256,6 +388,7 @@ const TabButton = ({ active, onClick, children }) => (
 export default function Projects() {
   const [activeTab, setActiveTab] = useState("overview"); 
   const [oaRole, setOaRole] = useState("admin"); 
+  const [sloozeRole, setSloozeRole] = useState(0);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const containerRef = useRef(null);
 
@@ -273,7 +406,7 @@ export default function Projects() {
 
   return (
     <section 
-      id="projects" // ✅ THIS IS THE CRITICAL FIX FOR SCROLLING
+      id="projects"
       ref={containerRef}
       className="relative w-full py-24 px-4 md:px-8 bg-[#020617] text-slate-200 overflow-hidden font-sans selection:bg-pink-500/30"
     >
@@ -489,7 +622,7 @@ export default function Projects() {
         {/* =======================================================
             TIER 2: THE SPOTLIGHT (ONLINE ASSESSMENT)
            ======================================================= */}
-        <div className="mb-32">
+        <div className="mb-40">
           <div className="flex items-center justify-between mb-10 px-2">
             <div className="flex items-center gap-3">
                <FaShieldAlt className="text-purple-500 text-xl" />
@@ -587,7 +720,184 @@ export default function Projects() {
         </div>
 
         {/* =======================================================
-            TIER 3: THE LAB (TASKS)
+            TIER 3: THE ENTERPRISE (SLOOZE CHALLENGE)
+           ======================================================= */}
+        <div className="mb-40">
+          <div className="flex items-center justify-between mb-10 px-2">
+            <div className="flex items-center gap-3">
+               <div className="p-2 bg-emerald-500/10 rounded-lg border border-emerald-500/20">
+                  <FaDatabase className="text-emerald-400 text-lg" />
+               </div>
+               <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest">
+                  Enterprise Architecture • GraphQL + RBAC
+               </h3>
+            </div>
+            <div className="h-px bg-slate-800 flex-grow ml-6 max-w-md hidden md:block"></div>
+          </div>
+
+          <div className="group relative rounded-[2.5rem] bg-[#0f172a] p-[1px] shadow-2xl hover:shadow-emerald-900/20 transition-all duration-500">
+            <div className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 opacity-30 group-hover:opacity-100 transition-opacity duration-700 blur-sm" />
+            
+            <div className="relative rounded-[2.4rem] bg-[#020617] overflow-hidden border border-slate-800">
+              <div className="grid lg:grid-cols-12 min-h-[850px]">
+                
+                {/* LEFT PANEL */}
+                <div className="lg:col-span-7 p-8 md:p-14 flex flex-col border-r border-slate-800/50 relative bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.05),transparent_40%)]">
+                  <div className="mb-10">
+                    <div className="flex items-center gap-3 text-emerald-500 font-mono text-xs mb-4">
+                       <FaCodeBranch /> {sloozeData.version}
+                       <span className="w-1 h-1 rounded-full bg-slate-600" />
+                       <span className="text-slate-500 truncate max-w-[200px]">{sloozeData.lastCommit}</span>
+                    </div>
+                    <h2 className="text-4xl md:text-6xl font-extrabold text-white mb-6 leading-tight">
+                      {sloozeData.title}
+                    </h2>
+                    <p className="text-xl text-emerald-400 font-medium mb-6 font-mono border-l-4 border-emerald-500 pl-4">
+                      {sloozeData.tagline}
+                    </p>
+                    <p className="text-slate-400 leading-relaxed text-lg">
+                      {sloozeData.description}
+                    </p>
+                  </div>
+
+                  {/* Tech Stack */}
+                  <div className="flex flex-wrap gap-3 mb-12 pb-8 border-b border-slate-800">
+                    {sloozeData.stack.map((tech, i) => (
+                      <TechPill key={i} {...tech} />
+                    ))}
+                  </div>
+
+                  {/* Role Permissions Showcase */}
+                  <div className="mb-8">
+                    <h4 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
+                      <FaUserShield className="text-emerald-500" /> Role-Based Permissions
+                    </h4>
+                    
+                    <div className="flex gap-2 mb-6">
+                      {sloozeData.roles.map((role, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => setSloozeRole(idx)}
+                          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all ${
+                            sloozeRole === idx
+                              ? role.color === 'red'
+                                ? 'bg-red-600 text-white'
+                                : role.color === 'blue'
+                                ? 'bg-blue-600 text-white'
+                                : 'bg-green-600 text-white'
+                              : 'bg-slate-900 text-slate-500 hover:text-slate-300'
+                          }`}
+                        >
+                          {role.icon}
+                          {role.name}
+                        </button>
+                      ))}
+                    </div>
+
+                    <div className="bg-slate-900/50 rounded-xl p-6 border border-slate-800">
+                      <ul className="space-y-3 min-h-[140px]">
+                        {sloozeData.roles[sloozeRole].permissions.map((perm, i) => (
+                          <li key={i} className="flex items-start gap-3 text-sm text-slate-300 animate-fade-in">
+                            <FaRegCheckCircle className={`mt-1 ${
+                              sloozeData.roles[sloozeRole].color === 'red'
+                                ? 'text-red-500'
+                                : sloozeData.roles[sloozeRole].color === 'blue'
+                                ? 'text-blue-500'
+                                : 'text-green-500'
+                            }`} />
+                            {perm}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  {/* Technical Highlights */}
+                  <div className="space-y-4 mb-8">
+                    <h4 className="text-sm font-bold text-white uppercase">Technical Innovations</h4>
+                    {sloozeData.techHighlights.map((highlight, i) => (
+                      <div key={i} className="flex gap-4 p-4 rounded-xl bg-slate-900/30 border border-slate-800">
+                        <div className="text-xl mt-1">{highlight.icon}</div>
+                        <div>
+                          <h5 className="font-bold text-white text-sm">{highlight.title}</h5>
+                          <p className="text-xs text-slate-400 mt-1 leading-relaxed">{highlight.desc}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex flex-wrap gap-4 mt-auto pt-8 border-t border-slate-800/50">
+                    <a
+                      href={sloozeData.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 px-8 py-4 rounded-xl bg-white text-black font-bold shadow-2xl shadow-white/10 hover:bg-slate-200 transition-all hover:scale-105 active:scale-95"
+                    >
+                      <FaGithub size={20} /> 
+                      View Full Source Code
+                    </a>
+                  </div>
+                </div>
+
+                {/* RIGHT PANEL */}
+                <div className="lg:col-span-5 relative bg-[#050912] flex flex-col">
+                  <div className="h-1/2 relative overflow-hidden flex items-center justify-center p-8">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.1),transparent_70%)]" />
+                    
+                    {/* Permission Matrix Card */}
+                    <div className="relative w-72 bg-slate-900/90 backdrop-blur-xl rounded-2xl border border-slate-700 shadow-2xl p-6 z-20">
+                      <div className="flex items-center justify-between mb-6">
+                        <h5 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Access Matrix</h5>
+                        <FaGlobe className="text-emerald-400" />
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <div className="grid grid-cols-2 gap-3">
+                          {sloozeData.countries.map((country, i) => (
+                            <div key={i} className="p-3 rounded-lg bg-slate-950 border border-slate-800 text-center">
+                              <div className="text-lg mb-1">{country.split(' ')[1]}</div>
+                              <div className="text-[10px] text-slate-500 font-mono">{country.split(' ')[0]}</div>
+                            </div>
+                          ))}
+                        </div>
+                        
+                        <div className="pt-4 border-t border-slate-800">
+                          <div className="text-[10px] text-slate-500 mb-2 uppercase font-bold">Active Features</div>
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2 text-xs text-slate-300">
+                              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                              Country Restrictions
+                            </div>
+                            <div className="flex items-center gap-2 text-xs text-slate-300">
+                              <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                              RBAC Enforcement
+                            </div>
+                            <div className="flex items-center gap-2 text-xs text-slate-300">
+                              <div className="w-2 h-2 rounded-full bg-purple-500 animate-pulse" />
+                              GraphQL Auth Guards
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="h-1/2 border-t border-slate-800 p-6 bg-[#02040a]">
+                    <div className="mb-2 text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                      <FaTerminal /> GraphQL Server Logs
+                    </div>
+                    <GraphQLTerminal />
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* =======================================================
+            TIER 4: THE LAB (TASKS)
            ======================================================= */}
         <div>
           <div className="flex items-center gap-3 mb-10 px-2">
