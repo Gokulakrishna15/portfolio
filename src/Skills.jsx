@@ -84,6 +84,12 @@ export default function Skills() {
       category: "Tools", 
       details: "Cloud hosting services, Docker containerization, and Auto-scaling infrastructure." 
     },
+    { 
+      name: "▲ Vercel", 
+      color: "var(--c-white)", 
+      category: "Tools", 
+      details: "Zero-config deployments, Edge middleware, and Next.js ISR/SSR optimization." 
+    },
   ];
 
   const categories = ["Frontend", "Backend", "Tools"];
@@ -107,6 +113,7 @@ export default function Skills() {
     "--c-gray": "#cbd5e1",
     "--c-green-soft": "#86efac",
     "--c-pink-soft": "#fbcfe8",
+    "--c-white": "#ffffff", // Added for Vercel
   };
 
   const particleCount = typeof window !== "undefined" && window.innerWidth < 640 ? 30 : 60;
