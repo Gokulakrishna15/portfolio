@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import {
   FaUtensils,
   FaCalendarAlt,
@@ -29,7 +29,8 @@ import {
   FaUserShield,
   FaShoppingCart,
   FaCreditCard,
-  FaDatabase
+  FaDatabase,
+  FaRobot
 } from "react-icons/fa";
 import {
   SiReact,
@@ -62,6 +63,15 @@ const terminalLogs = [
   { time: "10:43:12", type: "warn", msg: "Client connected: Socket ID x8d9s9" },
   { time: "10:43:15", type: "success", msg: "PaymentIntent created: pi_1Gq..." },
   { time: "10:43:16", type: "info", msg: "Booking confirmed: Table #4" },
+];
+
+const aiNotesLogs = [
+  { time: "11:23:01", type: "info", msg: "Next.js API Route: /api/ai/summarize" },
+  { time: "11:23:02", type: "success", msg: "MongoDB connection: ai-notes database" },
+  { time: "11:23:03", type: "info", msg: "Clerk middleware: JWT validation active" },
+  { time: "11:23:45", type: "success", msg: "AI Summary generated - Gemini 2.5 Flash" },
+  { time: "11:23:46", type: "info", msg: "Note saved: user_2xxx - 'Meeting Notes'" },
+  { time: "11:23:50", type: "success", msg: "AI Tags generated: ['work', 'productivity']" },
 ];
 
 const graphqlLogs = [
@@ -126,6 +136,65 @@ const restaurantData = {
       "Adaptive Dark Mode: A carefully curated color palette that reduces eye strain for restaurant staff working in low-light environments.",
     ],
   },
+};
+
+const aiNotesData = {
+  id: "ai-notes",
+  title: "🤖 AI Notes - Intelligent Note-Taking Platform",
+  tagline: "Next.js 16 • AI-Powered Productivity with Google Gemini 2.5",
+  description:
+    "A production-ready, full-stack note-taking application that leverages artificial intelligence to enhance productivity. Built with Next.js 16, TypeScript, and Google Gemini AI, it provides intelligent features like automatic summarization, content improvement, and smart tag generation. Demonstrates modern full-stack architecture with enterprise-grade security and real-time capabilities.",
+  demo: "https://ai-notes-app-vercel.vercel.app",
+  github: "https://github.com/Gokulakrishna15/ai-notes-app",
+  version: "v1.0.0-production",
+  lastCommit: "Complete AI Notes App with all POC features",
+  stack: [
+    { name: "Next.js 16", icon: <SiNextdotjs className="text-white" /> },
+    { name: "TypeScript", icon: <SiTypescript className="text-blue-400" /> },
+    { name: "MongoDB", icon: <SiMongodb className="text-green-400" /> },
+    { name: "Gemini AI", icon: <FaBolt className="text-orange-400" /> },
+    { name: "Clerk", icon: <FaUserShield className="text-purple-400" /> },
+    { name: "Tailwind", icon: <SiTailwindcss className="text-cyan-300" /> },
+  ],
+  stats: [
+    { label: "AI Model", value: "Gemini 2.5", sub: "Latest Flash Model" },
+    { label: "Type Safety", value: "100%", sub: "TypeScript Strict" },
+    { label: "Response", value: "< 2s", sub: "AI Processing" },
+    { label: "Auth", value: "JWT", sub: "Clerk Protected" },
+  ],
+  aiFeatures: [
+    {
+      title: "AI Summary",
+      desc: "Generates concise one-sentence summaries of long notes using Google Gemini 2.5 Flash for instant content comprehension.",
+      icon: <FaChartLine className="text-violet-400" />
+    },
+    {
+      title: "AI Improve",
+      desc: "Enhances grammar, clarity, and professionalism while preserving the original meaning through advanced language processing.",
+      icon: <FaPaintBrush className="text-blue-400" />
+    },
+    {
+      title: "AI Tags",
+      desc: "Automatically generates 3-5 relevant tags based on note title and content for intelligent organization and search.",
+      icon: <FaDatabase className="text-emerald-400" />
+    }
+  ],
+  techStack: {
+    frontend: [
+      "Next.js 16 with App Router for optimal performance",
+      "TypeScript strict mode for type safety",
+      "shadcn/ui component library for consistent design",
+      "Tailwind CSS 4 for modern styling",
+      "Real-time search and filtering"
+    ],
+    backend: [
+      "Next.js API Routes for serverless architecture",
+      "MongoDB Atlas with Mongoose ODM",
+      "Google Gemini AI API integration",
+      "User-specific data isolation",
+      "Comprehensive error handling"
+    ]
+  }
 };
 
 const oaData = {
@@ -284,13 +353,15 @@ const SectionBadge = ({ children, color = "blue" }) => (
         ? "bg-pink-900/30 border-pink-500/50 text-pink-300 shadow-pink-900/20"
         : color === "purple"
         ? "bg-purple-900/30 border-purple-500/50 text-purple-300 shadow-purple-900/20"
+        : color === "violet"
+        ? "bg-violet-900/30 border-violet-500/50 text-violet-300 shadow-violet-900/20"
         : color === "emerald"
         ? "bg-emerald-900/30 border-emerald-500/50 text-emerald-300 shadow-emerald-900/20"
         : "bg-blue-900/30 border-blue-500/50 text-blue-300 shadow-blue-900/20"
     }`}
   >
     <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${
-      color === "pink" ? "bg-pink-400" : color === "purple" ? "bg-purple-400" : color === "emerald" ? "bg-emerald-400" : "bg-blue-400"
+      color === "pink" ? "bg-pink-400" : color === "purple" ? "bg-purple-400" : color === "violet" ? "bg-violet-400" : color === "emerald" ? "bg-emerald-400" : "bg-blue-400"
     }`} />
     {children}
   </span>
@@ -303,69 +374,116 @@ const TechPill = ({ icon, name }) => (
   </div>
 );
 
-const Terminal = () => (
-  <div className="w-full h-full bg-[#0d1117] rounded-lg border border-slate-800 p-4 font-mono text-xs overflow-hidden flex flex-col shadow-inner">
-    <div className="flex gap-2 mb-3 pb-2 border-b border-slate-800">
-      <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
-      <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
-      <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
-      <span className="ml-2 text-slate-500">server.js — node</span>
-    </div>
-    <div className="flex-grow space-y-1 opacity-80">
-      {terminalLogs.map((log, i) => (
-        <div key={i} className="flex gap-3 animate-pulse" style={{ animationDuration: `${Math.random() * 2 + 1}s` }}>
-          <span className="text-slate-500">[{log.time}]</span>
-          <span className={
-            log.type === 'info' ? 'text-blue-400' : 
-            log.type === 'success' ? 'text-green-400' : 
-            log.type === 'warn' ? 'text-yellow-400' : 'text-slate-300'
-          }>
-            {log.type.toUpperCase()}:
-          </span>
-          <span className="text-slate-300">{log.msg}</span>
-        </div>
-      ))}
-      <div className="flex gap-2 mt-2">
-        <span className="text-green-500">➜</span>
-        <span className="text-cyan-400">~/restaurant-backend</span>
-        <span className="text-slate-400 git-branch">git:(main)</span>
-        <span className="animate-blink block w-2 h-4 bg-slate-400 ml-1" />
-      </div>
-    </div>
-  </div>
-);
+// Fixed: Uses useMemo to prevent "Impure Function" error with Math.random
+const Terminal = () => {
+  const durations = useMemo(() => terminalLogs.map(() => Math.random() * 2 + 1), []);
 
-const GraphQLTerminal = () => (
-  <div className="w-full h-full bg-[#0d1117] rounded-lg border border-slate-800 p-4 font-mono text-xs overflow-hidden flex flex-col shadow-inner">
-    <div className="flex gap-2 mb-3 pb-2 border-b border-slate-800">
-      <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
-      <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
-      <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
-      <span className="ml-2 text-slate-500">main.ts — nestjs</span>
-    </div>
-    <div className="flex-grow space-y-1 opacity-80">
-      {graphqlLogs.map((log, i) => (
-        <div key={i} className="flex gap-3 animate-pulse" style={{ animationDuration: `${Math.random() * 2 + 1}s` }}>
-          <span className="text-slate-500">[{log.time}]</span>
-          <span className={
-            log.type === 'info' ? 'text-blue-400' : 
-            log.type === 'success' ? 'text-green-400' : 
-            log.type === 'warn' ? 'text-yellow-400' : 'text-slate-300'
-          }>
-            {log.type.toUpperCase()}:
-          </span>
-          <span className="text-slate-300">{log.msg}</span>
+  return (
+    <div className="w-full h-full bg-[#0d1117] rounded-lg border border-slate-800 p-4 font-mono text-xs overflow-hidden flex flex-col shadow-inner">
+      <div className="flex gap-2 mb-3 pb-2 border-b border-slate-800">
+        <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
+        <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
+        <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
+        <span className="ml-2 text-slate-500">server.js — node</span>
+      </div>
+      <div className="grow space-y-1 opacity-80">
+        {terminalLogs.map((log, i) => (
+          <div key={i} className="flex gap-3 animate-pulse" style={{ animationDuration: `${durations[i]}s` }}>
+            <span className="text-slate-500">[{log.time}]</span>
+            <span className={
+              log.type === 'info' ? 'text-blue-400' : 
+              log.type === 'success' ? 'text-green-400' : 
+              log.type === 'warn' ? 'text-yellow-400' : 'text-slate-300'
+            }>
+              {log.type.toUpperCase()}:
+            </span>
+            <span className="text-slate-300">{log.msg}</span>
+          </div>
+        ))}
+        <div className="flex gap-2 mt-2">
+          <span className="text-green-500">➜</span>
+          <span className="text-cyan-400">~/restaurant-backend</span>
+          <span className="text-slate-400 git-branch">git:(main)</span>
+          <span className="animate-blink block w-2 h-4 bg-slate-400 ml-1" />
         </div>
-      ))}
-      <div className="flex gap-2 mt-2">
-        <span className="text-green-500">➜</span>
-        <span className="text-cyan-400">~/slooze-backend</span>
-        <span className="text-slate-400 git-branch">git:(main)</span>
-        <span className="animate-blink block w-2 h-4 bg-slate-400 ml-1" />
       </div>
     </div>
-  </div>
-);
+  );
+};
+
+// Fixed: Uses useMemo to prevent "Impure Function" error with Math.random
+const AINotesTerminal = () => {
+  const durations = useMemo(() => aiNotesLogs.map(() => Math.random() * 2 + 1), []);
+
+  return (
+    <div className="w-full h-full bg-[#0d1117] rounded-lg border border-slate-800 p-4 font-mono text-xs overflow-hidden flex flex-col shadow-inner">
+      <div className="flex gap-2 mb-3 pb-2 border-b border-slate-800">
+        <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
+        <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
+        <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
+        <span className="ml-2 text-slate-500">route.ts — next.js</span>
+      </div>
+      <div className="grow space-y-1 opacity-80">
+        {aiNotesLogs.map((log, i) => (
+          <div key={i} className="flex gap-3 animate-pulse" style={{ animationDuration: `${durations[i]}s` }}>
+            <span className="text-slate-500">[{log.time}]</span>
+            <span className={
+              log.type === 'info' ? 'text-blue-400' : 
+              log.type === 'success' ? 'text-green-400' : 
+              log.type === 'warn' ? 'text-yellow-400' : 'text-slate-300'
+            }>
+              {log.type.toUpperCase()}:
+            </span>
+            <span className="text-slate-300">{log.msg}</span>
+          </div>
+        ))}
+        <div className="flex gap-2 mt-2">
+          <span className="text-green-500">➜</span>
+          <span className="text-cyan-400">~/ai-notes-app</span>
+          <span className="text-slate-400 git-branch">git:(main)</span>
+          <span className="animate-blink block w-2 h-4 bg-slate-400 ml-1" />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Fixed: Uses useMemo to prevent "Impure Function" error with Math.random
+const GraphQLTerminal = () => {
+  const durations = useMemo(() => graphqlLogs.map(() => Math.random() * 2 + 1), []);
+
+  return (
+    <div className="w-full h-full bg-[#0d1117] rounded-lg border border-slate-800 p-4 font-mono text-xs overflow-hidden flex flex-col shadow-inner">
+      <div className="flex gap-2 mb-3 pb-2 border-b border-slate-800">
+        <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
+        <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
+        <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
+        <span className="ml-2 text-slate-500">main.ts — nestjs</span>
+      </div>
+      <div className="grow space-y-1 opacity-80">
+        {graphqlLogs.map((log, i) => (
+          <div key={i} className="flex gap-3 animate-pulse" style={{ animationDuration: `${durations[i]}s` }}>
+            <span className="text-slate-500">[{log.time}]</span>
+            <span className={
+              log.type === 'info' ? 'text-blue-400' : 
+              log.type === 'success' ? 'text-green-400' : 
+              log.type === 'warn' ? 'text-yellow-400' : 'text-slate-300'
+            }>
+              {log.type.toUpperCase()}:
+            </span>
+            <span className="text-slate-300">{log.msg}</span>
+          </div>
+        ))}
+        <div className="flex gap-2 mt-2">
+          <span className="text-green-500">➜</span>
+          <span className="text-cyan-400">~/slooze-backend</span>
+          <span className="text-slate-400 git-branch">git:(main)</span>
+          <span className="animate-blink block w-2 h-4 bg-slate-400 ml-1" />
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const TabButton = ({ active, onClick, children }) => (
   <button
@@ -414,14 +532,14 @@ export default function Projects() {
       {/* --- DYNAMIC BACKGROUND FX --- */}
       <div className="absolute inset-0 pointer-events-none">
          <div 
-            className="absolute top-0 left-1/4 w-[800px] h-[800px] bg-blue-600/5 rounded-full blur-[120px] mix-blend-screen transition-transform duration-1000 ease-out"
+            className="absolute top-0 left-1/4 w-200 h-200 bg-blue-600/5 rounded-full blur-[120px] mix-blend-screen transition-transform duration-1000 ease-out"
             style={{ transform: `translate(${mousePos.x * 0.02}px, ${mousePos.y * 0.02}px)` }}
          />
          <div 
-            className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-purple-600/5 rounded-full blur-[100px] mix-blend-screen transition-transform duration-1000 ease-out"
+            className="absolute bottom-0 right-1/4 w-150 h-150 bg-purple-600/5 rounded-full blur-[100px] mix-blend-screen transition-transform duration-1000 ease-out"
             style={{ transform: `translate(${mousePos.x * -0.02}px, ${mousePos.y * -0.02}px)` }}
          />
-         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
@@ -436,7 +554,7 @@ export default function Projects() {
             <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 blur-2xl opacity-20 -z-10" />
           </div>
           <p className="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 font-light leading-relaxed">
-            Architecting digital experiences with precision. Below are selected works demonstrating mastery in <span className="text-white font-semibold">Full-Stack Development</span>, <span className="text-white font-semibold">Real-Time Systems</span>, and <span className="text-white font-semibold">Security</span>.
+            Architecting digital experiences with precision. Below are selected works demonstrating mastery in <span className="text-white font-semibold">Full-Stack Development</span>, <span className="text-white font-semibold">AI Integration</span>, and <span className="text-white font-semibold">Security</span>.
           </p>
         </div>
 
@@ -453,11 +571,11 @@ export default function Projects() {
              </h3>
           </div>
 
-          <div className="group relative rounded-[2.5rem] bg-[#0f172a] p-[1px] shadow-2xl hover:shadow-pink-900/20 transition-all duration-500">
+          <div className="group relative rounded-[2.5rem] bg-[#0f172a] p-px shadow-2xl hover:shadow-pink-900/20 transition-all duration-500">
             <div className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 opacity-30 group-hover:opacity-100 transition-opacity duration-700 blur-sm" />
             
             <div className="relative rounded-[2.4rem] bg-[#020617] overflow-hidden border border-slate-800">
-              <div className="grid lg:grid-cols-12 min-h-[850px]">
+              <div className="grid lg:grid-cols-12 min-h-212.5">
                 
                 {/* LEFT PANEL */}
                 <div className="lg:col-span-7 p-8 md:p-14 flex flex-col border-r border-slate-800/50 relative bg-[radial-gradient(circle_at_top_left,rgba(236,72,153,0.05),transparent_40%)]">
@@ -465,7 +583,7 @@ export default function Projects() {
                     <div className="flex items-center gap-3 text-pink-500 font-mono text-xs mb-4">
                        <FaCodeBranch /> {restaurantData.version}
                        <span className="w-1 h-1 rounded-full bg-slate-600" />
-                       <span className="text-slate-500 truncate max-w-[200px]">{restaurantData.lastCommit}</span>
+                       <span className="text-slate-500 truncate max-w-50">{restaurantData.lastCommit}</span>
                     </div>
                     <h2 className="text-4xl md:text-6xl font-extrabold text-white mb-6 leading-tight">
                       {restaurantData.title}
@@ -486,7 +604,7 @@ export default function Projects() {
                   </div>
 
                   {/* TABS */}
-                  <div className="flex-grow flex flex-col">
+                  <div className="grow flex flex-col">
                     <div className="flex gap-8 mb-8 border-b border-slate-800">
                       {["overview", "architecture", "engineering", "ui/ux"].map((tab) => (
                         <TabButton key={tab} active={activeTab === tab} onClick={() => setActiveTab(tab)}>
@@ -495,7 +613,7 @@ export default function Projects() {
                       ))}
                     </div>
 
-                    <div className="flex-grow min-h-[200px] animate-fade-in">
+                    <div className="grow min-h-50 animate-fade-in">
                       {activeTab === "overview" && (
                         <div className="grid grid-cols-2 gap-6">
                           {restaurantData.stats.map((stat, i) => (
@@ -520,11 +638,11 @@ export default function Projects() {
                               {'}'}
                            </div>
                            <ul className="space-y-3">
-                              {restaurantData.deepDive.architecture.map((item, i) => (
-                                <li key={i} className="flex gap-3 text-slate-400 text-sm">
-                                  <FaServer className="mt-1 text-blue-500 flex-shrink-0" /> {item}
-                                </li>
-                              ))}
+                             {restaurantData.deepDive.architecture.map((item, i) => (
+                               <li key={i} className="flex gap-3 text-slate-400 text-sm">
+                                 <FaServer className="mt-1 text-blue-500 shrink-0" /> {item}
+                               </li>
+                             ))}
                            </ul>
                         </div>
                       )}
@@ -548,7 +666,7 @@ export default function Projects() {
                         <ul className="space-y-4">
                           {restaurantData.deepDive.uiux.map((item, i) => (
                             <li key={i} className="flex gap-3 text-slate-400 text-sm leading-relaxed p-3 rounded-lg hover:bg-slate-900/50 transition-colors">
-                              <FaPaintBrush className="mt-1 text-pink-500 flex-shrink-0" />
+                              <FaPaintBrush className="mt-1 text-pink-500 shrink-0" />
                               {item}
                             </li>
                           ))}
@@ -559,7 +677,7 @@ export default function Projects() {
 
                   {/* Actions */}
                   <div className="flex flex-wrap gap-4 mt-12 pt-8 border-t border-slate-800/50">
-                    <a
+                    <a 
                       href={restaurantData.demo}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -568,7 +686,8 @@ export default function Projects() {
                       <FaExternalLinkAlt className="group-hover:rotate-45 transition-transform" /> 
                       Launch Live Demo
                     </a>
-                    <a
+                    
+                    <a 
                       href={restaurantData.github}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -585,7 +704,7 @@ export default function Projects() {
                    <div className="h-1/2 relative overflow-hidden flex items-center justify-center p-8">
                       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(236,72,153,0.1),transparent_70%)]" />
                       
-                      <div className="relative w-64 h-80 bg-slate-900/90 backdrop-blur-xl rounded-2xl border border-slate-700 shadow-2xl p-5 transform rotate-[-6deg] hover:rotate-0 transition-transform duration-500 z-20 group/card">
+                      <div className="relative w-64 h-80 bg-slate-900/90 backdrop-blur-xl rounded-2xl border border-slate-700 shadow-2xl p-5 transform -rotate-6 hover:rotate-0 transition-transform duration-500 z-20 group/card">
                          <div className="flex justify-between items-center mb-6">
                             <span className="text-xs font-bold text-slate-500">Table #4</span>
                             <span className="px-2 py-0.5 rounded bg-green-500/20 text-green-400 text-[10px] font-bold">OCCUPIED</span>
@@ -604,7 +723,7 @@ export default function Projects() {
                             </div>
                          </div>
                       </div>
-                      <div className="absolute w-60 h-72 bg-slate-800/50 rounded-2xl border border-slate-700/50 z-10 transform translate-x-12 translate-y-4 rotate-[6deg]" />
+                      <div className="absolute w-60 h-72 bg-slate-800/50 rounded-2xl border border-slate-700/50 z-10 transform translate-x-12 translate-y-4 rotate-6" />
                    </div>
                    <div className="h-1/2 border-t border-slate-800 p-6 bg-[#02040a]">
                       <div className="mb-2 text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
@@ -620,7 +739,214 @@ export default function Projects() {
         </div>
 
         {/* =======================================================
-            TIER 2: THE SPOTLIGHT (ONLINE ASSESSMENT)
+            TIER 2: AI INTELLIGENCE (AI NOTES) - NEW!
+           ======================================================= */}
+        <div className="mb-40">
+          <div className="flex items-center justify-between mb-10 px-2">
+            <div className="flex items-center gap-3">
+               <div className="p-2 bg-violet-500/10 rounded-lg border border-violet-500/20">
+                  <FaRobot className="text-violet-400 text-lg animate-pulse" />
+               </div>
+               <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest">
+                  AI-Powered Platform • Production Ready
+               </h3>
+            </div>
+            <div className="h-px bg-slate-800 grow ml-6 max-w-md hidden md:block"></div>
+          </div>
+
+          <div className="group relative rounded-[2.5rem] bg-[#0f172a] p-px shadow-2xl hover:shadow-violet-900/20 transition-all duration-500">
+            <div className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-r from-violet-600 via-purple-600 to-blue-600 opacity-30 group-hover:opacity-100 transition-opacity duration-700 blur-sm" />
+            
+            <div className="relative rounded-[2.4rem] bg-[#020617] overflow-hidden border border-slate-800">
+              <div className="grid lg:grid-cols-12 min-h-212.5">
+                
+                {/* LEFT PANEL */}
+                <div className="lg:col-span-7 p-8 md:p-14 flex flex-col border-r border-slate-800/50 relative bg-[radial-gradient(circle_at_top_left,rgba(139,92,246,0.05),transparent_40%)]">
+                  <div className="mb-10">
+                    <div className="flex items-center gap-3 text-violet-500 font-mono text-xs mb-4">
+                       <FaCodeBranch /> {aiNotesData.version}
+                       <span className="w-1 h-1 rounded-full bg-slate-600" />
+                       <span className="text-slate-500 truncate max-w-50">{aiNotesData.lastCommit}</span>
+                    </div>
+                    <h2 className="text-4xl md:text-6xl font-extrabold text-white mb-6 leading-tight">
+                      {aiNotesData.title}
+                    </h2>
+                    <p className="text-xl text-violet-400 font-medium mb-6 font-mono border-l-4 border-violet-500 pl-4">
+                      {aiNotesData.tagline}
+                    </p>
+                    <p className="text-slate-400 leading-relaxed text-lg">
+                      {aiNotesData.description}
+                    </p>
+                  </div>
+
+                  {/* Tech Stack */}
+                  <div className="flex flex-wrap gap-3 mb-12 pb-8 border-b border-slate-800">
+                    {aiNotesData.stack.map((tech, i) => (
+                      <TechPill key={i} {...tech} />
+                    ))}
+                  </div>
+
+                  {/* Stats Grid */}
+                  <div className="grid grid-cols-2 gap-6 mb-12">
+                    {aiNotesData.stats.map((stat, i) => (
+                      <div key={i} className="p-5 rounded-2xl bg-slate-900/50 border border-slate-800 hover:border-violet-500/30 transition-colors group/stat">
+                        <div className="text-3xl font-black text-white mb-2 group-hover/stat:text-violet-400 transition-colors">{stat.value}</div>
+                        <div className="text-xs text-slate-400 uppercase font-bold tracking-wider">{stat.label}</div>
+                        <div className="text-xs text-slate-500 mt-1 font-mono">{stat.sub}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* AI Features */}
+                  <div className="space-y-4 mb-8">
+                    <h4 className="text-sm font-bold text-white uppercase flex items-center gap-2">
+                      <FaBolt className="text-violet-500" /> AI-Powered Features
+                    </h4>
+                    {aiNotesData.aiFeatures.map((feature, i) => (
+                      <div key={i} className="flex gap-4 p-4 rounded-xl bg-slate-900/30 border border-slate-800 hover:border-violet-500/30 transition-colors">
+                        <div className="text-xl mt-1">{feature.icon}</div>
+                        <div>
+                          <h5 className="font-bold text-white text-sm">{feature.title}</h5>
+                          <p className="text-xs text-slate-400 mt-1 leading-relaxed">{feature.desc}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Tech Implementation Details */}
+                  <div className="bg-slate-900/50 rounded-xl p-6 border border-slate-800 mb-8">
+                    <h4 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
+                      <FaServer className="text-violet-500" /> Technical Architecture
+                    </h4>
+                    <div className="space-y-4">
+                      <div>
+                        <div className="text-xs font-bold text-violet-400 mb-2 uppercase">Frontend & UI</div>
+                        <ul className="space-y-2">
+                          {aiNotesData.techStack.frontend.slice(0, 3).map((item, i) => (
+                            <li key={i} className="flex gap-2 text-slate-400 text-xs">
+                              <FaRegCheckCircle className="mt-0.5 text-violet-500 shrink-0" />
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div>
+                        <div className="text-xs font-bold text-blue-400 mb-2 uppercase">Backend & AI</div>
+                        <ul className="space-y-2">
+                          {aiNotesData.techStack.backend.slice(0, 3).map((item, i) => (
+                            <li key={i} className="flex gap-2 text-slate-400 text-xs">
+                              <FaRegCheckCircle className="mt-0.5 text-blue-500 shrink-0" />
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex flex-wrap gap-4 mt-auto pt-8 border-t border-slate-800/50">
+                    <a 
+                      href={aiNotesData.demo}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center gap-3 px-8 py-4 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-bold shadow-2xl shadow-violet-500/20 transition-all hover:scale-105 active:scale-95"
+                    >
+                      <FaExternalLinkAlt className="group-hover:rotate-45 transition-transform" /> 
+                      Launch Live Demo
+                    </a>
+                    
+                    <a 
+                      href={aiNotesData.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 px-8 py-4 rounded-xl bg-slate-900 text-white font-bold border border-slate-700 hover:border-violet-500 hover:bg-slate-800 transition-all"
+                    >
+                      <FaGithub size={20} /> 
+                      View Source Code
+                    </a>
+                  </div>
+                </div>
+
+                {/* RIGHT PANEL */}
+                <div className="lg:col-span-5 relative bg-[#050912] flex flex-col">
+                  {/* Visual Demo Card */}
+                  <div className="h-1/2 relative overflow-hidden flex items-center justify-center p-8">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(139,92,246,0.1),transparent_70%)]" />
+                    
+                    <div className="relative w-72 bg-slate-900/90 backdrop-blur-xl rounded-2xl border border-slate-700 shadow-2xl p-6 transform hover:scale-105 transition-transform duration-500 z-20">
+                      <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-r from-violet-600 to-purple-600 flex items-center justify-center">
+                            <FaBolt className="text-white text-sm" />
+                          </div>
+                          <span className="text-xs font-bold text-slate-300">AI Notes</span>
+                        </div>
+                        <div className="flex gap-1">
+                          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                          <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse delay-75" />
+                          <div className="w-2 h-2 rounded-full bg-purple-500 animate-pulse delay-150" />
+                        </div>
+                      </div>
+
+                      <div className="space-y-4 mb-6">
+                        <div className="p-3 rounded-lg bg-slate-950 border border-slate-800">
+                          <div className="h-2 w-3/4 bg-violet-600/30 rounded mb-2" />
+                          <div className="h-2 w-1/2 bg-slate-800 rounded" />
+                        </div>
+                        <div className="flex gap-2">
+                          <div className="flex-1 px-3 py-2 rounded-lg bg-violet-600/20 border border-violet-500/30 text-[10px] text-violet-300 font-bold text-center">
+                            AI Summary
+                          </div>
+                          <div className="flex-1 px-3 py-2 rounded-lg bg-blue-600/20 border border-blue-500/30 text-[10px] text-blue-300 font-bold text-center">
+                            AI Improve
+                          </div>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {['#work', '#productivity', '#ai'].map((tag, i) => (
+                            <span key={i} className="px-2 py-1 rounded bg-emerald-900/30 text-emerald-400 text-[9px] font-mono">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="pt-4 border-t border-slate-800">
+                        <div className="text-[10px] text-slate-500 mb-3 uppercase font-bold">Active Features</div>
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2 text-xs text-slate-300">
+                            <FaLock className="text-violet-500" />
+                            <span>Clerk Auth</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-xs text-slate-300">
+                            <FaDatabase className="text-green-500" />
+                            <span>MongoDB</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-xs text-slate-300">
+                            <FaBolt className="text-orange-500" />
+                            <span>Gemini AI</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Code Preview */}
+                  <div className="h-1/2 border-t border-slate-800 p-6 bg-[#02040a]">
+                    <div className="mb-2 text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                      <FaTerminal /> AI Integration Logs
+                    </div>
+                    <AINotesTerminal />
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* =======================================================
+            TIER 3: THE SPOTLIGHT (ONLINE ASSESSMENT)
            ======================================================= */}
         <div className="mb-40">
           <div className="flex items-center justify-between mb-10 px-2">
@@ -630,11 +956,11 @@ export default function Projects() {
                   Secure Enterprise Module
                </h3>
             </div>
-            <div className="h-px bg-slate-800 flex-grow ml-6 max-w-md hidden md:block"></div>
+            <div className="h-px bg-slate-800 grow ml-6 max-w-md hidden md:block"></div>
           </div>
 
           <div className="relative rounded-3xl bg-[#0b0f19] border border-slate-800 overflow-hidden group hover:border-purple-500/30 transition-all duration-500">
-             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-900/5 rounded-full blur-[100px] pointer-events-none" />
+             <div className="absolute top-0 right-0 w-125 h-125 bg-purple-900/5 rounded-full blur-[100px] pointer-events-none" />
              
              <div className="grid lg:grid-cols-2 gap-0">
                 <div className="p-10 md:p-14 flex flex-col justify-center relative z-10">
@@ -669,7 +995,7 @@ export default function Projects() {
                             ))}
                          </div>
                       </div>
-                      <ul className="space-y-3 min-h-[120px]">
+                      <ul className="space-y-3 min-h-30">
                          {oaData.features[oaRole].map((f, i) => (
                             <li key={i} className="flex items-start gap-3 text-sm text-slate-300 animate-fade-in">
                                <FaRegCheckCircle className="mt-1 text-purple-500" />
@@ -681,13 +1007,13 @@ export default function Projects() {
 
                    <div className="flex gap-4">
                       <a href={oaData.demo} target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-white border-b-2 border-purple-500 pb-1 hover:text-purple-400 transition-colors">
-                        View Application &rarr;
+                         View Application &rarr;
                       </a>
                    </div>
                 </div>
 
                 <div className="bg-[#05070e] border-l border-slate-800 p-10 md:p-14 relative overflow-hidden flex flex-col justify-center">
-                   <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(168,85,247,0.05)_50%,transparent_75%,transparent_100%)] bg-[length:250%_250%] animate-shine pointer-events-none" />
+                   <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(168,85,247,0.05)_50%,transparent_75%,transparent_100%)] bg-size-[250%_250%] animate-shine pointer-events-none" />
                    
                    <h4 className="text-sm font-bold text-white mb-6 flex items-center gap-2">
                       <FaLock className="text-purple-500" /> Security Architecture
@@ -720,7 +1046,7 @@ export default function Projects() {
         </div>
 
         {/* =======================================================
-            TIER 3: THE ENTERPRISE (SLOOZE CHALLENGE)
+            TIER 4: THE ENTERPRISE (SLOOZE CHALLENGE)
            ======================================================= */}
         <div className="mb-40">
           <div className="flex items-center justify-between mb-10 px-2">
@@ -732,14 +1058,14 @@ export default function Projects() {
                   Enterprise Architecture • GraphQL + RBAC
                </h3>
             </div>
-            <div className="h-px bg-slate-800 flex-grow ml-6 max-w-md hidden md:block"></div>
+            <div className="h-px bg-slate-800 grow ml-6 max-w-md hidden md:block"></div>
           </div>
 
-          <div className="group relative rounded-[2.5rem] bg-[#0f172a] p-[1px] shadow-2xl hover:shadow-emerald-900/20 transition-all duration-500">
+          <div className="group relative rounded-[2.5rem] bg-[#0f172a] p-px shadow-2xl hover:shadow-emerald-900/20 transition-all duration-500">
             <div className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 opacity-30 group-hover:opacity-100 transition-opacity duration-700 blur-sm" />
             
             <div className="relative rounded-[2.4rem] bg-[#020617] overflow-hidden border border-slate-800">
-              <div className="grid lg:grid-cols-12 min-h-[850px]">
+              <div className="grid lg:grid-cols-12 min-h-212.5">
                 
                 {/* LEFT PANEL */}
                 <div className="lg:col-span-7 p-8 md:p-14 flex flex-col border-r border-slate-800/50 relative bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.05),transparent_40%)]">
@@ -747,7 +1073,7 @@ export default function Projects() {
                     <div className="flex items-center gap-3 text-emerald-500 font-mono text-xs mb-4">
                        <FaCodeBranch /> {sloozeData.version}
                        <span className="w-1 h-1 rounded-full bg-slate-600" />
-                       <span className="text-slate-500 truncate max-w-[200px]">{sloozeData.lastCommit}</span>
+                       <span className="text-slate-500 truncate max-w-50">{sloozeData.lastCommit}</span>
                     </div>
                     <h2 className="text-4xl md:text-6xl font-extrabold text-white mb-6 leading-tight">
                       {sloozeData.title}
@@ -795,7 +1121,7 @@ export default function Projects() {
                     </div>
 
                     <div className="bg-slate-900/50 rounded-xl p-6 border border-slate-800">
-                      <ul className="space-y-3 min-h-[140px]">
+                      <ul className="space-y-3 min-h-35">
                         {sloozeData.roles[sloozeRole].permissions.map((perm, i) => (
                           <li key={i} className="flex items-start gap-3 text-sm text-slate-300 animate-fade-in">
                             <FaRegCheckCircle className={`mt-1 ${
@@ -828,7 +1154,7 @@ export default function Projects() {
 
                   {/* Actions */}
                   <div className="flex flex-wrap gap-4 mt-auto pt-8 border-t border-slate-800/50">
-                    <a
+                    <a 
                       href={sloozeData.github}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -897,7 +1223,7 @@ export default function Projects() {
         </div>
 
         {/* =======================================================
-            TIER 4: THE LAB (TASKS)
+            TIER 5: THE LAB (TASKS)
            ======================================================= */}
         <div>
           <div className="flex items-center gap-3 mb-10 px-2">
@@ -921,19 +1247,19 @@ export default function Projects() {
                       {task.icon}
                     </div>
                     <div className="flex gap-2">
-                       <a href={task.github} target="_blank" rel="noopener noreferrer" className="p-2 rounded-full hover:bg-slate-800 text-slate-500 hover:text-white transition-colors">
-                          <FaGithub size={18} />
-                       </a>
-                       <a href={task.demo} target="_blank" rel="noopener noreferrer" className="p-2 rounded-full hover:bg-slate-800 text-slate-500 hover:text-white transition-colors">
-                          <FaExternalLinkAlt size={16} />
-                       </a>
+                        <a href={task.github} target="_blank" rel="noopener noreferrer" className="p-2 rounded-full hover:bg-slate-800 text-slate-500 hover:text-white transition-colors">
+                           <FaGithub size={18} />
+                        </a>
+                        <a href={task.demo} target="_blank" rel="noopener noreferrer" className="p-2 rounded-full hover:bg-slate-800 text-slate-500 hover:text-white transition-colors">
+                           <FaExternalLinkAlt size={16} />
+                        </a>
                     </div>
                   </div>
 
                   <h4 className="text-lg font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">
                     {task.title}
                   </h4>
-                  <p className="text-slate-400 text-sm leading-relaxed mb-6 flex-grow">
+                  <p className="text-slate-400 text-sm leading-relaxed mb-6 grow">
                     {task.desc}
                   </p>
 
@@ -951,15 +1277,15 @@ export default function Projects() {
         </div>
 
         <div className="mt-32 text-center border-t border-slate-800 pt-16">
-           <p className="text-slate-500 font-mono text-sm mb-4">Looking for the code?</p>
-           <a 
-              href="https://github.com/Gokulakrishna15" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-white font-bold hover:text-pink-500 transition-colors"
-           >
-              <FaGithub /> github.com/Gokulakrishna15 <FaArrowRight className="text-xs" />
-           </a>
+            <p className="text-slate-500 font-mono text-sm mb-4">Looking for the code?</p>
+            <a 
+               href="https://github.com/Gokulakrishna15" 
+               target="_blank" 
+               rel="noopener noreferrer"
+               className="inline-flex items-center gap-2 text-white font-bold hover:text-pink-500 transition-colors"
+            >
+               <FaGithub /> github.com/Gokulakrishna15 <FaArrowRight className="text-xs" />
+            </a>
         </div>
       </div>
       
