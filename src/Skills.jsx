@@ -100,20 +100,21 @@ export default function Skills() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [hoveredCard, setHoveredCard] = useState(null);
 
+  // BRIGHTENED HEX CODES FOR MAXIMUM CONTRAST
   const cssVars = {
-    "--c-cyan": "#22d3ee",
-    "--c-cyan-soft": "#7dd3fc",
-    "--c-orange": "#fb923c",
-    "--c-blue": "#60a5fa",
-    "--c-yellow": "#facc15",
-    "--c-pink": "#fb7185",
-    "--c-purple": "#a78bfa",
-    "--c-green": "#34d399",
-    "--c-indigo": "#818cf8",
-    "--c-gray": "#cbd5e1",
-    "--c-green-soft": "#86efac",
-    "--c-pink-soft": "#fbcfe8",
-    "--c-white": "#ffffff", // Added for Vercel
+    "--c-cyan": "#67e8f9",      // Bright Cyan
+    "--c-cyan-soft": "#bae6fd", // Soft Sky
+    "--c-orange": "#fdba74",    // Bright Orange
+    "--c-blue": "#93c5fd",      // Bright Blue
+    "--c-yellow": "#fde047",    // Bright Yellow
+    "--c-pink": "#f9a8d4",      // Bright Pink
+    "--c-purple": "#c4b5fd",    // Bright Purple
+    "--c-green": "#6ee7b7",     // Bright Emerald
+    "--c-indigo": "#a5b4fc",    // Bright Indigo
+    "--c-gray": "#f1f5f9",      // Slate 100
+    "--c-green-soft": "#bbf7d0",// Soft Green
+    "--c-pink-soft": "#fbcfe8", // Soft Pink
+    "--c-white": "#ffffff", 
   };
 
   const particleCount = typeof window !== "undefined" && window.innerWidth < 640 ? 30 : 60;
@@ -248,8 +249,8 @@ export default function Skills() {
 
         /* Ultra Card with 3D Transform */
         .skill-card {
-          background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
-          border: 1px solid rgba(236,72,153,0.1);
+          background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+          border: 1px solid rgba(236,72,153,0.2);
           border-radius: 20px; 
           padding: 24px; 
           position: relative; 
@@ -266,8 +267,8 @@ export default function Skills() {
           inset: -2px; 
           opacity: 0;
           background: radial-gradient(circle 300px at var(--mouse-x, 50%) var(--mouse-y, 50%), 
-            rgba(34,211,238,0.15), 
-            rgba(236,72,153,0.1) 40%, 
+            rgba(34,211,238,0.25), 
+            rgba(236,72,153,0.15) 40%, 
             transparent 70%);
           border-radius: inherit;
           z-index: 0;
@@ -297,9 +298,9 @@ export default function Skills() {
         .skill-card:hover { 
           transform: translateY(-12px) scale(1.03) rotateX(2deg); 
           box-shadow: 0 35px 100px rgba(2,6,23,0.8), 
-                      0 0 60px rgba(34,211,238,0.15),
-                      0 0 100px rgba(236,72,153,0.1); 
-          border-color: rgba(34,211,238,0.3);
+                      0 0 60px rgba(34,211,238,0.2),
+                      0 0 100px rgba(236,72,153,0.2); 
+          border-color: rgba(34,211,238,0.4);
         }
 
         /* Orbiting Particles around card */
@@ -337,7 +338,7 @@ export default function Skills() {
         /* Neon Text with Glow */
         .neon-text { 
           text-shadow: 0 6px 20px rgba(124,58,237,0.08); 
-          font-weight: 700; 
+          font-weight: 800; 
           transition: all 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
           display: inline-block;
           position: relative;
@@ -355,7 +356,7 @@ export default function Skills() {
         }
         
         .skill-card:hover .neon-text {
-          text-shadow: 0 0 25px currentColor, 0 0 50px currentColor, 0 0 75px currentColor;
+          text-shadow: 0 0 25px currentColor, 0 0 50px currentColor;
           transform: translateX(3px) scale(1.05);
         }
         
@@ -474,7 +475,7 @@ export default function Skills() {
           <div style={{ position: 'absolute', inset: 0, background: 'inherit', filter: 'blur(10px)', borderRadius: 'inherit' }} />
         </div>
 
-        <p className="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed" style={{ color: "rgba(125,211,252,0.95)" }}>
+        <p className="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed text-slate-200">
           I build full stack web applications with <span style={{ color: 'var(--c-cyan)', fontWeight: 700 }}>modern tooling</span>, <span style={{ color: 'var(--c-pink)', fontWeight: 700 }}>clean architecture</span>, and <span style={{ color: 'var(--c-yellow)', fontWeight: 700 }}>cinematic UI</span>.
         </p>
       </div>
@@ -485,7 +486,8 @@ export default function Skills() {
           {categories.map((category, catIdx) => (
             <div key={category} className={`reveal-up ${visible ? "visible" : ""}`} style={{ transitionDelay: `${catIdx * 150}ms` }}>
               <div className="text-center mb-8">
-                <h3 className="category-header text-3xl md:text-4xl font-bold mb-3" style={{ color: "var(--c-pink)" }}>
+                {/* BRIGHTENED CATEGORY HEADER */}
+                <h3 className="category-header text-3xl md:text-4xl font-black mb-3 text-white tracking-tight">
                   {category} Technologies
                 </h3>
               </div>
@@ -521,30 +523,27 @@ export default function Skills() {
                         <div style={{ 
                           position: "absolute", 
                           inset: 0, 
-                          opacity: 0.08, 
-                          background: "radial-gradient(circle at 15% 15%, rgba(34,211,238,0.15), transparent 30%), radial-gradient(circle at 85% 85%, rgba(236,72,153,0.12), transparent 30%)", 
-                          filter: "blur(30px)", 
+                          opacity: 0.1, 
+                          background: "radial-gradient(circle at 15% 15%, rgba(34,211,238,0.2), transparent 30%), radial-gradient(circle at 85% 85%, rgba(236,72,153,0.15), transparent 30%)", 
+                          filter: "blur(20px)", 
                           pointerEvents: "none",
                           zIndex: 0
                         }} />
 
                         {/* Content */}
                         <div style={{ position: "relative", zIndex: 2 }}>
-                          <p className="neon-text" data-text={skill.name} style={{ color: skill.color, fontSize: 20, marginBottom: 4, fontWeight: 800 }}>
+                          <p className="neon-text" data-text={skill.name} style={{ color: skill.color, fontSize: 20, marginBottom: 6, fontWeight: 800 }}>
                             {skill.name}
                           </p>
-                          <p style={{ color: "rgba(125,211,252,0.9)", fontSize: 13, marginBottom: 12, fontWeight: 500, letterSpacing: '0.02em', textTransform: 'uppercase', opacity: 0.8 }}>
+                          
+                          {/* BRIGHTENED "PRODUCTION READY" LABEL */}
+                          <p className="text-[11px] text-cyan-300 mb-3 font-bold tracking-widest uppercase">
                             Production Ready
                           </p>
 
-                          {/* Technical Details (Replacing Progress Bar) */}
-                          <div className="pt-3 border-t border-white/5">
-                            <p style={{ 
-                                color: "rgba(226, 232, 240, 0.85)", 
-                                fontSize: 14, 
-                                lineHeight: '1.6',
-                                fontWeight: 400
-                              }}>
+                          {/* BRIGHTENED TECHNICAL DETAILS */}
+                          <div className="pt-3 border-t border-white/10">
+                            <p className="text-slate-200 text-sm leading-relaxed font-normal">
                               {skill.details}
                             </p>
                           </div>
