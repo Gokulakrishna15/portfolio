@@ -313,14 +313,14 @@ const TerminalUI = ({ logs, label, cwd }) => {
   }, []);
 
   return (
-    <div className="w-full h-full bg-[#080d14] rounded-xl border border-[#1e293b] p-4 font-mono text-xs flex flex-col shadow-[0_0_40px_rgba(0,0,0,0.8)] overflow-hidden">
-      <div className="flex items-center gap-2 mb-3 pb-2.5 border-b border-[#1e293b]">
+    <div className="w-full h-full bg-[#080d14] rounded-xl border border-white/10 p-4 font-mono text-xs flex flex-col shadow-[0_0_40px_rgba(0,0,0,0.8)] overflow-hidden">
+      <div className="flex items-center gap-2 mb-3 pb-2.5 border-b border-white/10">
         <div className="flex gap-1.5">
           <div className="w-3 h-3 rounded-full bg-[#ff5f56] shadow-[0_0_6px_#ff5f56]" />
           <div className="w-3 h-3 rounded-full bg-[#febc2e] shadow-[0_0_6px_#febc2e]" />
           <div className="w-3 h-3 rounded-full bg-[#27c93f] shadow-[0_0_6px_#27c93f]" />
         </div>
-        <span className="ml-2 text-slate-300 font-bold text-[10px]">{label}</span>
+        <span className="ml-2 text-slate-500 text-[10px]">{label}</span>
       </div>
       <div className="grow space-y-1.5 overflow-hidden">
         {logs.map((log, i) => (
@@ -333,19 +333,19 @@ const TerminalUI = ({ logs, label, cwd }) => {
               animationDuration: `${durations[i]}s`
             }}
           >
-            <span className="text-[#2d4a66] shrink-0">[{log.time}]</span>
+            <span className="text-slate-600 shrink-0">[{log.time}]</span>
             <span className={`shrink-0 font-bold ${
               log.type === 'info' ? 'text-[#60a5fa]' :
               log.type === 'success' ? 'text-[#34d399]' :
-              log.type === 'warn' ? 'text-[#fbbf24]' : 'text-slate-200'
+              log.type === 'warn' ? 'text-[#fbbf24]' : 'text-slate-300'
             }`}>{log.type.toUpperCase()}:</span>
-            <span className="text-slate-300 font-normal">{log.msg}</span>
+            <span className="text-slate-300">{log.msg}</span>
           </div>
         ))}
-        <div className="flex gap-2 mt-3 pt-2 border-t border-[#0f1a24]">
+        <div className="flex gap-2 mt-3 pt-2 border-t border-white/[0.08]">
           <span className="text-[#34d399]">➜</span>
           <span className="text-[#38bdf8]">{cwd}</span>
-          <span className="text-[#475569]">git:(main)</span>
+          <span className="text-slate-500">git:(main)</span>
           <span className="cursor-blink" />
         </div>
       </div>
@@ -361,8 +361,8 @@ const TabButton = ({ active, onClick, children }) => (
     onClick={onClick}
     className={`relative px-4 py-2.5 text-xs font-bold uppercase tracking-[0.15em] transition-all duration-300 rounded-lg
       ${active
-        ? "text-white bg-white/10 border border-white/20 shadow-[0_0_10px_rgba(255,255,255,0.1)]"
-        : "text-slate-400 hover:text-slate-200 hover:bg-white/5"
+        ? "text-white bg-white/10 border border-white/20"
+        : "text-slate-400 hover:text-slate-200 hover:bg-white/[0.06]"
       }
     `}
   >
@@ -377,7 +377,7 @@ const TabButton = ({ active, onClick, children }) => (
 // 6. TECH PILL
 // ==========================================
 const TechPill = ({ icon, name }) => (
-  <div className="group flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/[0.05] border border-white/[0.1] text-slate-200 text-xs font-mono hover:border-white/30 hover:text-white hover:bg-white/[0.1] transition-all duration-300 cursor-default shadow-sm">
+  <div className="group flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/[0.06] border border-white/[0.14] text-slate-200 text-xs font-mono hover:border-white/30 hover:text-white hover:bg-white/[0.10] transition-all duration-300 cursor-default">
     <span className="group-hover:scale-110 transition-transform duration-200">{icon}</span>
     <span>{name}</span>
   </div>
@@ -389,8 +389,8 @@ const TechPill = ({ icon, name }) => (
 const SectionLabel = ({ icon, text, glow }) => (
   <div className="flex items-center gap-3">
     <div className={`p-2 rounded-lg border ${glow}`}>{icon}</div>
-    <span className="text-xs font-bold text-slate-300 uppercase tracking-[0.2em] drop-shadow-md">{text}</span>
-    <div className="h-px bg-gradient-to-r from-slate-600 to-transparent grow ml-2 hidden md:block" />
+    <span className="text-xs font-bold text-slate-300 uppercase tracking-[0.2em]">{text}</span>
+    <div className="h-px bg-gradient-to-r from-slate-700 to-transparent grow ml-2 hidden md:block" />
   </div>
 );
 
@@ -416,7 +416,7 @@ const ParticleField = ({ color }) => {
           cy={`${p.y}%`}
           r={p.r}
           fill={color}
-          opacity="0.4"
+          opacity="0.55"
           style={{
             animation: `particle-float ${p.d}s ease-in-out ${p.delay}s infinite alternate`
           }}
@@ -449,7 +449,7 @@ export default function Projects() {
     <section
       id="projects"
       ref={containerRef}
-      className="relative w-full py-28 px-4 md:px-8 bg-[#030712] text-slate-100 overflow-hidden selection:bg-pink-500/30"
+      className="relative w-full py-28 px-4 md:px-8 bg-[#030712] text-slate-200 overflow-hidden selection:bg-pink-500/30"
       style={{ fontFamily: "'DM Sans', sans-serif" }}
     >
       <FloatingOrbs mouse={mousePos} />
@@ -458,34 +458,33 @@ export default function Projects() {
 
         {/* ── HEADER ── */}
         <div className="text-center mb-32 space-y-6 section-reveal">
-          <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-white/10 bg-white/[0.03] backdrop-blur-sm text-[11px] uppercase tracking-[0.25em] font-semibold text-slate-300 shadow-lg">
+          <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-white/20 bg-white/[0.06] backdrop-blur-sm text-[11px] uppercase tracking-[0.25em] font-semibold text-slate-300">
             <span className="w-1.5 h-1.5 rounded-full bg-pink-500 animate-pulse shadow-[0_0_8px_#ec4899]" />
             Portfolio & Engineering
           </div>
 
           <div className="relative">
             <h2 className="text-6xl md:text-9xl font-black tracking-tighter leading-none">
-              <span className="text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-400 drop-shadow-lg">Built to</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-500">Built to</span>
               <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 drop-shadow-[0_0_60px_rgba(168,85,247,0.5)]">Scale.</span>
             </h2>
-            {/* Decorative lines */}
             <div className="absolute top-1/2 -left-8 w-6 h-px bg-pink-500/60 hidden md:block" />
             <div className="absolute top-1/2 -right-8 w-6 h-px bg-blue-500/60 hidden md:block" />
           </div>
 
-          <p className="max-w-xl mx-auto text-base md:text-lg text-slate-300 font-normal leading-relaxed">
+          <p className="max-w-xl mx-auto text-base md:text-lg text-slate-300 font-light leading-relaxed">
             Architecting digital experiences with precision. Selected works demonstrating mastery in{" "}
-            <span className="text-white font-bold tracking-wide">Full-Stack</span>,{" "}
-            <span className="text-white font-bold tracking-wide">AI Integration</span>, and{" "}
-            <span className="text-white font-bold tracking-wide">Security</span>.
+            <span className="text-white font-medium">Full-Stack</span>,{" "}
+            <span className="text-white font-medium">AI Integration</span>, and{" "}
+            <span className="text-white font-medium">Security</span>.
           </p>
 
           {/* Scrolling tech marquee */}
           <div className="mt-10 overflow-hidden relative">
             <div className="flex gap-4 marquee-track py-2">
               {["MERN Stack", "TypeScript", "WebSockets", "GraphQL", "AI/ML", "Docker", "MongoDB", "Stripe API", "Next.js", "Clerk Auth", "MERN Stack", "TypeScript", "WebSockets", "GraphQL", "AI/ML", "Docker", "MongoDB", "Stripe API", "Next.js", "Clerk Auth"].map((t, i) => (
-                <span key={i} className="shrink-0 px-4 py-1.5 rounded-full border border-white/[0.1] bg-white/[0.04] text-slate-300 text-xs font-mono whitespace-nowrap shadow-sm">
+                <span key={i} className="shrink-0 px-4 py-1.5 rounded-full border border-white/[0.16] bg-white/[0.06] text-slate-300 text-xs font-mono whitespace-nowrap">
                   {t}
                 </span>
               ))}
@@ -503,16 +502,16 @@ export default function Projects() {
             <SectionLabel
               icon={<FaStar className="text-yellow-400 text-sm animate-spin-slow" />}
               text="Flagship Project · Production Grade"
-              glow="bg-yellow-500/10 border-yellow-500/20"
+              glow="bg-yellow-500/15 border-yellow-500/30"
             />
           </div>
 
-          <div className="project-card group relative rounded-[2rem] overflow-hidden border border-white/[0.1]"
-            style={{ background: "linear-gradient(135deg, #0a0e1a 0%, #050810 100%)" }}>
+          <div className="project-card group relative rounded-[2rem] overflow-hidden border border-white/[0.12]"
+            style={{ background: "linear-gradient(135deg, #0d1220 0%, #080c18 100%)" }}>
 
             {/* Glow border effect */}
             <div className="absolute inset-0 rounded-[2rem] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
-              style={{ background: "linear-gradient(135deg, rgba(236,72,153,0.15), rgba(168,85,247,0.1), rgba(59,130,246,0.1))", border: "1px solid rgba(236,72,153,0.4)" }} />
+              style={{ background: "linear-gradient(135deg, rgba(236,72,153,0.2), rgba(168,85,247,0.15), rgba(59,130,246,0.12))", border: "1px solid rgba(236,72,153,0.4)" }} />
 
             <ParticleField color="#ec4899" />
 
@@ -521,34 +520,34 @@ export default function Projects() {
               {/* LEFT */}
               <div className="lg:col-span-7 p-8 md:p-14 flex flex-col relative z-10">
                 <div className="mb-8">
-                  <div className="flex items-center gap-3 font-mono text-xs text-pink-400 font-bold mb-5">
+                  <div className="flex items-center gap-3 font-mono text-xs text-pink-400/80 mb-5">
                     <FaCodeBranch />
                     <span>{restaurantData.version}</span>
-                    <span className="text-slate-500">·</span>
-                    <span className="text-slate-400 truncate max-w-[200px]">{restaurantData.lastCommit}</span>
+                    <span className="text-slate-600">·</span>
+                    <span className="text-slate-500 truncate max-w-[200px]">{restaurantData.lastCommit}</span>
                   </div>
 
                   <div className="flex items-start gap-4 mb-5">
                     <span className="text-5xl">{restaurantData.emoji}</span>
-                    <h2 className="text-3xl md:text-5xl font-black text-white leading-tight drop-shadow-md">{restaurantData.title}</h2>
+                    <h2 className="text-3xl md:text-5xl font-black text-white leading-tight">{restaurantData.title}</h2>
                   </div>
 
-                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg mb-6 shadow-inner"
+                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg mb-6"
                     style={{ background: "linear-gradient(90deg, rgba(236,72,153,0.15), transparent)", borderLeft: "3px solid #ec4899" }}>
-                    <span className="text-sm text-pink-200 font-mono font-bold tracking-wide">{restaurantData.tagline}</span>
+                    <span className="text-sm text-pink-300 font-mono">{restaurantData.tagline}</span>
                   </div>
 
-                  <p className="text-slate-200 leading-relaxed font-normal">{restaurantData.description}</p>
+                  <p className="text-slate-300 leading-relaxed">{restaurantData.description}</p>
                 </div>
 
                 {/* Stack */}
-                <div className="flex flex-wrap gap-2.5 mb-10 pb-8 border-b border-white/[0.1]">
+                <div className="flex flex-wrap gap-2.5 mb-10 pb-8 border-b border-white/[0.12]">
                   {restaurantData.stack.map((t, i) => <TechPill key={i} {...t} />)}
                 </div>
 
                 {/* Tabs */}
                 <div className="grow flex flex-col">
-                  <div className="flex gap-1 mb-6 p-1 rounded-xl bg-white/[0.04] border border-white/[0.1] w-fit shadow-md">
+                  <div className="flex gap-1 mb-6 p-1 rounded-xl bg-white/[0.04] border border-white/[0.12] w-fit">
                     {["overview", "architecture", "engineering", "ui/ux"].map(tab => (
                       <TabButton key={tab} active={activeTab === tab} onClick={() => setActiveTab(tab)}>
                         {tab}
@@ -560,30 +559,30 @@ export default function Projects() {
                     {activeTab === "overview" && (
                       <div className="grid grid-cols-2 gap-4 animate-slide-up">
                         {restaurantData.stats.map((s, i) => (
-                          <div key={i} className="stat-card group/s p-5 rounded-xl border border-white/[0.1] bg-white/[0.04] hover:border-pink-500/40 hover:bg-pink-500/10 transition-all duration-300 shadow-md">
-                            <div className="text-2xl font-black text-white mb-1 group-hover/s:text-pink-400 transition-colors drop-shadow-sm">
+                          <div key={i} className="stat-card group/s p-5 rounded-xl border border-white/[0.12] bg-white/[0.05] hover:border-pink-500/40 hover:bg-pink-500/[0.08] transition-all duration-300">
+                            <div className="text-2xl font-black text-white mb-1 group-hover/s:text-pink-400 transition-colors">
                               {s.value}
                             </div>
-                            <div className="text-[10px] text-slate-300 uppercase tracking-widest font-bold">{s.label}</div>
-                            <div className="text-[10px] text-slate-400 mt-0.5 font-mono">{s.sub}</div>
+                            <div className="text-[10px] text-slate-400 uppercase tracking-widest font-bold">{s.label}</div>
+                            <div className="text-[10px] text-slate-500 mt-0.5 font-mono">{s.sub}</div>
                           </div>
                         ))}
                       </div>
                     )}
                     {activeTab === "architecture" && (
                       <div className="space-y-5 animate-slide-up">
-                        <div className="p-4 rounded-xl bg-[#050a12] border border-white/[0.1] font-mono text-xs text-slate-200 leading-relaxed shadow-inner">
+                        <div className="p-4 rounded-xl bg-[#050a12] border border-white/[0.12] font-mono text-xs text-slate-300 leading-relaxed">
                           <span className="text-pink-400">const</span> <span className="text-blue-400">socketHandler</span> = (io) ={">"} {"{"}
                           <br />&nbsp;&nbsp;io.on(<span className="text-green-400">'connection'</span>, (socket) ={">"} {"{"}
                           <br />&nbsp;&nbsp;&nbsp;&nbsp;socket.join(<span className="text-green-400">'restaurant_id'</span>);
-                          <br />&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-slate-400 font-bold">// Real-time push</span>
+                          <br />&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-slate-500">// Real-time push</span>
                           <br />&nbsp;&nbsp;&nbsp;&nbsp;socket.emit(<span className="text-green-400">'table_update'</span>, payload);
                           <br />&nbsp;&nbsp;{"}"});
                           <br />{"}"};
                         </div>
                         <ul className="space-y-3">
                           {restaurantData.deepDive.architecture.map((item, i) => (
-                            <li key={i} className="flex gap-3 text-slate-200 text-sm leading-relaxed font-normal">
+                            <li key={i} className="flex gap-3 text-slate-300 text-sm leading-relaxed">
                               <FaServer className="mt-1 text-blue-400 shrink-0" /> {item}
                             </li>
                           ))}
@@ -593,11 +592,11 @@ export default function Projects() {
                     {activeTab === "engineering" && (
                       <div className="space-y-4 animate-slide-up">
                         {restaurantData.challenges.map((c, i) => (
-                          <div key={i} className="flex gap-4 p-4 rounded-xl bg-white/[0.04] border border-white/[0.1] hover:border-white/20 transition-colors shadow-sm">
-                            <div className="text-xl mt-0.5 drop-shadow-md">{c.icon}</div>
+                          <div key={i} className="flex gap-4 p-4 rounded-xl bg-white/[0.05] border border-white/[0.12] hover:border-white/20 transition-colors">
+                            <div className="text-xl mt-0.5">{c.icon}</div>
                             <div>
-                              <h5 className="font-bold text-white text-sm tracking-wide">{c.title}</h5>
-                              <p className="text-xs text-slate-300 mt-1 leading-relaxed font-normal">{c.desc}</p>
+                              <h5 className="font-bold text-white text-sm">{c.title}</h5>
+                              <p className="text-xs text-slate-300 mt-1 leading-relaxed">{c.desc}</p>
                             </div>
                           </div>
                         ))}
@@ -606,8 +605,8 @@ export default function Projects() {
                     {activeTab === "ui/ux" && (
                       <ul className="space-y-4 animate-slide-up">
                         {restaurantData.deepDive.uiux.map((item, i) => (
-                          <li key={i} className="flex gap-3 text-slate-200 text-sm leading-relaxed p-3 rounded-lg hover:bg-white/[0.04] transition-colors border border-transparent hover:border-white/[0.05]">
-                            <FaPaintBrush className="mt-1 text-pink-400 shrink-0" /> {item}
+                          <li key={i} className="flex gap-3 text-slate-300 text-sm leading-relaxed p-3 rounded-lg hover:bg-white/[0.04] transition-colors">
+                            <FaPaintBrush className="mt-1 text-pink-500 shrink-0" /> {item}
                           </li>
                         ))}
                       </ul>
@@ -616,47 +615,47 @@ export default function Projects() {
                 </div>
 
                 {/* CTAs */}
-                <div className="flex flex-wrap gap-3 mt-10 pt-8 border-t border-white/[0.1]">
+                <div className="flex flex-wrap gap-3 mt-10 pt-8 border-t border-white/[0.12]">
                   <a href={restaurantData.demo} target="_blank" rel="noopener noreferrer"
-                    className="cta-primary group flex items-center gap-3 px-7 py-3.5 rounded-xl font-bold text-sm text-black">
+                    className="cta-primary group flex items-center gap-3 px-7 py-3.5 rounded-xl font-bold text-sm">
                     <FaExternalLinkAlt className="group-hover:rotate-45 transition-transform duration-300" />
                     Launch Live Demo
                   </a>
                   <a href={restaurantData.github} target="_blank" rel="noopener noreferrer"
-                    className="flex items-center gap-3 px-7 py-3.5 rounded-xl bg-white/[0.06] text-white font-bold text-sm border border-white/20 hover:bg-white/[0.1] hover:border-white/30 transition-all duration-300 shadow-md">
+                    className="flex items-center gap-3 px-7 py-3.5 rounded-xl bg-white/[0.07] text-white font-bold text-sm border border-white/20 hover:bg-white/[0.12] hover:border-white/30 transition-all duration-300">
                     <FaGithub size={18} /> View Source
                   </a>
                 </div>
               </div>
 
               {/* RIGHT */}
-              <div className="lg:col-span-5 bg-[#030610] border-l border-white/[0.06] flex flex-col">
+              <div className="lg:col-span-5 bg-[#050810] border-l border-white/[0.08] flex flex-col">
                 {/* Mock UI card */}
                 <div className="h-1/2 flex items-center justify-center p-8 relative overflow-hidden">
-                  <div className="absolute inset-0" style={{ background: "radial-gradient(circle at center, rgba(236,72,153,0.1), transparent 70%)" }} />
+                  <div className="absolute inset-0" style={{ background: "radial-gradient(circle at center, rgba(236,72,153,0.14), transparent 70%)" }} />
                   <div className="card-float relative z-10">
-                    <div className="w-60 bg-[#0e1628]/95 backdrop-blur-2xl rounded-2xl border border-white/20 shadow-[0_10px_40px_rgba(0,0,0,0.8)] p-5 -rotate-3 hover:rotate-0 transition-transform duration-700 group/card">
-                      <div className="absolute -top-1 -right-1 px-2 py-0.5 rounded bg-green-500/30 text-green-300 text-[10px] font-bold border border-green-500/50 shadow-[0_0_15px_rgba(52,211,153,0.5)]">
+                    <div className="w-60 bg-[#0e1628]/90 backdrop-blur-xl rounded-2xl border border-white/20 shadow-2xl p-5 -rotate-3 hover:rotate-0 transition-transform duration-700 group/card">
+                      <div className="absolute -top-1 -right-1 px-2 py-0.5 rounded bg-green-500/20 text-green-400 text-[9px] font-bold border border-green-500/30 shadow-[0_0_12px_rgba(52,211,153,0.3)]">
                         ● LIVE
                       </div>
                       <div className="flex justify-between items-center mb-4">
-                        <span className="text-xs font-bold text-slate-300">Table #4</span>
-                        <span className="text-xs text-slate-400 font-mono font-bold">2 guests</span>
+                        <span className="text-xs font-bold text-slate-400">Table #4</span>
+                        <span className="text-xs text-slate-500 font-mono">2 guests</span>
                       </div>
                       <div className="space-y-2 mb-5">
-                        <div className="h-1.5 w-3/4 bg-slate-700 rounded-full">
-                          <div className="h-full w-2/3 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 animate-width-pulse shadow-[0_0_8px_#ec4899]" />
+                        <div className="h-1.5 w-3/4 bg-slate-800 rounded-full">
+                          <div className="h-full w-2/3 rounded-full bg-gradient-to-r from-pink-600 to-purple-600 animate-width-pulse" />
                         </div>
-                        <div className="h-1.5 w-1/2 bg-slate-700 rounded-full">
-                          <div className="h-full w-1/3 rounded-full bg-blue-500 animate-width-pulse delay-300 shadow-[0_0_8px_#3b82f6]" />
+                        <div className="h-1.5 w-1/2 bg-slate-800 rounded-full">
+                          <div className="h-full w-1/3 rounded-full bg-blue-600 animate-width-pulse delay-300" />
                         </div>
                       </div>
                       <div className="border-t border-white/10 pt-4">
-                        <div className="flex justify-between text-xs font-mono text-slate-300 font-bold mb-3">
+                        <div className="flex justify-between text-xs font-mono text-slate-300 mb-3">
                           <span>Total Bill</span>
-                          <span className="text-white font-black drop-shadow-md">$142.50</span>
+                          <span className="text-white font-bold">$142.50</span>
                         </div>
-                        <div className="w-full py-2 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 text-center text-xs font-bold text-white shadow-[0_4px_20px_rgba(59,130,246,0.6)] group-hover/card:shadow-[0_4px_30px_rgba(59,130,246,0.8)] transition-shadow tracking-wide">
+                        <div className="w-full py-2 rounded-lg bg-gradient-to-r from-blue-600 to-blue-500 text-center text-xs font-bold text-white shadow-[0_4px_20px_rgba(59,130,246,0.4)] group-hover/card:shadow-[0_4px_30px_rgba(59,130,246,0.6)] transition-shadow">
                           Process Payment
                         </div>
                       </div>
@@ -667,9 +666,9 @@ export default function Projects() {
                 </div>
 
                 {/* Terminal */}
-                <div className="h-1/2 border-t border-white/[0.06] p-5 bg-[#080d14]">
-                  <div className="flex items-center gap-2 mb-3 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
-                    <FaTerminal className="text-slate-300" /> Server Logs
+                <div className="h-1/2 border-t border-white/[0.08] p-5">
+                  <div className="flex items-center gap-2 mb-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                    <FaTerminal /> Server Logs
                   </div>
                   <div className="h-[calc(100%-28px)]">
                     <TerminalUI logs={terminalLogs} label="server.js — node" cwd="~/restaurant-backend" />
@@ -689,15 +688,15 @@ export default function Projects() {
             <SectionLabel
               icon={<FaRobot className="text-violet-400 text-sm" />}
               text="AI-Powered Platform · Production Ready"
-              glow="bg-violet-500/10 border-violet-500/20"
+              glow="bg-violet-500/15 border-violet-500/30"
             />
           </div>
 
-          <div className="project-card group relative rounded-[2rem] overflow-hidden border border-white/[0.1]"
-            style={{ background: "linear-gradient(135deg, #090b18 0%, #060810 100%)" }}>
+          <div className="project-card group relative rounded-[2rem] overflow-hidden border border-white/[0.12]"
+            style={{ background: "linear-gradient(135deg, #0c0e1e 0%, #08090e 100%)" }}>
 
             <div className="absolute inset-0 rounded-[2rem] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
-              style={{ background: "linear-gradient(135deg, rgba(139,92,246,0.15), rgba(99,102,241,0.1))", border: "1px solid rgba(139,92,246,0.4)" }} />
+              style={{ background: "linear-gradient(135deg, rgba(139,92,246,0.18), rgba(99,102,241,0.12))", border: "1px solid rgba(139,92,246,0.35)" }} />
 
             <ParticleField color="#8b5cf6" />
 
@@ -705,37 +704,37 @@ export default function Projects() {
               {/* LEFT */}
               <div className="lg:col-span-7 p-8 md:p-14 flex flex-col relative z-10">
                 <div className="mb-8">
-                  <div className="flex items-center gap-3 font-mono text-xs text-violet-400 font-bold mb-5">
+                  <div className="flex items-center gap-3 font-mono text-xs text-violet-400/80 mb-5">
                     <FaCodeBranch /> {aiNotesData.version}
-                    <span className="text-slate-500">·</span>
-                    <span className="text-slate-400 truncate max-w-[200px]">{aiNotesData.lastCommit}</span>
+                    <span className="text-slate-600">·</span>
+                    <span className="text-slate-500 truncate max-w-[200px]">{aiNotesData.lastCommit}</span>
                   </div>
 
                   <div className="flex items-start gap-4 mb-5">
                     <span className="text-5xl">{aiNotesData.emoji}</span>
-                    <h2 className="text-3xl md:text-5xl font-black text-white leading-tight drop-shadow-md">{aiNotesData.title}</h2>
+                    <h2 className="text-3xl md:text-5xl font-black text-white leading-tight">{aiNotesData.title}</h2>
                   </div>
 
-                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg mb-6 shadow-inner"
+                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg mb-6"
                     style={{ background: "linear-gradient(90deg, rgba(139,92,246,0.15), transparent)", borderLeft: "3px solid #8b5cf6" }}>
-                    <span className="text-sm text-violet-200 font-mono font-bold tracking-wide">{aiNotesData.tagline}</span>
+                    <span className="text-sm text-violet-300 font-mono">{aiNotesData.tagline}</span>
                   </div>
 
-                  <p className="text-slate-200 leading-relaxed font-normal">{aiNotesData.description}</p>
+                  <p className="text-slate-300 leading-relaxed">{aiNotesData.description}</p>
                 </div>
 
                 {/* Stack */}
-                <div className="flex flex-wrap gap-2.5 mb-10 pb-8 border-b border-white/[0.1]">
+                <div className="flex flex-wrap gap-2.5 mb-10 pb-8 border-b border-white/[0.12]">
                   {aiNotesData.stack.map((t, i) => <TechPill key={i} {...t} />)}
                 </div>
 
                 {/* Stats */}
                 <div className="grid grid-cols-2 gap-4 mb-8">
                   {aiNotesData.stats.map((s, i) => (
-                    <div key={i} className="p-5 rounded-xl border border-white/[0.1] bg-white/[0.04] hover:border-violet-500/40 hover:bg-violet-500/10 transition-all duration-300 group/s shadow-md">
-                      <div className="text-2xl font-black text-white mb-1 group-hover/s:text-violet-400 transition-colors drop-shadow-sm">{s.value}</div>
-                      <div className="text-[10px] text-slate-300 uppercase tracking-widest font-bold">{s.label}</div>
-                      <div className="text-[10px] text-slate-400 mt-0.5 font-mono">{s.sub}</div>
+                    <div key={i} className="p-5 rounded-xl border border-white/[0.12] bg-white/[0.05] hover:border-violet-500/40 hover:bg-violet-500/[0.08] transition-all duration-300 group/s">
+                      <div className="text-2xl font-black text-white mb-1 group-hover/s:text-violet-400 transition-colors">{s.value}</div>
+                      <div className="text-[10px] text-slate-400 uppercase tracking-widest font-bold">{s.label}</div>
+                      <div className="text-[10px] text-slate-500 mt-0.5 font-mono">{s.sub}</div>
                     </div>
                   ))}
                 </div>
@@ -743,42 +742,42 @@ export default function Projects() {
                 {/* AI Features */}
                 <div className="space-y-3 mb-8">
                   <div className="flex items-center gap-2 mb-4">
-                    <FaBolt className="text-violet-400 animate-pulse" />
-                    <span className="text-sm font-bold text-white uppercase tracking-wider drop-shadow-sm">AI-Powered Features</span>
+                    <FaBolt className="text-violet-400" />
+                    <span className="text-sm font-bold text-white uppercase tracking-wider">AI-Powered Features</span>
                   </div>
                   {aiNotesData.aiFeatures.map((f, i) => (
-                    <div key={i} className="flex gap-4 p-4 rounded-xl bg-white/[0.04] border border-white/[0.1] hover:border-violet-500/30 hover:bg-violet-500/[0.08] transition-all duration-300 shadow-sm">
-                      <div className="text-lg mt-0.5 drop-shadow-md">{f.icon}</div>
+                    <div key={i} className="flex gap-4 p-4 rounded-xl bg-white/[0.05] border border-white/[0.12] hover:border-violet-500/30 hover:bg-violet-500/[0.06] transition-all duration-300">
+                      <div className="text-lg mt-0.5">{f.icon}</div>
                       <div>
-                        <h5 className="font-bold text-white text-sm tracking-wide">{f.title}</h5>
-                        <p className="text-xs text-slate-300 mt-1 leading-relaxed font-normal">{f.desc}</p>
+                        <h5 className="font-bold text-white text-sm">{f.title}</h5>
+                        <p className="text-xs text-slate-300 mt-1 leading-relaxed">{f.desc}</p>
                       </div>
                     </div>
                   ))}
                 </div>
 
                 {/* Tech breakdown */}
-                <div className="rounded-xl p-5 border border-white/[0.1] bg-white/[0.04] mb-8 shadow-inner">
+                <div className="rounded-xl p-5 border border-white/[0.12] bg-white/[0.05] mb-8">
                   <div className="flex items-center gap-2 mb-4">
                     <FaServer className="text-violet-400" />
-                    <span className="text-xs font-bold text-white uppercase tracking-wider drop-shadow-sm">Technical Architecture</span>
+                    <span className="text-xs font-bold text-white uppercase tracking-wider">Technical Architecture</span>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <div className="text-[11px] font-black text-violet-300 mb-2 uppercase tracking-widest">Frontend</div>
+                      <div className="text-[10px] font-bold text-violet-400 mb-2 uppercase">Frontend</div>
                       <ul className="space-y-2">
                         {aiNotesData.techStack.frontend.map((item, i) => (
-                          <li key={i} className="flex gap-2 text-slate-200 text-xs font-normal">
+                          <li key={i} className="flex gap-2 text-slate-300 text-xs">
                             <FaRegCheckCircle className="mt-0.5 text-violet-400 shrink-0" />{item}
                           </li>
                         ))}
                       </ul>
                     </div>
                     <div>
-                      <div className="text-[11px] font-black text-blue-300 mb-2 uppercase tracking-widest">Backend & AI</div>
+                      <div className="text-[10px] font-bold text-blue-400 mb-2 uppercase">Backend & AI</div>
                       <ul className="space-y-2">
                         {aiNotesData.techStack.backend.map((item, i) => (
-                          <li key={i} className="flex gap-2 text-slate-200 text-xs font-normal">
+                          <li key={i} className="flex gap-2 text-slate-300 text-xs">
                             <FaRegCheckCircle className="mt-0.5 text-blue-400 shrink-0" />{item}
                           </li>
                         ))}
@@ -788,69 +787,69 @@ export default function Projects() {
                 </div>
 
                 {/* CTAs */}
-                <div className="flex flex-wrap gap-3 mt-auto pt-8 border-t border-white/[0.1]">
+                <div className="flex flex-wrap gap-3 mt-auto pt-8 border-t border-white/[0.12]">
                   <a href={aiNotesData.demo} target="_blank" rel="noopener noreferrer"
-                    className="cta-violet group flex items-center gap-3 px-7 py-3.5 rounded-xl font-bold text-sm text-white">
+                    className="cta-violet group flex items-center gap-3 px-7 py-3.5 rounded-xl font-bold text-sm">
                     <FaExternalLinkAlt className="group-hover:rotate-45 transition-transform duration-300" />
                     Launch Live Demo
                   </a>
                   <a href={aiNotesData.github} target="_blank" rel="noopener noreferrer"
-                    className="flex items-center gap-3 px-7 py-3.5 rounded-xl bg-white/[0.06] text-white font-bold text-sm border border-white/20 hover:bg-white/[0.1] hover:border-white/30 transition-all duration-300 shadow-md">
+                    className="flex items-center gap-3 px-7 py-3.5 rounded-xl bg-white/[0.07] text-white font-bold text-sm border border-white/20 hover:bg-white/[0.12] hover:border-white/30 transition-all duration-300">
                     <FaGithub size={18} /> View Source
                   </a>
                 </div>
               </div>
 
               {/* RIGHT */}
-              <div className="lg:col-span-5 bg-[#03040e] border-l border-white/[0.06] flex flex-col">
+              <div className="lg:col-span-5 bg-[#04050f] border-l border-white/[0.08] flex flex-col">
                 <div className="h-1/2 flex items-center justify-center p-8 relative overflow-hidden">
-                  <div className="absolute inset-0" style={{ background: "radial-gradient(circle at center, rgba(139,92,246,0.1), transparent 70%)" }} />
+                  <div className="absolute inset-0" style={{ background: "radial-gradient(circle at center, rgba(139,92,246,0.14), transparent 70%)" }} />
                   <div className="card-float relative z-10 w-64">
-                    <div className="w-full bg-[#0e1020]/95 backdrop-blur-2xl rounded-2xl border border-white/20 shadow-[0_10px_40px_rgba(0,0,0,0.8)] p-5 hover:scale-105 transition-transform duration-500">
+                    <div className="w-full bg-[#0e1020]/90 backdrop-blur-xl rounded-2xl border border-white/20 shadow-2xl p-5 hover:scale-105 transition-transform duration-500">
                       <div className="flex items-center justify-between mb-5">
                         <div className="flex items-center gap-2">
-                          <div className="w-7 h-7 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-[0_0_16px_rgba(139,92,246,0.8)]">
+                          <div className="w-7 h-7 rounded-full bg-gradient-to-br from-violet-600 to-purple-700 flex items-center justify-center shadow-[0_0_16px_rgba(139,92,246,0.6)]">
                             <FaBolt className="text-white text-xs" />
                           </div>
-                          <span className="text-xs font-black text-slate-200 tracking-wide">AI Notes</span>
+                          <span className="text-xs font-bold text-slate-200">AI Notes</span>
                         </div>
                         <div className="flex gap-1">
                           {[0, 75, 150].map(d => (
-                            <div key={d} className="w-1.5 h-1.5 rounded-full animate-pulse shadow-sm"
+                            <div key={d} className="w-1.5 h-1.5 rounded-full animate-pulse"
                               style={{ backgroundColor: d === 0 ? '#34d399' : d === 75 ? '#60a5fa' : '#a78bfa', animationDelay: `${d}ms` }} />
                           ))}
                         </div>
                       </div>
                       <div className="space-y-4">
-                        <div className="p-3 rounded-lg bg-[#0a0c18] border border-white/[0.1] shadow-inner">
-                          <div className="h-1.5 w-3/4 rounded-full bg-violet-500/50 mb-2 ai-scan shadow-[0_0_5px_#8b5cf6]" />
-                          <div className="h-1.5 w-1/2 rounded-full bg-slate-600" />
+                        <div className="p-3 rounded-lg bg-[#0a0c18] border border-white/[0.12]">
+                          <div className="h-1.5 w-3/4 rounded-full bg-violet-600/30 mb-2 ai-scan" />
+                          <div className="h-1.5 w-1/2 rounded-full bg-slate-700" />
                         </div>
                         <div className="grid grid-cols-2 gap-2">
-                          <div className="px-2 py-2 rounded-lg bg-violet-600/20 border border-violet-500/30 text-center text-[10px] text-violet-200 font-black shadow-sm">AI Summary</div>
-                          <div className="px-2 py-2 rounded-lg bg-blue-600/20 border border-blue-500/30 text-center text-[10px] text-blue-200 font-black shadow-sm">AI Improve</div>
+                          <div className="px-2 py-2 rounded-lg bg-violet-600/15 border border-violet-500/30 text-center text-[9px] text-violet-300 font-bold">AI Summary</div>
+                          <div className="px-2 py-2 rounded-lg bg-blue-600/15 border border-blue-500/30 text-center text-[9px] text-blue-300 font-bold">AI Improve</div>
                         </div>
                         <div className="flex flex-wrap gap-1.5">
                           {['#work', '#productivity', '#ai'].map((tag, i) => (
-                            <span key={i} className="px-2 py-0.5 rounded bg-emerald-900/40 text-emerald-300 text-[10px] font-mono font-bold border border-emerald-500/30 shadow-sm">{tag}</span>
+                            <span key={i} className="px-2 py-0.5 rounded bg-emerald-900/40 text-emerald-400 text-[9px] font-mono border border-emerald-500/30">{tag}</span>
                           ))}
                         </div>
                       </div>
-                      <div className="mt-4 pt-3 border-t border-white/[0.1] space-y-2">
+                      <div className="mt-4 pt-3 border-t border-white/[0.08] space-y-2">
                         {[["Clerk Auth", "text-violet-400", FaLock], ["MongoDB", "text-green-400", FaDatabase], ["Gemini AI", "text-orange-400", FaBolt]].map(([label, cls, Icon], i) => (
-                          <div key={i} className="flex items-center gap-2 text-xs text-slate-300 font-bold">
+                          <div key={i} className="flex items-center gap-2 text-xs text-slate-300">
                             <Icon className={cls} />
                             <span>{label}</span>
-                            <div className="ml-auto w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse shadow-[0_0_5px_#34d399]" />
+                            <div className="ml-auto w-1.5 h-1.5 rounded-full bg-green-500/80 animate-pulse" />
                           </div>
                         ))}
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="h-1/2 border-t border-white/[0.06] p-5 bg-[#080d14]">
-                  <div className="flex items-center gap-2 mb-3 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
-                    <FaTerminal className="text-slate-300" /> AI Integration Logs
+                <div className="h-1/2 border-t border-white/[0.08] p-5">
+                  <div className="flex items-center gap-2 mb-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                    <FaTerminal /> AI Integration Logs
                   </div>
                   <div className="h-[calc(100%-28px)]">
                     <TerminalUI logs={aiNotesLogs} label="route.ts — next.js" cwd="~/ai-notes-app" />
@@ -869,45 +868,45 @@ export default function Projects() {
             <SectionLabel
               icon={<FaShieldAlt className="text-purple-400 text-sm" />}
               text="Secure Enterprise Module"
-              glow="bg-purple-500/10 border-purple-500/20"
+              glow="bg-purple-500/15 border-purple-500/30"
             />
           </div>
 
-          <div className="group relative rounded-[2rem] overflow-hidden border border-white/[0.1]"
-            style={{ background: "linear-gradient(135deg, #0a0b18 0%, #060710 100%)" }}>
+          <div className="group relative rounded-[2rem] overflow-hidden border border-white/[0.12]"
+            style={{ background: "linear-gradient(135deg, #0c0d1e 0%, #080910 100%)" }}>
 
             <div className="absolute inset-0 rounded-[2rem] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
-              style={{ border: "1px solid rgba(168,85,247,0.4)" }} />
+              style={{ border: "1px solid rgba(168,85,247,0.35)" }} />
 
             <ParticleField color="#a855f7" />
 
             <div className="grid lg:grid-cols-2 relative z-10">
               {/* LEFT */}
-              <div className="p-10 md:p-14 flex flex-col border-r border-white/[0.06]">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-purple-500/30 bg-purple-500/10 text-[11px] uppercase tracking-[0.2em] font-black text-purple-300 mb-6 w-fit shadow-md">
-                  <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse shadow-[0_0_5px_#a855f7]" />
+              <div className="p-10 md:p-14 flex flex-col border-r border-white/[0.08]">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-purple-500/30 bg-purple-500/10 text-[10px] uppercase tracking-[0.2em] font-bold text-purple-300 mb-6 w-fit">
+                  <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />
                   EdTech Security
                 </div>
 
                 <div className="flex items-start gap-4 mb-4">
                   <span className="text-4xl">{oaData.emoji}</span>
-                  <h3 className="text-3xl md:text-4xl font-black text-white leading-tight drop-shadow-md">{oaData.title}</h3>
+                  <h3 className="text-3xl md:text-4xl font-bold text-white leading-tight">{oaData.title}</h3>
                 </div>
 
-                <p className="text-slate-200 leading-relaxed mb-8 font-normal">{oaData.description}</p>
+                <p className="text-slate-300 leading-relaxed mb-8">{oaData.description}</p>
 
                 <div className="flex flex-wrap gap-2 mb-8">
                   {oaData.stack.map((t, i) => <TechPill key={i} {...t} />)}
                 </div>
 
                 {/* Role switcher */}
-                <div className="rounded-xl p-5 border border-white/[0.1] bg-white/[0.04] mb-8 shadow-inner">
+                <div className="rounded-xl p-5 border border-white/[0.12] bg-white/[0.05] mb-8">
                   <div className="flex justify-between items-center mb-4">
-                    <span className="text-xs font-black text-slate-300 uppercase tracking-wider drop-shadow-sm">View features as:</span>
-                    <div className="flex bg-black/50 rounded-lg p-1 border border-white/[0.1] shadow-inner">
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">View features as:</span>
+                    <div className="flex bg-black/30 rounded-lg p-0.5 border border-white/[0.12]">
                       {["admin", "student"].map(r => (
                         <button key={r} onClick={() => setOaRole(r)}
-                          className={`px-5 py-2 rounded-md text-xs font-black capitalize transition-all duration-300 ${oaRole === r ? "bg-purple-600 text-white shadow-[0_0_20px_rgba(168,85,247,0.6)]" : "text-slate-400 hover:text-slate-200"}`}>
+                          className={`px-4 py-1.5 rounded-md text-xs font-bold capitalize transition-all duration-300 ${oaRole === r ? "bg-purple-600 text-white shadow-[0_0_20px_rgba(168,85,247,0.4)]" : "text-slate-400 hover:text-slate-200"}`}>
                           {r}
                         </button>
                       ))}
@@ -915,8 +914,8 @@ export default function Projects() {
                   </div>
                   <ul className="space-y-3 min-h-[120px]">
                     {oaData.features[oaRole].map((f, i) => (
-                      <li key={i} className="flex items-start gap-3 text-sm text-slate-100 font-normal animate-slide-up">
-                        <FaRegCheckCircle className="mt-0.5 text-purple-400 shrink-0 drop-shadow-sm" />{f}
+                      <li key={i} className="flex items-start gap-3 text-sm text-slate-200 animate-slide-up">
+                        <FaRegCheckCircle className="mt-0.5 text-purple-400 shrink-0" />{f}
                       </li>
                     ))}
                   </ul>
@@ -924,12 +923,12 @@ export default function Projects() {
 
                 <div className="flex gap-4">
                   <a href={oaData.demo} target="_blank" rel="noopener noreferrer"
-                    className="group flex items-center gap-2 text-sm font-black text-purple-300 hover:text-purple-200 transition-colors drop-shadow-md">
+                    className="group flex items-center gap-2 text-sm font-bold text-purple-400 hover:text-purple-300 transition-colors">
                     View Application
                     <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
                   </a>
                   <a href={oaData.github} target="_blank" rel="noopener noreferrer"
-                    className="group flex items-center gap-2 text-sm font-black text-slate-300 hover:text-white transition-colors">
+                    className="group flex items-center gap-2 text-sm font-bold text-slate-400 hover:text-slate-200 transition-colors">
                     <FaGithub /> Source Code
                   </a>
                 </div>
@@ -937,29 +936,29 @@ export default function Projects() {
 
               {/* RIGHT */}
               <div className="p-10 md:p-14 relative overflow-hidden flex flex-col justify-center">
-                <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(168,85,247,0.06), transparent)" }} />
-                <h4 className="text-xs font-black text-white mb-6 flex items-center gap-2 relative z-10 tracking-wider drop-shadow-md">
+                <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(168,85,247,0.07), transparent)" }} />
+                <h4 className="text-xs font-bold text-white mb-6 flex items-center gap-2 relative z-10">
                   <FaLock className="text-purple-400" /> Security Architecture
                 </h4>
 
                 <div className="grid gap-3 relative z-10 mb-8">
                   {oaData.securityFeatures.map((feat, i) => (
-                    <div key={i} className="flex items-center gap-4 p-4 rounded-xl bg-white/[0.04] border border-white/[0.1] hover:border-purple-500/40 hover:bg-purple-500/10 transition-all duration-300 group/s shadow-sm">
-                      <div className="w-9 h-9 rounded-lg bg-white/[0.06] flex items-center justify-center text-slate-300 group-hover/s:text-purple-300 transition-colors border border-white/[0.1] shadow-inner">
+                    <div key={i} className="flex items-center gap-4 p-4 rounded-xl bg-white/[0.05] border border-white/[0.12] hover:border-purple-500/35 hover:bg-purple-500/[0.08] transition-all duration-300 group/s">
+                      <div className="w-9 h-9 rounded-lg bg-white/[0.06] flex items-center justify-center text-slate-400 group-hover/s:text-purple-400 transition-colors border border-white/[0.12]">
                         {[<FaFingerprint />, <FaShieldAlt />, <FaBolt />, <FaCodeBranch />][i]}
                       </div>
                       <div>
-                        <div className="text-sm font-bold text-slate-100 tracking-wide">{feat}</div>
-                        <div className="text-[11px] text-green-400 font-mono mt-0.5 font-bold">✓ Verified</div>
+                        <div className="text-sm font-semibold text-white">{feat}</div>
+                        <div className="text-[10px] text-slate-500 font-mono mt-0.5">✓ Verified</div>
                       </div>
                     </div>
                   ))}
                 </div>
 
-                <div className="p-4 rounded-xl bg-[#03040e] border border-white/[0.1] font-mono text-[11px] text-slate-300 leading-relaxed relative z-10 shadow-inner">
-                  <span className="text-purple-400 font-bold">const</span> verifyToken = (req, res, next) ={">"} {"{"}<br />
-                  &nbsp;&nbsp;<span className="text-blue-400 font-bold">const</span> token = req.cookies.access_token;<br />
-                  &nbsp;&nbsp;<span className="text-pink-400 font-bold">if</span> (!token) <span className="text-pink-400 font-bold">return</span> next(createError(401));<br />
+                <div className="p-4 rounded-xl bg-[#03040e] border border-white/[0.12] font-mono text-[10px] text-slate-400 leading-relaxed relative z-10">
+                  <span className="text-purple-400">const</span> verifyToken = (req, res, next) ={">"} {"{"}<br />
+                  &nbsp;&nbsp;<span className="text-blue-400">const</span> token = req.cookies.access_token;<br />
+                  &nbsp;&nbsp;<span className="text-pink-400">if</span> (!token) <span className="text-pink-400">return</span> next(createError(401));<br />
                   &nbsp;&nbsp;jwt.verify(token, process.env.JWT_SECRET...);<br />
                   {"}"};
                 </div>
@@ -976,48 +975,48 @@ export default function Projects() {
             <SectionLabel
               icon={<FaLaptopCode className="text-blue-400 text-sm" />}
               text="Utility Modules & Interface Studies"
-              glow="bg-blue-500/10 border-blue-500/20"
+              glow="bg-blue-500/15 border-blue-500/30"
             />
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {tasksData.map((task, idx) => {
               const colors = {
-                cyan: { border: "hover:border-cyan-500/40", bg: "hover:bg-cyan-500/10", text: "group-hover:text-cyan-300", tag: "text-cyan-300 border-cyan-500/30 bg-cyan-900/40", dot: "bg-cyan-400" },
-                emerald: { border: "hover:border-emerald-500/40", bg: "hover:bg-emerald-500/10", text: "group-hover:text-emerald-300", tag: "text-emerald-300 border-emerald-500/30 bg-emerald-900/40", dot: "bg-emerald-400" },
-                orange: { border: "hover:border-orange-500/40", bg: "hover:bg-orange-500/10", text: "group-hover:text-orange-300", tag: "text-orange-300 border-orange-500/30 bg-orange-900/40", dot: "bg-orange-400" },
+                cyan: { border: "hover:border-cyan-500/40", bg: "hover:bg-cyan-500/[0.08]", text: "group-hover:text-cyan-400", tag: "text-cyan-300 border-cyan-500/30 bg-cyan-900/30", dot: "bg-cyan-500" },
+                emerald: { border: "hover:border-emerald-500/40", bg: "hover:bg-emerald-500/[0.08]", text: "group-hover:text-emerald-400", tag: "text-emerald-300 border-emerald-500/30 bg-emerald-900/30", dot: "bg-emerald-500" },
+                orange: { border: "hover:border-orange-500/40", bg: "hover:bg-orange-500/[0.08]", text: "group-hover:text-orange-400", tag: "text-orange-300 border-orange-500/30 bg-orange-900/30", dot: "bg-orange-500" },
               }[task.color];
 
               return (
                 <div key={task.id}
-                  className={`group relative flex flex-col bg-white/[0.04] border border-white/[0.1] rounded-2xl p-6 ${colors.border} ${colors.bg} transition-all duration-500 overflow-hidden cursor-default shadow-md`}
+                  className={`group relative flex flex-col bg-white/[0.05] border border-white/[0.12] rounded-2xl p-6 ${colors.border} ${colors.bg} transition-all duration-500 overflow-hidden cursor-default`}
                 >
                   {/* Hover glow corner */}
-                  <div className={`absolute top-0 right-0 w-24 h-24 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${colors.dot}`} style={{ transform: "translate(50%, -50%)", opacity: 0 }} />
+                  <div className={`absolute top-0 right-0 w-24 h-24 rounded-full blur-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-500 ${colors.dot}`} style={{ transform: "translate(50%, -50%)" }} />
 
                   <div className="relative z-10 flex flex-col h-full">
                     <div className="flex justify-between items-start mb-5">
-                      <div className={`p-3 rounded-xl bg-white/[0.05] border border-white/[0.1] text-xl text-slate-300 ${colors.text} transition-all duration-300 group-hover:scale-110 group-hover:border-white/20 shadow-inner`}>
+                      <div className={`p-3 rounded-xl bg-white/[0.06] border border-white/[0.14] text-xl text-slate-300 ${colors.text} transition-all duration-300 group-hover:scale-110 group-hover:border-white/20`}>
                         {task.icon}
                       </div>
                       <div className="flex gap-1.5">
                         <a href={task.github} target="_blank" rel="noopener noreferrer"
-                          className="p-2 rounded-lg hover:bg-white/[0.1] text-slate-400 hover:text-white transition-all duration-200">
-                          <FaGithub size={18} />
+                          className="p-2 rounded-lg hover:bg-white/[0.08] text-slate-500 hover:text-white transition-all duration-200">
+                          <FaGithub size={15} />
                         </a>
                         <a href={task.demo} target="_blank" rel="noopener noreferrer"
-                          className="p-2 rounded-lg hover:bg-white/[0.1] text-slate-400 hover:text-white transition-all duration-200">
-                          <FaExternalLinkAlt size={15} />
+                          className="p-2 rounded-lg hover:bg-white/[0.08] text-slate-500 hover:text-white transition-all duration-200">
+                          <FaExternalLinkAlt size={13} />
                         </a>
                       </div>
                     </div>
 
-                    <h4 className={`text-lg font-black text-white mb-2 ${colors.text} transition-colors duration-300 drop-shadow-sm`}>{task.title}</h4>
-                    <p className="text-slate-200 text-sm leading-relaxed mb-5 grow font-normal">{task.desc}</p>
+                    <h4 className={`text-base font-bold text-white mb-2 ${colors.text} transition-colors duration-300`}>{task.title}</h4>
+                    <p className="text-slate-300 text-sm leading-relaxed mb-5 grow">{task.desc}</p>
 
                     <div className="flex flex-wrap gap-1.5 mt-auto">
                       {task.tags.map((tag, i) => (
-                        <span key={i} className={`text-[10px] font-black uppercase px-2.5 py-1 rounded-md border font-mono shadow-sm ${colors.tag}`}>{tag}</span>
+                        <span key={i} className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-md border font-mono ${colors.tag}`}>{tag}</span>
                       ))}
                     </div>
                   </div>
@@ -1028,13 +1027,13 @@ export default function Projects() {
         </div>
 
         {/* FOOTER LINK */}
-        <div className="mt-28 text-center border-t border-white/[0.1] pt-14 section-reveal">
-          <p className="text-slate-400 font-mono text-xs mb-5 uppercase tracking-widest font-bold">Find all my code here</p>
+        <div className="mt-28 text-center border-t border-white/[0.10] pt-14 section-reveal">
+          <p className="text-slate-500 font-mono text-xs mb-5 uppercase tracking-widest">Find all my code here</p>
           <a href="https://github.com/Gokulakrishna15" target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 text-slate-200 font-black hover:text-white transition-colors duration-300 group drop-shadow-md text-lg">
-            <FaGithub size={24} className="group-hover:scale-110 transition-transform" />
+            className="inline-flex items-center gap-3 text-slate-300 font-bold hover:text-white transition-colors duration-300 group">
+            <FaGithub size={20} className="group-hover:scale-110 transition-transform" />
             github.com/Gokulakrishna15
-            <FaArrowRight className="text-sm group-hover:translate-x-1 transition-transform text-slate-400" />
+            <FaArrowRight className="text-xs group-hover:translate-x-1 transition-transform text-slate-500" />
           </a>
         </div>
 
@@ -1043,7 +1042,7 @@ export default function Projects() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700;900&display=swap');
 
-        /* ── ORBS ── */
+        /* ── ORBS — boosted from 8-12% to 30-40% opacity ── */
         .orb {
           position: absolute;
           border-radius: 50%;
@@ -1053,19 +1052,19 @@ export default function Projects() {
         }
         .orb-1 {
           width: 600px; height: 600px;
-          background: radial-gradient(circle, rgba(236,72,153,0.15) 0%, transparent 70%);
+          background: radial-gradient(circle, rgba(236,72,153,0.38) 0%, transparent 70%);
           top: -100px; left: 10%;
           animation: orb-drift-1 12s ease-in-out infinite;
         }
         .orb-2 {
           width: 500px; height: 500px;
-          background: radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%);
+          background: radial-gradient(circle, rgba(139,92,246,0.32) 0%, transparent 70%);
           bottom: 10%; right: 5%;
           animation: orb-drift-2 15s ease-in-out infinite;
         }
         .orb-3 {
           width: 400px; height: 400px;
-          background: radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%);
+          background: radial-gradient(circle, rgba(59,130,246,0.25) 0%, transparent 70%);
           top: 50%; left: 50%;
           animation: orb-drift-3 18s ease-in-out infinite;
         }
@@ -1108,31 +1107,41 @@ export default function Projects() {
         @keyframes ai-scan { 0% { opacity: 0.3; } 50% { opacity: 0.8; background: rgba(139,92,246,0.6); } 100% { opacity: 0.3; } }
         .ai-scan { animation: ai-scan 2s ease-in-out infinite; }
 
-        @keyframes particle-float { from { transform: translateY(0px); opacity: 0.4; } to { transform: translateY(-20px); opacity: 0; } }
+        @keyframes particle-float { from { transform: translateY(0px); opacity: 0.55; } to { transform: translateY(-20px); opacity: 0; } }
 
+        /* ── SECTION REVEAL — fixed: starts invisible, animates in with delay per child ── */
         @keyframes section-reveal { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
-        .section-reveal { animation: section-reveal 0.8s ease-out forwards; }
+        .section-reveal {
+          opacity: 0;
+          animation: section-reveal 0.8s ease-out forwards;
+        }
+        .section-reveal:nth-child(1) { animation-delay: 0.1s; }
+        .section-reveal:nth-child(2) { animation-delay: 0.25s; }
+        .section-reveal:nth-child(3) { animation-delay: 0.4s; }
+        .section-reveal:nth-child(4) { animation-delay: 0.55s; }
+        .section-reveal:nth-child(5) { animation-delay: 0.7s; }
+        .section-reveal:nth-child(6) { animation-delay: 0.85s; }
 
         /* ── CTAs ── */
         .cta-primary {
           background: linear-gradient(135deg, #fff 0%, #e2e8f0 100%);
           color: #000;
-          box-shadow: 0 0 30px rgba(255,255,255,0.2), 0 4px 20px rgba(0,0,0,0.6);
+          box-shadow: 0 0 30px rgba(255,255,255,0.1), 0 4px 20px rgba(0,0,0,0.5);
           transition: all 0.3s;
         }
         .cta-primary:hover {
-          box-shadow: 0 0 50px rgba(236,72,153,0.5), 0 4px 30px rgba(0,0,0,0.8);
+          box-shadow: 0 0 50px rgba(236,72,153,0.4), 0 4px 30px rgba(0,0,0,0.5);
           transform: scale(1.03);
         }
 
         .cta-violet {
-          background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+          background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
           color: #fff;
-          box-shadow: 0 0 30px rgba(139,92,246,0.4), 0 4px 20px rgba(0,0,0,0.6);
+          box-shadow: 0 0 30px rgba(139,92,246,0.4), 0 4px 20px rgba(0,0,0,0.5);
           transition: all 0.3s;
         }
         .cta-violet:hover {
-          box-shadow: 0 0 50px rgba(139,92,246,0.6), 0 4px 30px rgba(0,0,0,0.8);
+          box-shadow: 0 0 50px rgba(139,92,246,0.6), 0 4px 30px rgba(0,0,0,0.5);
           transform: scale(1.03);
         }
 
@@ -1141,7 +1150,7 @@ export default function Projects() {
           transition: box-shadow 0.5s;
         }
         .project-card:hover {
-          box-shadow: 0 0 80px rgba(236,72,153,0.1), 0 25px 80px rgba(0,0,0,0.8);
+          box-shadow: 0 0 80px rgba(236,72,153,0.08), 0 25px 80px rgba(0,0,0,0.6);
         }
 
         /* ── STAT CARD ── */
@@ -1151,7 +1160,7 @@ export default function Projects() {
         .stat-card::before {
           content: '';
           position: absolute; inset: 0;
-          background: radial-gradient(circle at top left, rgba(236,72,153,0.1), transparent 60%);
+          background: radial-gradient(circle at top left, rgba(236,72,153,0.08), transparent 60%);
           opacity: 0; transition: opacity 0.3s;
         }
         .stat-card:hover::before { opacity: 1; }
