@@ -339,7 +339,7 @@ const TerminalUI = ({ logs, label, cwd }) => {
               log.type === 'success' ? 'text-[#34d399]' :
               log.type === 'warn' ? 'text-[#fbbf24]' : 'text-slate-300'
             }`}>{log.type.toUpperCase()}:</span>
-            <span className="text-slate-300">{log.msg}</span>
+            <span className="text-slate-200">{log.msg}</span>
           </div>
         ))}
         <div className="flex gap-2 mt-3 pt-2 border-t border-white/[0.08]">
@@ -473,7 +473,7 @@ export default function Projects() {
             <div className="absolute top-1/2 -right-8 w-6 h-px bg-blue-500/60 hidden md:block" />
           </div>
 
-          <p className="max-w-xl mx-auto text-base md:text-lg text-slate-300 font-light leading-relaxed">
+          <p className="max-w-xl mx-auto text-base md:text-lg text-slate-200 font-light leading-relaxed">
             Architecting digital experiences with precision. Selected works demonstrating mastery in{" "}
             <span className="text-white font-medium">Full-Stack</span>,{" "}
             <span className="text-white font-medium">AI Integration</span>, and{" "}
@@ -507,7 +507,7 @@ export default function Projects() {
           </div>
 
           <div className="project-card group relative rounded-[2rem] overflow-hidden border border-white/[0.12]"
-            style={{ background: "linear-gradient(135deg, #0d1220 0%, #080c18 100%)" }}>
+            style={{ background: "linear-gradient(135deg, #111827 0%, #0d1117 100%)" }}>
 
             {/* Glow border effect */}
             <div className="absolute inset-0 rounded-[2rem] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
@@ -537,7 +537,7 @@ export default function Projects() {
                     <span className="text-sm text-pink-300 font-mono">{restaurantData.tagline}</span>
                   </div>
 
-                  <p className="text-slate-300 leading-relaxed">{restaurantData.description}</p>
+                  <p className="text-slate-200 leading-relaxed">{restaurantData.description}</p>
                 </div>
 
                 {/* Stack */}
@@ -582,7 +582,7 @@ export default function Projects() {
                         </div>
                         <ul className="space-y-3">
                           {restaurantData.deepDive.architecture.map((item, i) => (
-                            <li key={i} className="flex gap-3 text-slate-300 text-sm leading-relaxed">
+                            <li key={i} className="flex gap-3 text-slate-200 text-sm leading-relaxed">
                               <FaServer className="mt-1 text-blue-400 shrink-0" /> {item}
                             </li>
                           ))}
@@ -596,7 +596,7 @@ export default function Projects() {
                             <div className="text-xl mt-0.5">{c.icon}</div>
                             <div>
                               <h5 className="font-bold text-white text-sm">{c.title}</h5>
-                              <p className="text-xs text-slate-300 mt-1 leading-relaxed">{c.desc}</p>
+                              <p className="text-xs text-slate-200 mt-1 leading-relaxed">{c.desc}</p>
                             </div>
                           </div>
                         ))}
@@ -605,7 +605,7 @@ export default function Projects() {
                     {activeTab === "ui/ux" && (
                       <ul className="space-y-4 animate-slide-up">
                         {restaurantData.deepDive.uiux.map((item, i) => (
-                          <li key={i} className="flex gap-3 text-slate-300 text-sm leading-relaxed p-3 rounded-lg hover:bg-white/[0.04] transition-colors">
+                          <li key={i} className="flex gap-3 text-slate-200 text-sm leading-relaxed p-3 rounded-lg hover:bg-white/[0.04] transition-colors">
                             <FaPaintBrush className="mt-1 text-pink-500 shrink-0" /> {item}
                           </li>
                         ))}
@@ -693,7 +693,7 @@ export default function Projects() {
           </div>
 
           <div className="project-card group relative rounded-[2rem] overflow-hidden border border-white/[0.12]"
-            style={{ background: "linear-gradient(135deg, #0c0e1e 0%, #08090e 100%)" }}>
+            style={{ background: "linear-gradient(135deg, #111420 0%, #0c0e18 100%)" }}>
 
             <div className="absolute inset-0 rounded-[2rem] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
               style={{ background: "linear-gradient(135deg, rgba(139,92,246,0.18), rgba(99,102,241,0.12))", border: "1px solid rgba(139,92,246,0.35)" }} />
@@ -720,7 +720,7 @@ export default function Projects() {
                     <span className="text-sm text-violet-300 font-mono">{aiNotesData.tagline}</span>
                   </div>
 
-                  <p className="text-slate-300 leading-relaxed">{aiNotesData.description}</p>
+                  <p className="text-slate-200 leading-relaxed">{aiNotesData.description}</p>
                 </div>
 
                 {/* Stack */}
@@ -750,7 +750,7 @@ export default function Projects() {
                       <div className="text-lg mt-0.5">{f.icon}</div>
                       <div>
                         <h5 className="font-bold text-white text-sm">{f.title}</h5>
-                        <p className="text-xs text-slate-300 mt-1 leading-relaxed">{f.desc}</p>
+                        <p className="text-xs text-slate-200 mt-1 leading-relaxed">{f.desc}</p>
                       </div>
                     </div>
                   ))}
@@ -767,7 +767,7 @@ export default function Projects() {
                       <div className="text-[10px] font-bold text-violet-400 mb-2 uppercase">Frontend</div>
                       <ul className="space-y-2">
                         {aiNotesData.techStack.frontend.map((item, i) => (
-                          <li key={i} className="flex gap-2 text-slate-300 text-xs">
+                          <li key={i} className="flex gap-2 text-slate-200 text-xs">
                             <FaRegCheckCircle className="mt-0.5 text-violet-400 shrink-0" />{item}
                           </li>
                         ))}
@@ -777,7 +777,7 @@ export default function Projects() {
                       <div className="text-[10px] font-bold text-blue-400 mb-2 uppercase">Backend & AI</div>
                       <ul className="space-y-2">
                         {aiNotesData.techStack.backend.map((item, i) => (
-                          <li key={i} className="flex gap-2 text-slate-300 text-xs">
+                          <li key={i} className="flex gap-2 text-slate-200 text-xs">
                             <FaRegCheckCircle className="mt-0.5 text-blue-400 shrink-0" />{item}
                           </li>
                         ))}
@@ -873,7 +873,7 @@ export default function Projects() {
           </div>
 
           <div className="group relative rounded-[2rem] overflow-hidden border border-white/[0.12]"
-            style={{ background: "linear-gradient(135deg, #0c0d1e 0%, #080910 100%)" }}>
+            style={{ background: "linear-gradient(135deg, #111220 0%, #0c0d18 100%)" }}>
 
             <div className="absolute inset-0 rounded-[2rem] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
               style={{ border: "1px solid rgba(168,85,247,0.35)" }} />
@@ -893,7 +893,7 @@ export default function Projects() {
                   <h3 className="text-3xl md:text-4xl font-bold text-white leading-tight">{oaData.title}</h3>
                 </div>
 
-                <p className="text-slate-300 leading-relaxed mb-8">{oaData.description}</p>
+                <p className="text-slate-200 leading-relaxed mb-8">{oaData.description}</p>
 
                 <div className="flex flex-wrap gap-2 mb-8">
                   {oaData.stack.map((t, i) => <TechPill key={i} {...t} />)}
@@ -914,7 +914,7 @@ export default function Projects() {
                   </div>
                   <ul className="space-y-3 min-h-[120px]">
                     {oaData.features[oaRole].map((f, i) => (
-                      <li key={i} className="flex items-start gap-3 text-sm text-slate-200 animate-slide-up">
+                      <li key={i} className="flex items-start gap-3 text-sm text-white animate-slide-up">
                         <FaRegCheckCircle className="mt-0.5 text-purple-400 shrink-0" />{f}
                       </li>
                     ))}
@@ -1012,7 +1012,7 @@ export default function Projects() {
                     </div>
 
                     <h4 className={`text-base font-bold text-white mb-2 ${colors.text} transition-colors duration-300`}>{task.title}</h4>
-                    <p className="text-slate-300 text-sm leading-relaxed mb-5 grow">{task.desc}</p>
+                    <p className="text-slate-200 text-sm leading-relaxed mb-5 grow">{task.desc}</p>
 
                     <div className="flex flex-wrap gap-1.5 mt-auto">
                       {task.tags.map((tag, i) => (
@@ -1109,18 +1109,11 @@ export default function Projects() {
 
         @keyframes particle-float { from { transform: translateY(0px); opacity: 0.55; } to { transform: translateY(-20px); opacity: 0; } }
 
-        /* ── SECTION REVEAL — fixed: starts invisible, animates in with delay per child ── */
-        @keyframes section-reveal { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        /* ── SECTION REVEAL — slide only, no opacity fade so nothing stays invisible ── */
+        @keyframes section-reveal { from { transform: translateY(30px); } to { transform: translateY(0); } }
         .section-reveal {
-          opacity: 0;
-          animation: section-reveal 0.8s ease-out forwards;
+          animation: section-reveal 0.7s ease-out;
         }
-        .section-reveal:nth-child(1) { animation-delay: 0.1s; }
-        .section-reveal:nth-child(2) { animation-delay: 0.25s; }
-        .section-reveal:nth-child(3) { animation-delay: 0.4s; }
-        .section-reveal:nth-child(4) { animation-delay: 0.55s; }
-        .section-reveal:nth-child(5) { animation-delay: 0.7s; }
-        .section-reveal:nth-child(6) { animation-delay: 0.85s; }
 
         /* ── CTAs ── */
         .cta-primary {
