@@ -163,7 +163,7 @@ const SkillPill = ({ icon, name, highlight = false }) => (
       : "bg-white/5 border-white/5 hover:bg-white/10 hover:border-white/20"
   }`}>
     <span className="text-lg opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">{icon}</span>
-    <span className={`text-xs font-medium tracking-wide ${highlight ? "text-white" : "text-slate-400 group-hover:text-slate-200"}`}>{name}</span>
+    <span className={`text-xs font-medium tracking-wide ${highlight ? "text-white" : "text-slate-200 group-hover:text-white"}`}>{name}</span>
   </div>
 );
 
@@ -289,7 +289,7 @@ export default function About() {
                 <h1 className="text-5xl md:text-6xl font-bold text-white tracking-tight mb-2">
                   Gokulakrishna <span className="text-purple-400">N.E.</span>
                 </h1>
-                <p className="text-xl text-slate-400 font-light max-w-2xl">
+                <p className="text-xl text-slate-200 font-light max-w-2xl">
                   Certified <span className="text-cyan-300 font-medium">MERN Full Stack Developer</span> // Building Scalable Digital Ecosystems.
                 </p>
               </div>
@@ -298,7 +298,7 @@ export default function About() {
             <div className="mt-8 md:mt-0 flex gap-4">
                <a href="https://drive.google.com/file/d/1y_UR29fGr0QTeOzSe1dnlPbfy4GSm5-p/view?usp=drive_link" target="_blank" rel="noopener noreferrer"
                   className="px-8 py-3 rounded-xl bg-white text-black font-bold text-sm hover:bg-purple-50 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.2)]">
-                  Download Resume
+                 Download Resume
                </a>
             </div>
           </div>
@@ -320,7 +320,7 @@ export default function About() {
                   "I did not choose this path because it was easy. I chose it because <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-cyan-400">I fell in love with the craft</span>."
                 </h2>
                 
-                <div className="space-y-5 text-slate-300 leading-7 text-sm font-light">
+                <div className="space-y-5 text-slate-100 leading-7 text-sm font-normal">
                   <p>
                     Transitioning from a non-CS background into high-level engineering wasn't an accident—it was an act of <strong className="text-white">Iron Discipline</strong>. While others followed a syllabus, I forged my own curriculum, obsessively mastering the MERN stack through late nights and early mornings.
                   </p>
@@ -339,7 +339,7 @@ export default function About() {
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
                   </div>
                   <h3 className="text-white font-bold mb-2 text-sm uppercase tracking-wide">Unshakable Integrity</h3>
-                  <p className="text-xs text-slate-400 leading-relaxed">
+                  <p className="text-xs text-slate-200 leading-relaxed">
                     I code what I say. I don't hide technical debt. If a feature isn't ready for production, I don't ship it. Transparency is my default state.
                   </p>
                 </SpotlightCard>
@@ -350,7 +350,7 @@ export default function About() {
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
                   </div>
                   <h3 className="text-white font-bold mb-2 text-sm uppercase tracking-wide">Radical Generosity</h3>
-                  <p className="text-xs text-slate-400 leading-relaxed">
+                  <p className="text-xs text-slate-200 leading-relaxed">
                     Knowledge is meant to be shared. I strive to uplift my team, write clear documentation, and mentor others. A win for the team is a win for me.
                   </p>
                 </SpotlightCard>
@@ -361,7 +361,7 @@ export default function About() {
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
                   </div>
                   <h3 className="text-white font-bold mb-2 text-sm uppercase tracking-wide">Relentless Discipline</h3>
-                  <p className="text-xs text-slate-400 leading-relaxed">
+                  <p className="text-xs text-slate-200 leading-relaxed">
                     Consistency is my superpower. Whether it's debugging a race condition or perfecting a CSS transition, I stay until the job is done right.
                   </p>
                 </SpotlightCard>
@@ -372,7 +372,7 @@ export default function About() {
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
                   </div>
                   <h3 className="text-white font-bold mb-2 text-sm uppercase tracking-wide">Humanity First</h3>
-                  <p className="text-xs text-slate-400 leading-relaxed">
+                  <p className="text-xs text-slate-200 leading-relaxed">
                     Software is used by people. I build with empathy, ensuring accessibility and usability are never afterthoughts. Kindness is part of my code.
                   </p>
                 </SpotlightCard>
@@ -385,7 +385,7 @@ export default function About() {
                   <h4 className="text-white font-bold text-sm">Consistency Engine</h4>
                   <span className="text-[10px] text-emerald-400 font-mono">100% UPTIME</span>
                 </div>
-                <p className="text-xs text-slate-400 mb-4">
+                <p className="text-xs text-slate-200 mb-4">
                   Visual representation of my daily commitment to code and improvement.
                 </p>
                 <ConsistencyGraph />
@@ -453,21 +453,21 @@ export default function About() {
                     <div className="mt-1 w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]" />
                     <div>
                       <strong className="text-white block text-sm mb-1">Production-Ready Code</strong>
-                      <span className="text-xs text-slate-400">CI/CD pipelines, secure auth, optimized assets.</span>
+                      <span className="text-xs text-slate-200">CI/CD pipelines, secure auth, optimized assets.</span>
                     </div>
                   </li>
                   <li className="flex items-start gap-4 p-4 rounded-xl bg-white/5 border border-white/5 hover:border-purple-500/30 transition-colors">
                     <div className="mt-1 w-2 h-2 rounded-full bg-purple-400 shadow-[0_0_8px_#a78bfa]" />
                     <div>
                       <strong className="text-white block text-sm mb-1">Cinematic UI/UX</strong>
-                      <span className="text-xs text-slate-400">Accessible interfaces with fluid micro-interactions.</span>
+                      <span className="text-xs text-slate-200">Accessible interfaces with fluid micro-interactions.</span>
                     </div>
                   </li>
                   <li className="flex items-start gap-4 p-4 rounded-xl bg-white/5 border border-white/5 hover:border-cyan-500/30 transition-colors">
                     <div className="mt-1 w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]" />
                     <div>
                       <strong className="text-white block text-sm mb-1">Real-Time Systems</strong>
-                      <span className="text-xs text-slate-400">WebSockets, payment flows, and complex state.</span>
+                      <span className="text-xs text-slate-200">WebSockets, payment flows, and complex state.</span>
                     </div>
                   </li>
                 </ul>
@@ -482,7 +482,7 @@ export default function About() {
                       <span className="text-2xl">🇮🇳</span>
                       <div>
                         <div className="text-white text-sm font-bold">Tamil</div>
-                        <div className="text-[10px] text-slate-400 uppercase tracking-wider">Native</div>
+                        <div className="text-[10px] text-slate-300 uppercase tracking-wider">Native</div>
                       </div>
                     </div>
                     <div className="h-1.5 w-20 bg-slate-700 rounded-full overflow-hidden">
@@ -495,7 +495,7 @@ export default function About() {
                       <span className="text-2xl">🇬🇧</span>
                       <div>
                         <div className="text-white text-sm font-bold">English</div>
-                        <div className="text-[10px] text-slate-400 uppercase tracking-wider">Fluent (Pro)</div>
+                        <div className="text-[10px] text-slate-300 uppercase tracking-wider">Fluent (Pro)</div>
                       </div>
                     </div>
                     <div className="h-1.5 w-20 bg-slate-700 rounded-full overflow-hidden">
@@ -508,7 +508,7 @@ export default function About() {
                       <span className="text-2xl">🇮🇳</span>
                       <div>
                         <div className="text-white text-sm font-bold">Hindi</div>
-                        <div className="text-[10px] text-slate-400 uppercase tracking-wider">Basic</div>
+                        <div className="text-[10px] text-slate-300 uppercase tracking-wider">Basic</div>
                       </div>
                     </div>
                     <div className="h-1.5 w-20 bg-slate-700 rounded-full overflow-hidden">
