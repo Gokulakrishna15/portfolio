@@ -444,8 +444,8 @@ const AIChatSimulator = () => {
   return (
     <div className="w-full max-w-lg bg-[#05050a]/90 backdrop-blur-2xl border border-white/10 rounded-2xl p-0 font-mono text-sm shadow-[0_20px_50px_rgba(0,0,0,0.8)] relative overflow-hidden flex flex-col h-80 z-20 hover:border-cyan-500/30 transition-colors duration-500">
       <div className="h-10 bg-white/5 flex items-center px-4 gap-2 border-b border-white/10 shrink-0">
-        <FaTerminal className="text-slate-400" />
-        <span className="text-xs text-slate-300 font-bold tracking-widest">MULTI_AGENT_ROUTER.exe</span>
+        <FaTerminal className="text-slate-300" />
+        <span className="text-xs text-slate-100 font-bold tracking-widest">MULTI_AGENT_ROUTER.exe</span>
         <div className="ml-auto flex gap-1.5">
           <div className="w-3 h-3 rounded-full bg-red-500/80 shadow-[0_0_5px_rgba(239,68,68,0.8)]" />
           <div className="w-3 h-3 rounded-full bg-yellow-500/80 shadow-[0_0_5px_rgba(234,179,8,0.8)]" />
@@ -456,8 +456,8 @@ const AIChatSimulator = () => {
       <div ref={scrollRef} className="flex-1 overflow-y-auto p-5 space-y-5 scrollbar-hide">
         {messages.map((msg, i) => (
           <div key={i} className={`flex flex-col animate-slide-up ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}>
-            <span className="text-[10px] uppercase text-slate-500 mb-1 ml-1 font-bold">{msg.sender}</span>
-            <div className={`p-3.5 rounded-xl max-w-[90%] border backdrop-blur-md shadow-lg leading-relaxed text-xs md:text-sm ${msg.sender === 'user' ? 'bg-slate-800/80 border-slate-600 text-slate-200 rounded-tr-none' : `${getAgentColor(msg.sender)} rounded-tl-none`}`}>
+            <span className="text-[10px] uppercase text-slate-300 mb-1 ml-1 font-bold">{msg.sender}</span>
+            <div className={`p-3.5 rounded-xl max-w-[90%] border backdrop-blur-md shadow-lg leading-relaxed text-xs md:text-sm ${msg.sender === 'user' ? 'bg-slate-800/80 border-slate-600 text-slate-100 rounded-tr-none' : `${getAgentColor(msg.sender)} rounded-tl-none`}`}>
                {msg.text}
             </div>
           </div>
@@ -465,7 +465,7 @@ const AIChatSimulator = () => {
         
         {isTyping && (
           <div className="flex flex-col items-start animate-fade-in">
-             <span className="text-[10px] uppercase text-slate-500 mb-1 ml-1 animate-pulse">AGENT ROUTING...</span>
+             <span className="text-[10px] uppercase text-slate-300 mb-1 ml-1 animate-pulse">AGENT ROUTING...</span>
              <div className="p-3.5 rounded-xl border border-white/10 bg-white/5 rounded-tl-none flex gap-1.5 items-center h-11">
                <div className="w-2.5 h-2.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: '0ms' }} />
                <div className="w-2.5 h-2.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: '150ms' }} />
@@ -509,24 +509,24 @@ const ToolCard = ({ tool }) => {
             <span className="text-4xl relative z-10" style={{ color: tool.color }}>{tool.icon}</span>
           </div>
           <div className="flex flex-col items-end">
-            <FaFingerprint className={`text-3xl transition-all duration-500 ${isHovered ? 'opacity-100 scale-110' : 'opacity-20 text-slate-600'}`} style={{ color: isHovered ? tool.color : undefined, filter: isHovered ? `drop-shadow(0 0 10px ${tool.color})` : 'none' }} />
-            <span className="text-[9px] uppercase tracking-[0.3em] text-slate-500 mt-2 font-mono opacity-50">SYNCED</span>
+            <FaFingerprint className={`text-3xl transition-all duration-500 ${isHovered ? 'opacity-100 scale-110' : 'opacity-20 text-slate-400'}`} style={{ color: isHovered ? tool.color : undefined, filter: isHovered ? `drop-shadow(0 0 10px ${tool.color})` : 'none' }} />
+            <span className="text-[9px] uppercase tracking-[0.3em] text-slate-300 mt-2 font-mono opacity-80">SYNCED</span>
           </div>
         </div>
 
         <h4 className="text-2xl font-black text-white mb-2 tracking-tight">{tool.name}</h4>
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-white/5 border border-white/10 mb-4 shadow-inner">
            <FaBolt size={10} style={{ color: tool.color }} className="animate-pulse" />
-           <p className="text-[11px] font-mono text-slate-300 tracking-wider uppercase">{tool.role}</p>
+           <p className="text-[11px] font-mono text-slate-200 tracking-wider uppercase">{tool.role}</p>
         </div>
 
-        <p className="text-sm text-slate-400 leading-relaxed mb-6">
+        <p className="text-sm text-slate-200 leading-relaxed mb-6">
           {tool.description}
         </p>
 
         <div className="flex flex-wrap gap-2 mb-6">
           {tool.capabilities.map((cap, idx) => (
-            <span key={idx} className="text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full border bg-black/50 text-slate-300 backdrop-blur-md" style={{ borderColor: `${tool.color}50` }}>
+            <span key={idx} className="text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full border bg-black/50 text-slate-200 backdrop-blur-md" style={{ borderColor: `${tool.color}50` }}>
               {cap}
             </span>
           ))}
@@ -536,7 +536,7 @@ const ToolCard = ({ tool }) => {
       <div className="relative z-10 space-y-3 mt-auto pt-5 border-t border-white/10" style={{ transform: "translateZ(25px)" }}>
         {tool.metrics.map((metric, i) => (
           <div key={i} className="group/metric">
-            <div className="flex justify-between text-[10px] uppercase tracking-widest text-slate-500 mb-1.5 font-mono">
+            <div className="flex justify-between text-[10px] uppercase tracking-widest text-slate-300 mb-1.5 font-mono">
               <span className="group-hover/metric:text-white transition-colors">{metric.label}</span>
               <span className="text-white group-hover/metric:scale-110 transition-transform font-bold">{metric.value}%</span>
             </div>
@@ -574,7 +574,7 @@ const WorldImpactGrid = () => {
         <h3 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tighter">
           AI IN THE <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-400 to-cyan-400">MODERN WORLD</span>
         </h3>
-        <p className="text-slate-400 max-w-2xl mx-auto text-lg">
+        <p className="text-slate-200 max-w-2xl mx-auto text-lg">
           Beyond the code editor, Artificial Intelligence is fundamentally acting as a massive multiplier for human capability across every major industry.
         </p>
       </div>
@@ -591,7 +591,7 @@ const WorldImpactGrid = () => {
             </div>
             <div>
               <h4 className="text-2xl font-bold text-white mb-3 tracking-tight">{item.title}</h4>
-              <p className="text-slate-400 leading-relaxed text-sm">{item.desc}</p>
+              <p className="text-slate-200 leading-relaxed text-sm">{item.desc}</p>
               
               {/* Decorative data stream line */}
               <div className="mt-6 h-[2px] w-full bg-slate-800 rounded-full overflow-hidden relative">
@@ -622,7 +622,7 @@ const TechStackArchitecture = () => {
         <h3 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tighter">
           AI IN MODERN <span className="text-cyan-400">TECH STACKS</span>
         </h3>
-        <p className="text-slate-400 uppercase tracking-widest font-mono text-sm">The Evolution of the Software Development Life Cycle</p>
+        <p className="text-slate-200 uppercase tracking-widest font-mono text-sm">The Evolution of the Software Development Life Cycle</p>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-12 relative z-10">
@@ -644,20 +644,20 @@ const TechStackArchitecture = () => {
                 {/* Selection indicator line */}
                 <div className={`absolute left-0 top-0 bottom-0 w-1 transition-colors duration-500 ${isActive ? 'bg-cyan-400 shadow-[0_0_10px_#22d3ee]' : 'bg-transparent'}`} />
                 
-                <div className={`p-4 rounded-xl border transition-all duration-500 ${isActive ? 'bg-cyan-900/50 border-cyan-400/50 text-cyan-300' : 'bg-black/40 border-white/10 text-slate-500 group-hover:text-slate-300'}`}>
+                <div className={`p-4 rounded-xl border transition-all duration-500 ${isActive ? 'bg-cyan-900/50 border-cyan-400/50 text-cyan-300' : 'bg-black/40 border-white/10 text-slate-400 group-hover:text-slate-200'}`}>
                   <span className="text-2xl">{layer.icon}</span>
                 </div>
                 
                 <div className="flex-1">
-                  <h4 className={`text-xl font-bold transition-colors ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-white'}`}>
+                  <h4 className={`text-xl font-bold transition-colors ${isActive ? 'text-white' : 'text-slate-300 group-hover:text-white'}`}>
                     {layer.name}
                   </h4>
-                  <p className={`text-sm mt-1 transition-colors ${isActive ? 'text-cyan-200/70 font-mono' : 'text-slate-600'}`}>
+                  <p className={`text-sm mt-1 transition-colors ${isActive ? 'text-cyan-200/70 font-mono' : 'text-slate-400'}`}>
                     Layer 0{idx + 1} System
                   </p>
                 </div>
 
-                <div className={`flex gap-3 text-2xl transition-all duration-500 ${isActive ? 'opacity-100 text-white' : 'opacity-30 text-slate-600'}`}>
+                <div className={`flex gap-3 text-2xl transition-all duration-500 ${isActive ? 'opacity-100 text-white' : 'opacity-30 text-slate-400'}`}>
                   {layer.techs.map((t, i) => <span key={i}>{t}</span>)}
                 </div>
               </button>
@@ -687,15 +687,15 @@ const TechStackArchitecture = () => {
                   {layer.title}
                 </h3>
                 
-                <p className="text-slate-400 text-lg leading-relaxed mb-8">
+                <p className="text-slate-200 text-lg leading-relaxed mb-8">
                   {layer.desc}
                 </p>
 
                 {/* Decorative terminal representation */}
-                <div className="w-full h-12 bg-black/80 rounded-lg border border-white/10 flex items-center px-4 font-mono text-xs text-slate-500 overflow-hidden relative">
+                <div className="w-full h-12 bg-black/80 rounded-lg border border-white/10 flex items-center px-4 font-mono text-xs text-slate-300 overflow-hidden relative">
                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-green-500/50 animate-pulse" />
                    <span className="text-green-400 mr-2">root@nexus:~#</span> 
-                   <span className="text-slate-300 typing-animation block whitespace-nowrap overflow-hidden border-r-2 border-slate-300 pr-1">
+                   <span className="text-slate-200 typing-animation block whitespace-nowrap overflow-hidden border-r-2 border-slate-300 pr-1">
                       systemctl status ai-agent-{layer.id.split('-')[1]}
                    </span>
                 </div>
@@ -799,7 +799,7 @@ export default function NeuralNexusOS() {
             HUMAN <span className="text-transparent bg-clip-text bg-linear-to-r from-cyan-400 to-purple-500">+</span> AI SYNERGY
           </h2>
           
-          <p className="text-slate-400 max-w-3xl mx-auto text-lg md:text-xl font-light leading-relaxed">
+          <p className="text-slate-200 max-w-3xl mx-auto text-lg md:text-xl font-normal leading-relaxed">
             I orchestrate a swarm of specialized LLMs to build software. By combining the architectural reasoning of <strong className="text-white">ChatGPT</strong>, the massive context depth of <strong className="text-white">Claude</strong>, and the raw algorithmic speed of <strong className="text-white">DeepSeek</strong>, I deliver full-stack applications at 10x velocity.
           </p>
         </div>
@@ -824,7 +824,7 @@ export default function NeuralNexusOS() {
                  <FaNetworkWired className="text-4xl text-purple-400 animate-pulse" />
                  <h3 className="text-3xl md:text-4xl font-black text-white tracking-tight">Active Model Roster</h3>
                </div>
-               <p className="text-slate-400 text-sm md:text-base max-w-2xl">Real-time telemetry and capability breakdown of the integrated language models powering my local development environment.</p>
+               <p className="text-slate-200 text-sm md:text-base max-w-2xl">Real-time telemetry and capability breakdown of the integrated language models powering my local development environment.</p>
             </div>
             <div className="flex gap-4">
                <div className="flex items-center gap-2 text-xs font-mono text-cyan-400 bg-cyan-950/40 px-4 py-2 rounded-lg border border-cyan-500/30">
@@ -871,7 +871,7 @@ export default function NeuralNexusOS() {
                <h3 className="text-4xl md:text-6xl font-black text-white mb-6 leading-tight tracking-tighter">
                  Ready to architect the <span className="text-transparent bg-clip-text bg-linear-to-r from-cyan-400 to-purple-400">future?</span>
                </h3>
-               <p className="text-slate-300 text-lg md:text-xl mb-10 leading-relaxed font-light">
+               <p className="text-slate-100 text-lg md:text-xl mb-10 leading-relaxed font-normal">
                  The most successful developers today aren't replacing themselves with AI; they are pairing with it. Combining traditional engineering mastery with modern AI orchestration means faster delivery, fewer bugs, and infinitely scalable architectures.
                </p>
                <button className="flex items-center gap-4 px-10 py-5 bg-white text-black font-black text-lg rounded-full hover:bg-cyan-400 hover:scale-105 hover:shadow-[0_0_30px_rgba(34,211,238,0.5)] transition-all duration-300">
