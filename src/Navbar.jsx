@@ -186,17 +186,17 @@ const NavLink = ({ item, activeSection, onClick, isRetro }) => {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         className={`relative group px-4 py-3 rounded-xl flex flex-col items-center justify-center transition-all duration-500 overflow-hidden ${
-            isActive ? "bg-white/5" : "hover:bg-white/5"
+            isActive ? "bg-white/10 shadow-[inset_0_0_10px_rgba(34,211,238,0.2)]" : "hover:bg-white/5"
         }`}
       >
-        <span className={`text-xl mb-1 transition-all duration-300 ${isHovered ? "scale-125 -translate-y-1" : ""} ${isActive ? "text-orange-400" : "text-gray-400"}`}>
+        <span className={`text-xl mb-1 transition-all duration-300 ${isHovered ? "scale-125 -translate-y-1" : ""} ${isActive ? "text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]" : "text-slate-400 group-hover:text-cyan-300"}`}>
             {item.icon}
         </span>
-        <span className={`text-[10px] font-bold tracking-widest uppercase ${isActive ? "text-white" : "text-gray-400"} ${isRetro ? "font-mono" : "font-sans"}`}>
+        <span className={`text-[10px] font-bold tracking-widest uppercase transition-colors duration-300 ${isActive ? "text-cyan-300 drop-shadow-[0_0_5px_rgba(34,211,238,0.5)]" : "text-slate-300 group-hover:text-white"} ${isRetro ? "font-mono" : "font-sans"}`}>
             {displayText}
         </span>
         {isActive && (
-            <span className="absolute bottom-1 w-1 h-1 bg-orange-500 rounded-full shadow-[0_0_10px_#f97316]" />
+            <span className="absolute bottom-1 w-1 h-1 bg-cyan-400 rounded-full shadow-[0_0_10px_#22d3ee] animate-pulse" />
         )}
       </a>
     </MagneticItem>
@@ -273,7 +273,7 @@ export default function Navbar() {
       <style>{`
         @keyframes scanline { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
         @keyframes grain { 0%, 100% { transform: translate(0, 0); } 10% { transform: translate(-5%, -10%); } 30% { transform: translate(3%, -15%); } 50% { transform: translate(12%, 10%); } 70% { transform: translate(9%, 15%); } 90% { transform: translate(-10%, 10%); } }
-        @keyframes pulse-ring { 0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(255, 136, 0, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 136, 0, 0); } 100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(255, 136, 0, 0); } }
+        @keyframes pulse-ring { 0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(34, 211, 238, 0); } 100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(34, 211, 238, 0); } }
         @keyframes float-y { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
         
         .nav-container {
@@ -287,8 +287,8 @@ export default function Navbar() {
         .retro-active { font-family: 'Courier New', monospace !important; filter: contrast(1.2) brightness(1.1) sepia(0.3); }
         .retro-scanline { background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.3) 50%); background-size: 100% 4px; animation: scanline 10s linear infinite; pointer-events: none; }
         .retro-grain { position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); opacity: 0.15; animation: grain 8s steps(10) infinite; pointer-events: none; }
-        .liquid-btn { background-size: 200% auto; background-image: linear-gradient(to right, #ff8000 0%, #ff0080 51%, #ff8000 100%); transition: 0.5s; }
-        .liquid-btn:hover { background-position: right center; box-shadow: 0 0 20px #ff0080; }
+        .liquid-btn { background-size: 200% auto; background-image: linear-gradient(to right, #0ea5e9 0%, #a855f7 51%, #0ea5e9 100%); transition: 0.5s; }
+        .liquid-btn:hover { background-position: right center; box-shadow: 0 0 20px rgba(168,85,247,0.6); }
       `}</style>
 
       <nav
@@ -314,7 +314,7 @@ export default function Navbar() {
 
         <div className="absolute bottom-0 left-0 w-full h-0.5 bg-white/5">
             <div 
-                className={`h-full shadow-[0_0_10px_currentColor] transition-all duration-100 ease-linear ${isRetroMode ? "bg-green-500 text-green-500" : "bg-linear-to-r from-orange-500 via-pink-500 to-purple-600"}`}
+                className={`h-full shadow-[0_0_10px_currentColor] transition-all duration-100 ease-linear ${isRetroMode ? "bg-green-500 text-green-500" : "bg-linear-to-r from-cyan-400 via-purple-500 to-fuchsia-600"}`}
                 style={{ width: `${scrollProgress}%` }}
             />
         </div>
@@ -329,17 +329,17 @@ export default function Navbar() {
                         <span className="text-2xl animate-pulse">👨‍💻</span>
                     </div>
                     <div className="flex flex-col">
-                        <h1 className={`text-xl font-bold tracking-tight leading-none transition-colors ${isRetroMode ? "text-green-500 font-mono tracking-widest" : "text-white group-hover:text-orange-400"}`}>
+                        <h1 className={`text-xl font-bold tracking-tight leading-none transition-colors ${isRetroMode ? "text-green-500 font-mono tracking-widest" : "text-white group-hover:text-cyan-400"}`}>
                             GOKULAKRISHNA N.E
                         </h1>
-                        <span className={`text-[10px] font-bold tracking-[0.2em] uppercase mt-1 ${isRetroMode ? "text-green-800" : "text-gray-500 group-hover:text-white"}`}>
+                        <span className={`text-[10px] font-bold tracking-[0.2em] uppercase mt-1 ${isRetroMode ? "text-green-800" : "text-slate-400 group-hover:text-white"}`}>
                             MERN Full Stack Dev
                         </span>
                     </div>
                 </div>
             </MagneticItem>
 
-            <div className="hidden lg:flex items-center gap-2 bg-black/20 p-2 rounded-2xl border border-white/5 backdrop-blur-md">
+            <div className="hidden lg:flex items-center gap-2 bg-black/30 p-2 rounded-2xl border border-white/10 backdrop-blur-md shadow-[0_0_20px_rgba(0,0,0,0.5)]">
                 {navItems.map((item) => (
                     <NavLink 
                         key={item.id} 
@@ -393,7 +393,7 @@ export default function Navbar() {
                     key={item.id}
                     href={`#${item.id}`}
                     onClick={() => setIsOpen(false)}
-                    className={`text-4xl font-black text-transparent bg-clip-text bg-linear-to-b from-white to-gray-600 hover:to-orange-500 transition-all transform hover:scale-110 ${isOpen ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"}`}
+                    className={`text-4xl font-black text-transparent bg-clip-text bg-linear-to-b from-white to-slate-400 hover:to-cyan-400 transition-all transform hover:scale-110 ${isOpen ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"}`}
                     style={{ transitionDelay: `${idx * 100}ms` }}
                  >
                      {item.label}
@@ -406,7 +406,7 @@ export default function Navbar() {
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         className={`fixed bottom-10 right-10 z-40 w-14 h-14 rounded-full flex items-center justify-center text-2xl transition-all duration-500 shadow-2xl ${
             isScrolled ? "translate-y-0 opacity-100" : "translate-y-20 opacity-0"
-        } ${isRetroMode ? "bg-green-600 text-black font-mono border-4 border-black" : "bg-white/10 backdrop-blur-md text-orange-400 border border-orange-500/50 hover:bg-orange-500 hover:text-white"}`}
+        } ${isRetroMode ? "bg-green-600 text-black font-mono border-4 border-black" : "bg-black/50 backdrop-blur-md text-cyan-400 border border-cyan-500/50 hover:bg-cyan-500 hover:text-white"}`}
       >
         <span className="animate-[float-y_3s_ease-in-out_infinite]">⬆</span>
         {!isRetroMode && <span className="absolute inset-0 rounded-full animate-[pulse-ring_2s_infinite]" />}
